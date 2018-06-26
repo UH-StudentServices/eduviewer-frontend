@@ -1,0 +1,12 @@
+dist
+config/config.json
+node_modules
+npm-debug.log
+
+# IDE metadata
+.vscode
+.idea
+*.iml
+
+# Mac metadata
+*.DS_Store
