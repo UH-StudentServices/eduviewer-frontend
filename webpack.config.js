@@ -113,5 +113,6 @@ module.exports = {
     webpackMd5Hash,
     cleanWebPackPlugin
   ],
-  devServer: devServerConfig
+  devServer: devServerConfig,
+  devtool: 'eval-source-map'
 };
