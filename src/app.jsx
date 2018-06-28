@@ -14,7 +14,7 @@ const render = (Component) => {
 };
 
 if (module.hot) {
-  module.hot.accept('./components/Main', () => {
+  module.hot.accept('./components/OldApp/Main', () => {
     render(Main);
   });
 }
