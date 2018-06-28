@@ -1,0 +1,28 @@
+version: '3.5'
+
+services:
+  frontend:
+    image: $REGISTRY_URL/tike/eduviewer-frontend:$DOCKER_TAG
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf.template:/etc/nginx/conf.d/nginx.conf.template
+      - /var/log/nginx:/var/log/nginx
+      - ${CERT_PATH}:${CERT_PATH}
+      - ${KEY_PATH}:${KEY_PATH}
+    networks:
+      - app
+      - default
+    environment:
+      - SERVER_NAME=$SERVER_NAME
+      - CERT_PATH=$CERT_PATH
+      - KEY_PATH=$KEY_PATH
+    command: /bin/bash -c "envsubst '$${SERVER_NAME},$${CERT_PATH},$${KEY_PATH}' < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+
+
+networks:
+  app:
+    external:
+      name: app

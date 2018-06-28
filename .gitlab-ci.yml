@@ -1,0 +1,73 @@
+image: docker:stable
+
+stages:
+  - build_node_git_image
+  - test_and_build
+  - build_image
+  - deploy
+
+test_and_build:
+  image: timbru31/node-alpine-git
+  stage: test_and_build
+  script:
+    - npm install
+    - npm run test
+    - npm run dist
+  artifacts:
+    paths:
+      - dist/
+
+.deploy_template: &deploy_definition
+  image: williamyeh/ansible:alpine3
+  stage: deploy
+  script:
+   - ci/deploy/deploy.sh $CI_COMMIT_SHA $HOST
+  environment:
+    name: $ENVR
+    url: https://$HOST
+
+.build_image_template: &build_image_definition
+  stage: build_image
+  script:
+    - docker login -u="$REGISTRY_USER" -p="$REGISTRY_TOKEN" $REGISTRY_URL
+    - docker build -f ci/build/frontend/Dockerfile -t $REGISTRY_URL/tike/eduviewer-frontend:$CI_COMMIT_SHA .
+    - docker push $REGISTRY_URL/tike/eduviewer-frontend:$CI_COMMIT_SHA
+
+build_image:
+  <<: *build_image_definition
+  only:
+    - master
+
+build_image_manual:
+  <<: *build_image_definition
+  when: manual
+
+deploy_dev:
+  variables:
+    HOST: "eduviewer-dev.it.helsinki.fi"
+    ENVR: "dev"
+  only:
+    - master
+  <<: *deploy_definition
+
+deploy_dev_manual:
+  variables:
+    HOST: "eduviewer-dev.it.helsinki.fi"
+    ENVR: "dev"
+  when: manual
+  <<: *deploy_definition
+
+deploy_qa:
+  variables:
+    HOST: "eduviewer-qa.it.helsinki.fi"
+    ENVR: "qa"
+  when: manual
+  <<: *deploy_definition
+
+deploy_prod:
+  variables:
+    HOST: "eduviewer.it.helsinki.fi"
+    ENVR: "prod"
+  when: manual
+  <<: *deploy_definition
+

@@ -1,0 +1,48 @@
+server {
+     listen 80;
+     server_name ${SERVER_NAME};
+     return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl;
+
+    ssl on;
+    ssl_certificate ${CERT_PATH};
+    ssl_certificate_key ${KEY_PATH};
+
+    server_name ${SERVER_NAME};
+
+    etag off;
+    if_modified_since off;
+
+    location /api {
+      proxy_set_header X-Forwarded-Host $host;
+      proxy_set_header X-Forwarded-Server $host;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_pass https://od.helsinki.fi/eduviewer;
+
+      add_header Cache-Control "no-store, no-cache, max-age=0";
+      add_header Access-Control-Allow-Origin * always;
+      expires off;
+    }
+
+    location / {
+      alias /usr/src/app;
+      try_files /$uri /index.html =404;
+
+      add_header Cache-Control "no-store, no-cache, max-age=0";
+      add_header Access-Control-Allow-Origin * always;
+      expires off;
+    }
+
+    location ~* \.(js|css|png|jpe?g|svg|gif|ico|eot|woff|woff2|ttf)$ {
+      alias /usr/src/app;
+      try_files /$uri /index.html =404;
+
+      add_header Cache-Control "public";
+      add_header Access-Control-Allow-Origin * always;
+      expires 1y;
+    }
+}
