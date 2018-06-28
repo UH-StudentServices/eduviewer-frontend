@@ -1,8 +1,8 @@
 /* eslint-disable */
 
-import Element from '../Element';
+import Element from './Element';
 
-import { getSelectValues, } from '../../utils';
+import { getSelectValues, } from './utils';
 
 import './oldApp.css';
 

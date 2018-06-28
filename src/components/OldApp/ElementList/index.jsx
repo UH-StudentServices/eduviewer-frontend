@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-import Element from '../Element';
-import { isEqual, qs } from '../../utils';
+import Element from '../Element/index';
+import { isEqual, qs } from '../utils/index';
 
 export default class ElementList extends React.Component {
   constructor(props) {

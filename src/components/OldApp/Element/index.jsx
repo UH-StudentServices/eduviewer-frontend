@@ -2,9 +2,9 @@
 
 import React from 'react';
 
-import Rule from '../Rule';
-import ElementList from '../ElementList';
-import { qs } from '../../utils';
+import Rule from '../../Rule/index';
+import ElementList from '../ElementList/index';
+import { qs } from '../utils/index';
 
 function getElementStructure(struct, lv) {
   const structures = [];

@@ -2,12 +2,12 @@
 
 import React from 'react';
 
-import CourseList from '../CourseList';
-import Dropdown from '../Dropdown';
-import ElementList from '../ElementList';
-import Rule from '../Rule';
+import CourseList from '../CourseList/index';
+import Dropdown from '../Dropdown/index';
+import ElementList from '../ElementList/index';
+import Rule from '../../Rule/index';
 
-import { isNotEmpty, isViewAllEnabled, parseRuleData } from '../../utils';
+import { isNotEmpty, isViewAllEnabled, parseRuleData } from '../utils/index';
 
 export default class CompositeRule extends React.Component {
   constructor(props) {

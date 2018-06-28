@@ -1,6 +1,6 @@
 import React from 'react';
 
-import OldApp from '../OldApp';
+import OldApp from '../index';
 
 
 const Main = () => (

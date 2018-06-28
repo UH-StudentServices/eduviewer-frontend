@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import Rule from '../Rule';
+import Rule from '../../Rule/index';
 
 export default class CreditsRule extends React.Component {
   creditsRow(credits) {

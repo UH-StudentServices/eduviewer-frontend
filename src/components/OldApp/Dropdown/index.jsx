@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-import ElementList from '../ElementList';
-import { getSelectValues } from '../../utils';
+import ElementList from '../ElementList/index';
+import { getSelectValues } from '../utils/index';
 
 export default class Dropdown extends React.Component {
   constructor(props) {
