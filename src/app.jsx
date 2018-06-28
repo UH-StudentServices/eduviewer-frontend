@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 
-import Main from './components/Main';
+import Main from './components/OldApp/Main';
 
 const render = (Component) => {
   ReactDOM.render(
