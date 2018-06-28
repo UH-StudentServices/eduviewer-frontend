@@ -1,0 +1,27 @@
+---
+
+- name: Create eduviewer user
+  user:
+    name: eduviewer
+    comment: User for Eduviewer application
+    state: present
+  become: true
+
+- name: Create frontend app dir
+  file:
+    path: /opt/eduviewer-frontend
+    owner: eduviewer
+    group: eduviewer
+    state: directory
+    mode: 0775
+  become: true
+
+
+- name: Create frontend log dir
+  file:
+    path: /var/log/eduviewer-frontend
+    owner: eduviewer
+    group: eduviewer
+    state: directory
+    mode: 0775
+  become: true
