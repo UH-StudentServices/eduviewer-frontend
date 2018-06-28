@@ -1,6 +1,6 @@
 ---
 
-- name: Create the eduviewer user
+- name: Create eduviewer user
   user:
     name: eduviewer
     comment: User for Eduviewer application
