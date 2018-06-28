@@ -3,19 +3,22 @@
 import React from 'react';
 
 import ElementList from '../ElementList/index';
+import ErrorMessage from '../../ErrorMessage';
 import { getSelectValues } from '../utils/index';
 import { fetchAllIdsJson } from '../../../api';
 
 export default class Dropdown extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { elements: [], selected: {} };
+    this.state = { elements: [], selected: {}, error: undefined };
     this.onChange = this.onChange.bind(this);
   }
 
   componentDidMount() {
     const { lv, ids } = this.props;
-    fetchAllIdsJson(lv, ids).then(elements => this.setState({ elements }));
+    fetchAllIdsJson(lv, ids)
+      .then(elements => this.setState({ elements }))
+      .catch(error => this.setState({ error: error.message }));
   }
 
   onChange(event) {
@@ -24,6 +27,12 @@ export default class Dropdown extends React.Component {
 
 
   render() {
+    const { error } = this.state;
+
+    if (error) {
+      return <ErrorMessage errorMessage={error} />
+    }
+
     if (this.state.elements.length == 0) {
       return (
         <div>

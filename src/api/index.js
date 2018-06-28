@@ -1,11 +1,21 @@
-const options = ids => ({
-  method: 'post',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(ids)
+import fetchIntercept from 'fetch-intercept';
+
+fetchIntercept.register({
+  response: (response) => {
+    if (!response.ok) {
+      return Promise.reject(new Error(`${response.url} ${response.status}`));
+    }
+
+    return response.json();
+  }
 });
 
-export const fetchAllIdsJson = (lv = '', ids) => fetch(`/api/all_ids?lv=${lv}`, options(ids))
-  .then(res => res.json());
+const postForJson = (path, body) => fetch(path, {
+  method: 'post',
+  headers: { 'Content-Type': 'application/json' },
+  body
+});
 
-export const fetchCourseNames = (lv = '', ids) => fetch(`/api/cu/names?lv=${lv}`, options(ids))
-  .then(res => res.json());
+export const fetchAllIdsJson = (lv = '', ids) => postForJson(`/api/all_ids?lv=${lv}`, JSON.stringify(ids));
+
+export const fetchCourseNames = (lv = '', ids) => postForJson(`/api/cu/names?lv=${lv}`, JSON.stringify(ids));

@@ -12,6 +12,7 @@
       "props": false
     }],
     "react/jsx-no-bind": 2,
+    "react/jsx-one-expression-per-line": 0,
     "react/no-did-mount-set-state": 0,
     "react/prefer-stateless-function": 2
   },
