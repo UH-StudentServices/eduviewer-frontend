@@ -1,5 +1,5 @@
 {
-    "experimental": true,
+    "experimental": false,
     "icc": false,
     "max-concurrent-downloads": 30,
     "max-concurrent-uploads": 30,
