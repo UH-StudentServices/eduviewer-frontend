@@ -1,7 +1,10 @@
 ---
 
 - name: Create the eduviewer user
-  user: name=eduviewer comment="User for Eduviewer application" state=present
+  user:
+    name: eduviewer
+    comment: User for Eduviewer application
+    state: present
   become: true
 
 - name: Create frontend app dir
