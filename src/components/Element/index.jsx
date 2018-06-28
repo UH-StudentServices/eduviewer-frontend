@@ -3,7 +3,32 @@
 import React from 'react';
 
 import Rule from '../Rule';
-import { getElementStructure , qs } from '../../utils';
+import ElementList from '../ElementList';
+import { qs } from '../../utils';
+
+function getElementStructure(struct, lv) {
+  const structures = [];
+  for (const property in struct) {
+    if (property.startsWith('phase') && struct[property] != null) {
+      if (property.indexOf('phase1') >= 0
+        || qs.allPhases == 'true') {
+        const phase = struct[property];
+        const options = [];
+        for (let i = 0; i < phase.options.length; i++) {
+          options.push(phase.options[i].moduleGroupId);
+        }
+        structures.push(<div key={property}>
+          <ElementList key={`opt-${property}`} id={`opt-${property}`} ids={options} lv={lv} rule="{}" />
+        </div>);
+      }
+    }
+  }
+  return (
+    <div>
+      {structures}
+    </div>
+  );
+}
 
 export default class Element extends React.Component {
   componentWillReceiveProps(nextProps) {

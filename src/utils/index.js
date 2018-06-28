@@ -1,8 +1,5 @@
 /* eslint-disable */
 
-import React from 'react';
-import ElementList from '../components/ElementList';
-
 export function getSelectValues(select) {
   const result = [];
   const options = select && select.options;
@@ -91,56 +88,6 @@ export function isEqual(value, other) {
 
   // If nothing failed, return true
   return true;
-}
-
-export function getRules(rule) {
-  const rules = [];
-  if (rule.type == 'CompositeRule') {
-    const subModIds = [];
-    for (let i = 0; i < rule.rules.length; i++) {
-      const sub = rule.rules[i];
-      if (sub.type == 'CompositeRule') {
-        rules.concat(getRules(sub));
-      }
-      if (sub.type == 'ModuleRule') {
-        subModIds.push(sub.moduleGroupId);
-      }
-    }
-    rules.push(<li key={`l-${rule.localId}`}>
-      <ElementList key={rule.localId} id={rule.localId} ids={subModIds} rule={rule} />
-    </li>);
-  } else if (rule.type == 'ModuleRule') {
-    const mods = [];
-    mods.push(rule.moduleGroupId);
-    rules.push(<li key={`l-${rule.localId}`}>
-      <ElementList key={rule.localId} id={rule.localId} ids={mods} rule={rule} />
-    </li>);
-  }
-  return rules;
-}
-
-export function getElementStructure(struct, lv) {
-  const structures = [];
-  for (const property in struct) {
-    if (property.startsWith('phase') && struct[property] != null) {
-      if (property.indexOf('phase1') >= 0
-        || qs.allPhases == 'true') {
-        const phase = struct[property];
-        const options = [];
-        for (let i = 0; i < phase.options.length; i++) {
-          options.push(phase.options[i].moduleGroupId);
-        }
-        structures.push(<div key={property}>
-          <ElementList key={`opt-${property}`} id={`opt-${property}`} ids={options} lv={lv} rule="{}" />
-        </div>);
-      }
-    }
-  }
-  return (
-    <div>
-      {structures}
-    </div>
-  );
 }
 
 export const qs = (function (a) {
