@@ -4,6 +4,7 @@ import React from 'react';
 
 import Element from '../Element/index';
 import { isEqual, qs } from '../utils/index';
+import { fetchAllIdsJson } from '../../../api';
 
 export default class ElementList extends React.Component {
   constructor(props) {
@@ -12,14 +13,10 @@ export default class ElementList extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.ids != null && this.props.ids.length > 0) {
-      fetch(`/api/all_ids?lv=${this.props.lv == undefined ? '' : this.props.lv}`, {
-        method: 'post',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.props.ids)
-      }).then(response => response.json()).then((responseJson) => {
-        this.setState({ elements: responseJson });
-      });
+    const { lv, ids } = this.props;
+
+    if (ids != null && ids.length > 0) {
+      fetchAllIdsJson(lv, ids).then(elements => this.setState({ elements }));
     }
   }
 
@@ -27,13 +24,7 @@ export default class ElementList extends React.Component {
     if (isEqual(this.props, nextProps)) {
       return;
     }
-    fetch(`/api/all_ids?lv=${nextProps.lv == undefined ? '' : nextProps.lv}`, {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(nextProps.ids)
-    }).then(response => response.json()).then((responseJson) => {
-      this.setState({ elements: responseJson });
-    });
+    fetchAllIdsJson(nextProps.lv, nextProps.ids).then(elements => this.setState({ elements }));
   }
 
 

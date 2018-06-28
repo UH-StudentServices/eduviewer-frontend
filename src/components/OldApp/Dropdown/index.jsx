@@ -4,6 +4,7 @@ import React from 'react';
 
 import ElementList from '../ElementList/index';
 import { getSelectValues } from '../utils/index';
+import { fetchAllIdsJson } from '../../../api';
 
 export default class Dropdown extends React.Component {
   constructor(props) {
@@ -13,13 +14,8 @@ export default class Dropdown extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`/api/all_ids?lv=${this.props.lv}`, {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(this.props.ids)
-    }).then(response => response.json()).then((responseJson) => {
-      this.setState({ elements: responseJson });
-    });
+    const { lv, ids } = this.props;
+    fetchAllIdsJson(lv, ids).then(elements => this.setState({ elements }));
   }
 
   onChange(event) {

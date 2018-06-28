@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-import CompositeRule from '../OldApp/CompositeRule';
-import CreditsRule from '../OldApp/CreditsRule';
+import CompositeRule from '../CompositeRule/index';
+import CreditsRule from '../CreditsRule/index';
 
 export default class Rule extends React.Component {
   render() {

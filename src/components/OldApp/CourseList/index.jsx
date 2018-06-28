@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import React, { Component } from 'react';
+import { fetchCourseNames } from '../../../api';
 
 export default class CourseList extends Component {
   constructor(props) {
@@ -9,28 +10,20 @@ export default class CourseList extends Component {
   }
 
   componentDidMount() {
-    if (this.props.ids != null && this.props.ids.length > 0) {
-      fetch(`/api/cu/names?lv=${this.props.lv != undefined ? this.props.lv : ''}`, {
-        method: 'post',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.props.ids)
-      }).then(response => response.json()).then((responseJson) => {
-        this.setState({ courseNames: responseJson });
-      });
+    const { ids, lv } = this.props;
+
+    if (ids != null && ids.length > 0) {
+      fetchCourseNames(lv, ids).then(courseNames => this.setState({ courseNames }));
     }
   }
 
   componentWillReceiveProps(nextProps) {
+    const { lv, ids } = this.props;
     if (isEqual(this.props, nextProps)) {
       return;
     }
-    fetch(`/api/cu/names?lv=${this.props.lv}`, {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(nextProps.ids)
-    }).then(response => response.json()).then((responseJson) => {
-      this.setState({ courseNames: responseJson });
-    });
+
+    fetchCourseNames(lv, ids).then(courseNames => this.setState({ courseNames }));
   }
 
 
