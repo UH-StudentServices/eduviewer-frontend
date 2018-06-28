@@ -1,0 +1,6 @@
+---
+
+ssl_cert_file: eduviewer-qa.it.helsinki.fi.crt
+ssl_cert_bundle_file: eduviewer-qa.it.helsinki.fi.bundle.crt
+ssl_key_file: eduviewer-qa.it.helsinki.fi.key
+

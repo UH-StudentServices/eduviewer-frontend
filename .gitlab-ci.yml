@@ -1,0 +1,28 @@
+image: williamyeh/ansible:alpine3
+
+stages:
+  - provision
+
+.deploy_template: &deploy_definition
+  stage: provision
+  script:
+    - eval `ssh-agent -s`
+    - echo "$OPINTOTARJONTA_DEPLOYER_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - export ANSIBLE_HOST_KEY_CHECKING=false
+    - ansible-playbook -u deployer --limit $ENVIRONMENT -i ansible/hosts/inventory ansible/provision.yml
+  when: manual
+
+provision_dev:
+  variables:
+    ENVIRONMENT: "dev"
+  <<: *deploy_definition
+
+provision_qa:
+  variables:
+    ENVIRONMENT: "qa"
+  <<: *deploy_definition
+
+provision_prod:
+  variables:
+    ENVIRONMENT: "prod"
+  <<: *deploy_definition
