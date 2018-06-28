@@ -23,7 +23,7 @@
 # With `update_cache` we force an `apt update` which
 # would essentially be the equivalent of updating the
 # list of packages from a list of source repositories.
-- name: 'add Docker repository'
+- name: add Docker repository
   apt_repository:
     repo: '{{ docker_apt_repository }}'
     state: 'present'
