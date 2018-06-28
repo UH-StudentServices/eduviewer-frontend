@@ -21,7 +21,7 @@ server {
       proxy_set_header X-Forwarded-Server $host;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
       proxy_set_header X-Forwarded-Proto $scheme;
-      proxy_pass http://backend:8081/api;
+      proxy_pass https://od.helsinki.fi/eduviewer;
 
       add_header Cache-Control "no-store, no-cache, max-age=0";
       add_header Access-Control-Allow-Origin * always;
