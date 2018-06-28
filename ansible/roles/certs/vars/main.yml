@@ -2,3 +2,4 @@
 
 ssl_cert_path: "/etc/ssl/certs/{{ ssl_cert_file }}"
 ssl_cert_bundle_path: "/etc/ssl/certs/{{ ssl_cert_bundle_file }}"
+ca_bundle_path: "/etc/ssl/terena-bundle.pem"
