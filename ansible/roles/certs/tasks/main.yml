@@ -1,10 +1,5 @@
 ---
 
-- name: Read bundle file into variable
-  include_vars:
-    file: terena-bundle.yml
-    name: bundle
-
 - name: Create ssl cert bundle
   shell: "cat {{ ssl_cert_path }} {{ ca_bundle_path }} > {{ ssl_cert_bundle_path }}"
   become: true
