@@ -1,6 +1,6 @@
 import React from 'react';
 import { string } from 'prop-types';
-import { creditsType } from '../../types';
+import { creditsType, localizedTextType } from '../../types';
 
 const Course = ({ code, name, credits }) => (
   <li>
@@ -13,7 +13,7 @@ const Course = ({ code, name, credits }) => (
 
 Course.propTypes = {
   code: string.isRequired,
-  name: string.isRequired,
+  name: localizedTextType.isRequired,
   credits: creditsType.isRequired
 };
 
