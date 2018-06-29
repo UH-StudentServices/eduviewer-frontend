@@ -6,6 +6,7 @@ import {
   getDegreeProgramForAcademicYear
 } from '../../api';
 
+import DegreeProgram from '../DegreeProgram';
 import Element from '../OldApp/Element';
 import styles from './main.css';
 
@@ -17,7 +18,7 @@ class Main extends Component {
     academicYears: [],
     academicYearNames: {},
     isLoading: false,
-    degreeProgram: '',
+    degreeProgram: {},
     academicYear: ''
   }
 
@@ -28,10 +29,13 @@ class Main extends Component {
     );
 
     const degreePrograms = degreeProgramsResponse.educations;
+    console.log(degreePrograms[0].id);
     const academicYears = await getAcademicYearsForDegreeProgram(degreePrograms[0].id);
+    const academicYear = this.getAcademicYear(academicYears);
 
     this.setState({
       degreePrograms,
+      academicYear,
       academicYearNames,
       academicYears,
       isLoading: false
@@ -53,9 +57,16 @@ class Main extends Component {
      });
    }
 
-  onAcademicYearsChange = (event) => {
+  onAcademicYearsChange = async (event) => {
+    const { degreeProgram: { id } } = this.state;
+    this.setState({ isLoading: true });
     const academicYear = event.target.value;
-    this.setState({ academicYear });
+    const degreeProgram = await getDegreeProgramForAcademicYear(id, academicYear);
+    this.setState({
+      degreeProgram,
+      academicYear,
+      isLoading: false
+    });
   }
 
   getAcademicYear = (academicYears) => {
@@ -83,7 +94,7 @@ class Main extends Component {
     const DEGREE_PROGRAMS_ID = 'degreePrograms';
 
     return (
-      <div>
+      <form>
         <label htmlFor={ACADEMIC_YEARS_ID}>
           Lukuvuodet
           <select
@@ -104,13 +115,13 @@ class Main extends Component {
           <select
             name={DEGREE_PROGRAMS_ID}
             id={DEGREE_PROGRAMS_ID}
-            value={degreeProgram}
+            value={degreeProgram.id}
             onChange={this.onDegreeProgramsChange}
           >
             { degreePrograms.map(dp => <option key={dp.id} value={dp.id}>{dp.name.fi}</option>) }
           </select>
         </label>
-      </div>
+      </form>
     );
   }
 
@@ -118,12 +129,16 @@ class Main extends Component {
     const {
       degreeProgram, academicYear
     } = this.state;
-    if (!academicYear) {
+    if (!academicYear || !degreeProgram.name) {
       return <div>Ei lukuvuosia</div>;
     }
-    console.log(degreeProgram);
     return (
       <div>
+        <DegreeProgram
+          key={degreeProgram.id}
+          degreeProgram={degreeProgram}
+          academicYear={academicYear}
+        />
         <Element
           key={degreeProgram.id}
           id={degreeProgram.id}

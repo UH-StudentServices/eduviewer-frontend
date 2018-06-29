@@ -53,3 +53,9 @@ export const elemType = shape({
   type: string.isRequired,
   universityOrgIds: arrayOf(string).isRequired
 });
+
+export const degreeProgramType = shape({
+  id: string.isRequired,
+  name: localizedTextType,
+  rule: ruleType.isRequired
+});
