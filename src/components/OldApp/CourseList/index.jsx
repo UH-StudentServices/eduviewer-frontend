@@ -1,19 +1,24 @@
 /* eslint-disable */
 
 import React, { Component } from 'react';
+
 import { fetchCourseNames } from '../../../api';
+import ErrorMessage from '../../ErrorMessage';
+import { isEqual } from '../utils';
 
 export default class CourseList extends Component {
   constructor(props) {
     super(props);
-    this.state = { courseNames: [] };
+    this.state = { courseNames: [], error: undefined };
   }
 
   componentDidMount() {
     const { ids, lv } = this.props;
 
     if (ids != null && ids.length > 0) {
-      fetchCourseNames(lv, ids).then(courseNames => this.setState({ courseNames }));
+      fetchCourseNames(lv, ids)
+        .then(courseNames => this.setState({ courseNames }))
+        .catch(error => this.setState({ error: error.message }));
     }
   }
 
@@ -23,11 +28,19 @@ export default class CourseList extends Component {
       return;
     }
 
-    fetchCourseNames(lv, ids).then(courseNames => this.setState({ courseNames }));
+    fetchCourseNames(lv, ids)
+      .then(courseNames => this.setState({ courseNames }))
+      .catch(error => this.setState({ error: error.message }));
   }
 
 
   render() {
+    const { error } = this.state;
+
+    if (error) {
+      return <ErrorMessage errorMessage={error} />
+    }
+
     const courseNames = this.state.courseNames.map((node, index) => (
       <li key={`${index}${node.name.fi}`}>
         {node.code}
