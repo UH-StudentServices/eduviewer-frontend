@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { arrayOf, shape, string } from 'prop-types';
+import { string } from 'prop-types';
 
-import { creditsType, localizedTextType } from '../../types';
+import { creditsType, localizedTextType, ruleType } from '../../types';
 import { fetchCourseNames } from '../../api';
 import Course from '../Course';
 import ErrorMessage from '../ErrorMessage';
@@ -23,10 +23,10 @@ export default class StudyModule extends Component {
   }
 
   fetchCourses() {
-    const { academicYear, rules } = this.props;
-    const courseUnitIds = rules
-      .filter(rule => rule.type === 'CourseUnitRule')
-      .map(rule => rule.courseUnitGroupId);
+    const { academicYear, rule } = this.props;
+    const courseUnitIds = rule.rules
+      .filter(subRule => subRule.type === 'CourseUnitRule')
+      .map(subRule => subRule.courseUnitGroupId);
 
     fetchCourseNames(academicYear, courseUnitIds)
       .then(courses => this.setState({ courses }))
@@ -64,10 +64,5 @@ StudyModule.propTypes = {
   name: localizedTextType.isRequired,
   targetCredits: creditsType.isRequired,
   code: string.isRequired,
-  rules: arrayOf(
-    shape({
-      type: string.isRequired,
-      courseUnitGroupId: string.isRequired
-    })
-  ).isRequired
+  rule: ruleType.isRequired
 };
