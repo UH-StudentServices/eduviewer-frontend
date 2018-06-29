@@ -1,8 +1,9 @@
 import React from 'react';
-import { shape, string } from 'prop-types';
+import { string } from 'prop-types';
 
-import CompositeRule from '../CompositeRule/index'; // eslint-disable-line
+import CompositeRule from '../CompositeRule'; // eslint-disable-line
 import { parseRuleData } from '../utils';
+import { elemType, ruleType } from '../../../types';
 
 const renderCreditsRow = (credits) => {
   const { max, min } = credits;
@@ -18,7 +19,7 @@ const Rule = (props) => {
     const rulesData = parseRuleData(rule);
     const { anyMR, anyCUR, creditsRules } = rulesData;
     return (
-      <CompositeRule key={rule.id} rule={rule} lv={lv} elem={elem}>
+      <CompositeRule key={rule.id} rule={rule} academicYear={lv} elem={elem}>
         {rulesData.anyMR != null
           && <Rule key={anyMR.localId} rule={anyMR} lv={lv} elem={elem} />}
         {rulesData.anyCUR != null
@@ -52,11 +53,9 @@ const Rule = (props) => {
 };
 
 Rule.propTypes = {
-  rule: shape({
-    id: string.isRequired
-  }).isRequired,
+  rule: ruleType.isRequired,
   lv: string.isRequired,
-  elem: shape({}).isRequired
+  elem: elemType.isRequired
 };
 
 export default Rule;

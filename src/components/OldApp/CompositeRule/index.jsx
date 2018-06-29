@@ -1,26 +1,29 @@
 import React, { Component } from 'react';
-import { shape, string, node } from 'prop-types';
+import { string, node } from 'prop-types';
 
 import CourseList from '../CourseList/index';
 import Dropdown from '../Dropdown/index'; // eslint-disable-line
 import ElementList from '../ElementList/index'; // eslint-disable-line
 
 import { isNotEmpty, isViewAllEnabled, parseRuleData } from '../utils/index';
+import { elemType, ruleType } from '../../../types/index';
 
 export default class CompositeRule extends Component {
   createMarkUp = rule => ({ __html: rule.description.fi });
 
-  renderModules = (rule, rulesData) => {
-    const { elem, lv } = this.props;
+  shouldRenderDropdown() {
+    const { elem } = this.props;
     const name = elem.name.fi.toLowerCase();
-    const dropDownTime = (name === 'opintosuunta'
-      || name === 'stuydy track')
-      || (name === 'vieras kieli'
-      || name === 'foreign language');
+    return ['opintosuunta', 'study track', 'vieras kieli', 'foreign language'].includes(name);
+  }
+
+  renderModules = (rule, rulesData) => {
+    const { academicYear } = this.props;
+    const shouldRenderDropdown = this.shouldRenderDropdown();
 
     return (
       <div>
-        { !isViewAllEnabled() && dropDownTime
+        { !isViewAllEnabled() && shouldRenderDropdown
         && (
           <li>
             <Dropdown
@@ -28,18 +31,18 @@ export default class CompositeRule extends Component {
               rule={rule}
               id={`dd-${rule.localId}`}
               ids={rulesData.modules}
-              lv={lv}
+              lv={academicYear}
             />
           </li>
         )
         }
-        { !isViewAllEnabled() && !dropDownTime
+        { !isViewAllEnabled() && !shouldRenderDropdown
         && (
           <ElementList
             key={`mods-${rule.localId}`}
             id={`mods-${rule.localId}`}
             ids={rulesData.modules}
-            lv={lv}
+            lv={academicYear}
             rule={rule}
           />
         )
@@ -50,7 +53,7 @@ export default class CompositeRule extends Component {
             key={`mods-${rule.localId}`}
             id={`mods-${rule.localId}`}
             ids={rulesData.modules}
-            lv={lv}
+            lv={academicYear}
             rule={rule}
           />
         )
@@ -60,8 +63,8 @@ export default class CompositeRule extends Component {
   };
 
   renderCourses(rule, rulesData) {
-    const { lv } = this.props;
-    return <CourseList key={`cu-${rule.id}`} ids={rulesData.courses} lv={lv} />;
+    const { academicYear } = this.props;
+    return <CourseList key={`cu-${rule.id}`} ids={rulesData.courses} lv={academicYear} />;
   }
 
   render() {
@@ -94,10 +97,8 @@ export default class CompositeRule extends Component {
 }
 
 CompositeRule.propTypes = {
-  lv: string.isRequired,
+  academicYear: string.isRequired,
   children: node.isRequired,
-  rule: shape({
-    name: string.isRequired
-  }).isRequired,
-  elem: shape({}).isRequired
+  rule: ruleType.isRequired,
+  elem: elemType.isRequired
 };

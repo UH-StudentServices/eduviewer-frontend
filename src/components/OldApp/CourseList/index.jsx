@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import { fetchCourseNames } from '../../../api';
 import ErrorMessage from '../../ErrorMessage';
 import { isEqual } from '../utils';
+import Course from '../../Course';
 
 export default class CourseList extends Component {
   constructor(props) {
@@ -35,41 +36,22 @@ export default class CourseList extends Component {
 
 
   render() {
-    const { error } = this.state;
+    const { error, courseNames } = this.state;
 
     if (error) {
       return <ErrorMessage errorMessage={error} />
     }
 
-    const courseNames = this.state.courseNames.map((node, index) => (
-      <li key={`${index}${node.name.fi}`}>
-        {node.code}
-        {' '}
-        {node.name.fi}
-        &nbsp;
-        (
-        {(node.credits.min == node.credits.max)
-          ? (
-            <b>
-              {node.credits.min}
-            </b>
-          )
-          : (
-            <b>
-              {node.credits.min}
-              -
-              {node.credits.max}
-            </b>
-          )}
-        <b>
-          op
-        </b>
-        )
-      </li>
-    ));
     return (
       <ul>
-        {courseNames}
+        {courseNames.map((node, index) => (
+          <Course
+            key={`${index}${node.name.fi}`}
+            code={node.code}
+            name={node.name}
+            credits={node.credits}
+          />
+        ))}
       </ul>
     );
   }
