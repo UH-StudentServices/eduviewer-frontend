@@ -103,6 +103,24 @@ module.exports = {
             loader: 'postcss-loader'
           }
         ]
+      },
+      {
+        test: /\.(eot|svg|ttf|woff|woff2)$/,
+        include: /\/uh-living-styleguide\//,
+        use: 'file-loader?name=fonts/[name]-[hash].[ext]'
+      },
+
+      {
+        test: /\.(jpe?g|png|gif|svg)$/,
+        exclude: /\/fonts?\//,
+        use: {
+          loader: 'url-loader',
+          options: {
+            // inline images below 16kb
+            limit: 16384,
+            name: 'images/[name]-[hash].[ext]'
+          }
+        }
       }
     ]
   },
