@@ -4,43 +4,42 @@ import React from 'react';
 
 import Element from '../Element/index';
 import { isEqual, qs } from '../utils/index';
+import { fetchAllIdsJson } from '../../../api';
+import ErrorMessage from '../../ErrorMessage';
 
 export default class ElementList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { elements: [] };
+    this.state = { elements: [], error: undefined };
   }
 
   componentDidMount() {
-    if (this.props.ids != null && this.props.ids.length > 0) {
-      fetch(`/api/all_ids?lv=${this.props.lv == undefined ? '' : this.props.lv}`, {
-        method: 'post',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.props.ids)
-      }).then(response => response.json()).then((responseJson) => {
-        this.setState({ elements: responseJson });
-      });
+    const { lv, ids } = this.props;
+
+    if (ids != null && ids.length > 0) {
+      this.fetchData(lv, ids);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (isEqual(this.props, nextProps)) {
-      return;
+    if (!isEqual(this.props, nextProps)) {
+      this.fetchData(nextProps.lv, nextProps.ids);
     }
-    fetch(`/api/all_ids?lv=${nextProps.lv == undefined ? '' : nextProps.lv}`, {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(nextProps.ids)
-    }).then(response => response.json()).then((responseJson) => {
-      this.setState({ elements: responseJson });
-    });
   }
 
-
-  componentDidUpdate() {
+  fetchData(lv, ids) {
+    fetchAllIdsJson(lv, ids)
+      .then(elements => this.setState({ elements }))
+      .catch(error => this.setState({ error }));
   }
 
   render() {
+    const { error } = this.state;
+
+    if (error) {
+      return <ErrorMessage errorMessage={error} />
+    }
+
     const elements = this.state.elements.map(elem => <Element key={elem.id} id={elem.id} elem={elem} lv={this.props.lv} />);
     return (
       <div>
