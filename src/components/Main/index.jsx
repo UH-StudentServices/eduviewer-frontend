@@ -6,6 +6,7 @@ import {
   getDegreeProgramForAcademicYear
 } from '../../api';
 
+import Element from '../OldApp/Element';
 import styles from './main.css';
 
 const DEFAULT_ACADEMIC_YEAR = 'hy-lv-68';
@@ -113,6 +114,26 @@ class Main extends Component {
     );
   }
 
+  renderContent = () => {
+    const {
+      degreeProgram, academicYear
+    } = this.state;
+    if (!academicYear) {
+      return <div>Ei lukuvuosia</div>;
+    }
+    console.log(degreeProgram);
+    return (
+      <div>
+        <Element
+          key={degreeProgram.id}
+          id={degreeProgram.id}
+          elem={degreeProgram}
+          lv={academicYear}
+        />
+      </div>
+    );
+  }
+
   render() {
     const { isLoading } = this.state;
 
@@ -121,6 +142,7 @@ class Main extends Component {
         <main>
           {isLoading && this.renderLoader()}
           { this.renderSelections()}
+          { this.renderContent()}
         </main>
       </div>
     );
