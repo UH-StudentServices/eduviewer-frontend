@@ -16,6 +16,20 @@ const postForJson = (path, body) => fetch(path, {
   body
 });
 
-export const fetchAllIdsJson = (lv = '', ids) => postForJson(`/api/all_ids?lv=${lv}`, JSON.stringify(ids));
+const getJson = path => fetch(path, {
+  headers: {
+    Accept: 'application/json'
+  }
+});
 
-export const fetchCourseNames = (lv = '', ids) => postForJson(`/api/cu/names?lv=${lv}`, JSON.stringify(ids));
+export const getDegreePrograms = () => getJson('/api/educations');
+
+export const getAcademicYearsForDegreeProgram = degreeProgram => getJson(`/api/available_lvs/${degreeProgram}`);
+
+export const getAcademicYearNames = () => getJson('/api/lv_names');
+
+export const getDegreeProgramForAcademicYear = (degreeProgramId, academicYear) => getJson(`/api/by_id/${degreeProgramId}?lv=${academicYear}`);
+
+export const fetchAllIdsJson = (academicYear = '', ids) => postForJson(`/api/all_ids?lv=${academicYear}`, JSON.stringify(ids));
+
+export const fetchCourseNames = (academicYear = '', ids) => postForJson(`/api/cu/names?lv=${academicYear}`, JSON.stringify(ids));
