@@ -47,6 +47,7 @@ module.exports = {
   context: path.join(__dirname, 'src'),
   entry: [
     'react-hot-loader/patch',
+    'babel-polyfill',
     './app'
   ],
   output: {
