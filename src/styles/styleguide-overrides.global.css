@@ -12,7 +12,3 @@ li {
 li:last-child {
   border: none;
 }
-
-.hidden {
-  display: none;
-}
