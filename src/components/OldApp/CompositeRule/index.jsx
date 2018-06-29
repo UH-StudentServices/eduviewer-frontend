@@ -62,7 +62,7 @@ export default class CompositeRule extends Component {
     );
   };
 
-  renderCourses(rule, rulesData) {
+  renderCourses = (rule, rulesData) => {
     const { academicYear } = this.props;
     return <CourseList key={`cu-${rule.id}`} ids={rulesData.courses} lv={academicYear} />;
   }
@@ -92,6 +92,7 @@ export default class CompositeRule extends Component {
         {rulesData.modules.length > 0 && this.renderModules(rule, rulesData)}
         {children}
       </div>
+
     );
   }
 }
