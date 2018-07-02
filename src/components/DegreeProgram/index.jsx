@@ -36,7 +36,6 @@ class DegreeProgram extends Component {
   }
 
   render() {
-    console.log(this.state);
     const { academicYear, degreeProgram, showAll } = this.props;
     const { isLoading, moduleGroups } = this.state;
     const { name } = degreeProgram;
