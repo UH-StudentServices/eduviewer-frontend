@@ -19,7 +19,8 @@ class Main extends Component {
     academicYearNames: {},
     isLoading: false,
     degreeProgram: {},
-    academicYear: ''
+    academicYear: '',
+    showAll: false
   }
 
   async componentDidMount() {
@@ -69,6 +70,11 @@ class Main extends Component {
     });
   }
 
+  onShowAll = () => {
+    const { showAll } = this.state;
+    this.setState({ showAll: !showAll });
+  }
+
   getAcademicYear = (academicYears) => {
     const { academicYear: oldSelection } = this.state;
 
@@ -84,7 +90,13 @@ class Main extends Component {
 
   renderSelections = () => {
     const {
-      degreeProgram, degreePrograms, academicYears, academicYearNames, academicYear, isLoading
+      degreeProgram,
+      degreePrograms,
+      academicYears,
+      academicYearNames,
+      academicYear,
+      isLoading,
+      showAll
     } = this.state;
 
     if (isLoading) {
@@ -92,9 +104,21 @@ class Main extends Component {
     }
     const ACADEMIC_YEARS_ID = 'academicYear';
     const DEGREE_PROGRAMS_ID = 'degreePrograms';
+    const SHOW_ALL_ID = 'showAll';
 
     return (
-      <form>
+      <div>
+        <label htmlFor={DEGREE_PROGRAMS_ID}>
+          Koulutusohjelmat
+          <select
+            name={DEGREE_PROGRAMS_ID}
+            id={DEGREE_PROGRAMS_ID}
+            value={degreeProgram.id}
+            onChange={this.onDegreeProgramsChange}
+          >
+            { degreePrograms.map(dp => <option key={dp.id} value={dp.id}>{dp.name.fi}</option>) }
+          </select>
+        </label>
         <label htmlFor={ACADEMIC_YEARS_ID}>
           Lukuvuodet
           <select
@@ -110,18 +134,16 @@ class Main extends Component {
             ))}
           </select>
         </label>
-        <label htmlFor={DEGREE_PROGRAMS_ID}>
-          Koulutusohjelmat
-          <select
-            name={DEGREE_PROGRAMS_ID}
-            id={DEGREE_PROGRAMS_ID}
-            value={degreeProgram.id}
-            onChange={this.onDegreeProgramsChange}
-          >
-            { degreePrograms.map(dp => <option key={dp.id} value={dp.id}>{dp.name.fi}</option>) }
-          </select>
+        <label htmlFor={SHOW_ALL_ID}>
+          Näytä kaikki
+          <input
+            type="checkbox"
+            id={SHOW_ALL_ID}
+            value={showAll}
+            onChange={this.onShowAll}
+          />
         </label>
-      </form>
+      </div>
     );
   }
 
