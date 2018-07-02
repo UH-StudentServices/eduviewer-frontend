@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { string } from 'prop-types';
 
 import { elemType } from '../../types';
@@ -6,6 +6,7 @@ import { fetchAllIdsJson } from '../../api';
 import { rules, modules } from '../../constants';
 import StudyModule from '../StudyModule'; // eslint-disable-line
 import CourseUnitRule from '../CourseUnitRule';
+import { creditsToString } from '../../utils';
 
 const {
   ANY_COURSE_UNIT_RULE, ANY_MODULE_RULE, COMPOSITE_RULE, COURSE_UNIT_RULE,
@@ -72,7 +73,12 @@ export default class GroupingModule extends Component {
     }
 
     if (rule.type === CREDITS_RULE) {
-      return this.renderRule(rule.rule);
+      return (
+        <Fragment>
+          <div>Valitse {creditsToString(rule.credits)} op</div>
+          {this.renderRule(rule.rule)}
+        </Fragment>
+      );
     }
 
     return null;
@@ -105,6 +111,7 @@ export default class GroupingModule extends Component {
     return (
       <div>
         <strong>{name.fi}</strong>
+        {getDescription(module)}
         {this.renderRule(rule)}
         {subModules.map(subModule => this.renderModule(subModule))}
       </div>

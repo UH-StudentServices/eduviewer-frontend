@@ -3,6 +3,7 @@ import { string } from 'prop-types';
 
 import { elemType } from '../../types';
 import { fetchAllIdsJson, fetchCourseNames } from '../../api';
+import { creditsToString } from '../../utils';
 import Course from '../Course';
 import ErrorMessage from '../ErrorMessage';
 import GroupingModule from '../GroupingModule'; // eslint-disable-line
@@ -21,8 +22,7 @@ export default class StudyModule extends Component {
   getTargetCredits() {
     const { module } = this.props;
     const { targetCredits } = module;
-    const { max, min } = targetCredits;
-    return (max === min) ? min : `${min}–${max}`;
+    return creditsToString(targetCredits);
   }
 
   fetchCourses() {
