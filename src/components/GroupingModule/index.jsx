@@ -82,7 +82,7 @@ export default class GroupingModule extends Component {
     const { academicYear } = this.props;
 
     if (module.type === GROUPING_MODULE) {
-      return <GroupingModule academicYear={academicYear} module={module} />;
+      return <GroupingModule key={module.localId} academicYear={academicYear} module={module} />;
     }
     if (module.type === STUDY_MODULE) {
       return (

@@ -9,7 +9,6 @@ import {
 import DegreeProgram from '../DegreeProgram';
 import Element from '../OldApp/Element';
 import styles from './main.css';
-import GroupingModule from '../GroupingModule';
 
 const DEFAULT_ACADEMIC_YEAR = 'hy-lv-68';
 
@@ -175,54 +174,12 @@ class Main extends Component {
   render() {
     const { isLoading } = this.state;
 
-    const groupingModule = {
-      metadata: {
-        revision: 85,
-        createdBy: 'hy.i',
-        createdOn: '2017-04-21T06:23:31.597',
-        lastModifiedBy: 'hkahlos@helsinki.fi',
-        lastModifiedOn: '2017-09-07T07:41:11.559',
-        modificationOrdinal: 4334987
-      },
-      id: 'hy-GM-114256325-2017-tieteenala',
-      documentState: 'ACTIVE',
-      universityOrgIds: ['hy-university-root-id'],
-      groupId: 'hy-GM-114256325-2017-tieteenala',
-      name: {
-        en: 'Discipline-specific studies',
-        fi: 'Tieteenalan opinnot',
-        sv: 'Studier inom vetenskapsområdet'
-      },
-      moduleContentApprovalRequired: false,
-      code: null,
-      curriculumPeriodIds: [],
-      type: 'GroupingModule',
-      rule: {
-        type: 'CompositeRule',
-        localId: '8e554dd5-d285-42f7-aaf1-48b4bfffba58',
-        rules: [{
-          type: 'ModuleRule',
-          localId: 'otm-b998798a-7ccc-4ef5-be11-c6ecfbc7f569',
-          moduleGroupId: 'hy-SM-118024353'
-        }, {
-          type: 'ModuleRule',
-          localId: 'otm-4c2371bb-d26d-42f9-aad6-4ab24b1fbf07',
-          moduleGroupId: 'hy-SM-118024481'
-        }],
-        require: null,
-        description: null,
-        allMandatory: true
-      }
-    };
-
     return (
       <div>
         <main>
           {isLoading && this.renderLoader()}
           { this.renderSelections()}
           { this.renderContent()}
-
-          <GroupingModule academicYear="hy-lv-68" module={groupingModule} />
         </main>
       </div>
     );

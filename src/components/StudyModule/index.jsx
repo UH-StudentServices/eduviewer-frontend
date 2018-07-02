@@ -29,6 +29,12 @@ export default class StudyModule extends Component {
     const { academicYear, module } = this.props;
     const { rule } = module;
 
+    if (!rule || !rule.rules) {
+      console.log('courses not fecthed. check module');
+      console.log(module);
+      return;
+    }
+
     const moduleGroupIds = rule.rules
       .filter(subRule => subRule.type === 'ModuleRule')
       .map(subRule => subRule.moduleGroupId);
