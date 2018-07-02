@@ -1,0 +1,13 @@
+.loaderContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.labelText {
+  font-size: 1.125em;
+  color: var(--lightGray);
+  font-weight: 300;
+  line-height: 2.4em;
+  padding: 0;
+  margin: 0;
+}

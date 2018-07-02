@@ -1,0 +1,33 @@
+:root {
+  font-size: 16px;
+}
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+#root {
+  height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: unset;
+  line-height: unset;
+}

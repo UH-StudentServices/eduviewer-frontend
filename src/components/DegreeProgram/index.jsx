@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { string } from 'prop-types';
+import { string, bool } from 'prop-types';
 import { degreeProgramType } from '../../types';
 import { fetchAllIdsJson } from '../../api';
 import { rules } from '../../constants';
 
-import styles from './degreeProgram.css';
 import GroupingModule from '../GroupingModule';
+import Loader from '../Loader';
+
+import styles from './degreeProgram.css';
 
 class DegreeProgram extends Component {
   state = {
@@ -13,46 +15,58 @@ class DegreeProgram extends Component {
     moduleGroups: []
   }
 
-  async componentDidMount() {
-    this.setState({ isLoading: true });
+  componentDidMount() {
     this.fetchRules();
   }
 
-  fetchRules() {
+  async fetchRules() {
+    this.setState({ isLoading: true });
     const { academicYear, degreeProgram } = this.props;
-    const modules = degreeProgram.rule.rules.filter(rule => rule.type === rules.MODULE_RULE);
+    const { rule } = degreeProgram;
 
-    fetchAllIdsJson(academicYear, modules.map(module => module.moduleGroupId))
-      .then(moduleGroups => this.setState({ moduleGroups, isLoading: false }));
+    const isModuleRule = r => r.type === rules.MODULE_RULE;
+
+    const moduleGroupIds = rule.rules
+      ? rule.rules.filter(isModuleRule).map(module => module.moduleGroupId)
+      : [isModuleRule(rule) && module.moduleGroupId];
+
+    const moduleGroups = await fetchAllIdsJson(academicYear, moduleGroupIds);
+
+    this.setState({ moduleGroups, isLoading: false });
   }
 
   render() {
-    const { academicYear, degreeProgram } = this.props;
+    console.log(this.state);
+    const { academicYear, degreeProgram, showAll } = this.props;
     const { isLoading, moduleGroups } = this.state;
     const { name } = degreeProgram;
 
     return (
       <div className={styles.degreeProgram}>
-        <b>{name.fi}</b>
+        <h4>{name.fi}</h4>
         {
-          isLoading && <div>loading...</div>
+          isLoading && <Loader />
         }
-        {
-          moduleGroups.map(group => (
-            <GroupingModule
-              key={group.code}
-              academicYear={academicYear}
-              module={group}
-            />
-          ))
-        }
+        <div className={styles.moduleGroups}>
+          { showAll && <div>SHOW ALL TOGGLED</div>}
+          {
+            moduleGroups.map(group => (
+              <GroupingModule
+                key={group.code}
+                academicYear={academicYear}
+                module={group}
+              />
+            ))
+          }
+        </div>
       </div>);
   }
 }
 
 DegreeProgram.propTypes = {
   academicYear: string.isRequired,
-  degreeProgram: degreeProgramType.isRequired
+  degreeProgram: degreeProgramType.isRequired,
+  showAll: bool.isRequired
 };
 
 export default DegreeProgram;
