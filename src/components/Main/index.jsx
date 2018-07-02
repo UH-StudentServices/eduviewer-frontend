@@ -7,8 +7,10 @@ import {
 } from '../../api';
 
 import DegreeProgram from '../DegreeProgram';
-import Element from '../OldApp/Element';
+import LoaderDropdown from '../LoaderDropdown';
+
 import styles from './main.css';
+import ToggleSelect from '../ToggleSelect';
 
 const DEFAULT_ACADEMIC_YEAR = 'hy-lv-68';
 
@@ -30,12 +32,13 @@ class Main extends Component {
     );
 
     const degreePrograms = degreeProgramsResponse.educations;
-    console.log(degreePrograms[0].id);
-    const academicYears = await getAcademicYearsForDegreeProgram(degreePrograms[0].id);
+    const degreeProgram = degreePrograms[0];
+    const academicYears = await getAcademicYearsForDegreeProgram(degreeProgram.id);
     const academicYear = this.getAcademicYear(academicYears);
 
     this.setState({
       degreePrograms,
+      degreeProgram,
       academicYear,
       academicYearNames,
       academicYears,
@@ -60,9 +63,11 @@ class Main extends Component {
 
   onAcademicYearsChange = async (event) => {
     const { degreeProgram: { id } } = this.state;
+
     this.setState({ isLoading: true });
     const academicYear = event.target.value;
     const degreeProgram = await getDegreeProgramForAcademicYear(id, academicYear);
+
     this.setState({
       degreeProgram,
       academicYear,
@@ -82,11 +87,6 @@ class Main extends Component {
     return isOldSelectionValid ? oldSelection : DEFAULT_ACADEMIC_YEAR;
   }
 
-  renderLoader = () => (
-    <div className={styles.loader}>
-      <span className="icon--spinner icon-spin" />
-    </div>
-  )
 
   renderSelections = () => {
     const {
@@ -95,89 +95,75 @@ class Main extends Component {
       academicYears,
       academicYearNames,
       academicYear,
-      isLoading,
-      showAll
+      showAll,
+      isLoading
     } = this.state;
 
-    if (isLoading) {
-      return null;
-    }
+    const getOption = (id, value, text) => ({ id, value, text });
+
     const ACADEMIC_YEARS_ID = 'academicYear';
     const DEGREE_PROGRAMS_ID = 'degreePrograms';
-    const SHOW_ALL_ID = 'showAll';
+    const degreeProgramOptions = degreePrograms.map(dp => getOption(dp.id, dp.id, dp.name.fi));
+    const academicYearOptions = academicYears.map(ay => getOption(ay, ay, academicYearNames[ay]));
+
+    const academicYearsLabel = 'Lukuvuodet';
+    const degreeProgramsLabel = 'Koulutusohjelmat';
+    const showAllLabel = 'Näytä kaikki';
 
     return (
-      <div>
-        <label htmlFor={DEGREE_PROGRAMS_ID}>
-          Koulutusohjelmat
-          <select
-            name={DEGREE_PROGRAMS_ID}
-            id={DEGREE_PROGRAMS_ID}
-            value={degreeProgram.id}
-            onChange={this.onDegreeProgramsChange}
-          >
-            { degreePrograms.map(dp => <option key={dp.id} value={dp.id}>{dp.name.fi}</option>) }
-          </select>
-        </label>
-        <label htmlFor={ACADEMIC_YEARS_ID}>
-          Lukuvuodet
-          <select
-            name={ACADEMIC_YEARS_ID}
-            id={ACADEMIC_YEARS_ID}
-            value={academicYear}
-            onChange={this.onAcademicYearsChange}
-          >
-            {academicYears.map(ay => (
-              <option key={ay} value={ay}>
-                {academicYearNames[ay]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label htmlFor={SHOW_ALL_ID}>
-          Näytä kaikki
-          <input
-            type="checkbox"
-            id={SHOW_ALL_ID}
-            value={showAll}
-            onChange={this.onShowAll}
-          />
-        </label>
+      <div className={styles.selectContainer}>
+        <LoaderDropdown
+          id={DEGREE_PROGRAMS_ID}
+          value={degreeProgram.id}
+          onChange={this.onDegreeProgramsChange}
+          options={degreeProgramOptions}
+          label={degreeProgramsLabel}
+          isLoading={isLoading}
+        />
+        <LoaderDropdown
+          id={ACADEMIC_YEARS_ID}
+          value={academicYear}
+          onChange={this.onAcademicYearsChange}
+          options={academicYearOptions}
+          label={academicYearsLabel}
+          isLoading={isLoading}
+        />
+        <ToggleSelect
+          onChange={this.onShowAll}
+          checked={showAll}
+          label={showAllLabel}
+        />
       </div>
     );
   }
 
   renderContent = () => {
-    const {
-      degreeProgram, academicYear
-    } = this.state;
-    if (!academicYear || !degreeProgram.name) {
-      return <div>Ei lukuvuosia</div>;
-    }
+    const { degreeProgram, academicYear, showAll } = this.state;
+
+    const hasContent = academicYear && degreeProgram.name;
+
     return (
-      <div>
-        <DegreeProgram
-          key={degreeProgram.id}
-          degreeProgram={degreeProgram}
-          academicYear={academicYear}
-        />
-        <Element
-          key={degreeProgram.id}
-          id={degreeProgram.id}
-          elem={degreeProgram}
-          lv={academicYear}
-        />
+      <div className={styles.contentContainer}>
+        {hasContent
+          ? (
+            <DegreeProgram
+              key={degreeProgram.id}
+              degreeProgram={degreeProgram}
+              academicYear={academicYear}
+              showAll={showAll}
+            />
+          )
+          : <div>Ei näytettävää koulutusohjelmaa</div>
+        }
       </div>
     );
   }
 
   render() {
-    const { isLoading } = this.state;
-
     return (
       <div>
-        <main>
-          {isLoading && this.renderLoader()}
+        <main className={styles.mainContainer}>
+          <h2>Eduviewer</h2>
           { this.renderSelections()}
           { this.renderContent()}
         </main>

@@ -1,4 +1,7 @@
 .degreeProgram {
   padding-bottom: 2em;
-  border-bottom: 0.2em red dashed;
+}
+
+.moduleGroups {
+  padding-left: 1em;
 }
