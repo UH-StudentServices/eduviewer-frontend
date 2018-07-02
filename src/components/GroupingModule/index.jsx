@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { string } from 'prop-types';
+
 import { elemType } from '../../types';
 import { fetchAllIdsJson } from '../../api';
 import StudyModule from '../StudyModule'; // eslint-disable-line
+import CourseUnitRule from '../CourseUnitRule';
 
 const getDescription = (rule) => {
   const { description } = rule;
@@ -33,6 +35,8 @@ export default class GroupingModule extends Component {
   }
 
   renderRule = (rule) => {
+    const { academicYear } = this.props;
+
     if (rule.type === 'CompositeRule') {
       return (
         <div>
@@ -51,18 +55,43 @@ export default class GroupingModule extends Component {
     }
 
     if (rule.type === 'CourseUnitRule') {
-      return <li>Course unit rule</li>;
+      return (
+        <CourseUnitRule
+          key={rule.localId}
+          academicYear={academicYear}
+          code={rule.courseUnitGroupId}
+        />
+      );
     }
 
     if (rule.type === 'CreditsRule') {
-      console.log(rule);
+      return this.renderRule(rule.rule);
     }
 
     return null;
   };
 
+  renderModule = (module) => {
+    const { academicYear } = this.props;
+
+    if (module.type === 'GroupingModule') {
+      return <GroupingModule academicYear={academicYear} module={module} />;
+    }
+    if (module.type === 'StudyModule') {
+      return (
+        <StudyModule
+          key={module.code}
+          academicYear={academicYear}
+          module={module}
+        />
+      );
+    }
+    console.log('warning: module not rendered');
+    return null;
+  };
+
   render() {
-    const { academicYear, module } = this.props;
+    const { module } = this.props;
     const { subModules } = this.state;
     const { name, rule } = module;
 
@@ -70,22 +99,7 @@ export default class GroupingModule extends Component {
       <div>
         <strong>{name.fi}</strong>
         {this.renderRule(rule)}
-        {subModules.map((subModule) => {
-          if (subModule.type === 'GroupingModule') {
-            return <GroupingModule academicYear={academicYear} module={subModule} />;
-          }
-          if (subModule.type === 'StudyModule') {
-            return (
-              <StudyModule
-                key={subModule.code}
-                academicYear={academicYear}
-                module={subModule}
-              />
-            );
-          }
-          console.log('not rendered');
-          return null;
-        })}
+        {subModules.map(subModule => this.renderModule(subModule))}
       </div>
     );
   }
