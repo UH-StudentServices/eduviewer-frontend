@@ -7,12 +7,15 @@ import { rules, modules } from '../../constants';
 import StudyModule from '../StudyModule'; // eslint-disable-line
 import CourseUnitRule from '../CourseUnitRule';
 import { creditsToString } from '../../utils';
+import DropdownModule from '../DropdownModule';
 
 const {
   ANY_COURSE_UNIT_RULE, ANY_MODULE_RULE, COMPOSITE_RULE, COURSE_UNIT_RULE,
   CREDITS_RULE, MODULE_RULE
 } = rules;
 const { GROUPING_MODULE, STUDY_MODULE } = modules;
+
+const DROPDOWN_MODULES = ['opintosuunta', 'study track', 'vieras kieli', 'foreign language'];
 
 const getDescription = (rule) => {
   const { description } = rule;
@@ -104,9 +107,18 @@ export default class GroupingModule extends Component {
   };
 
   render() {
-    const { module } = this.props;
+    const { academicYear, module } = this.props;
     const { subModules } = this.state;
     const { name, rule } = module;
+
+    if (DROPDOWN_MODULES.includes(module.name.fi.toLowerCase())) {
+      return (
+        <div>
+          <strong>{name.fi}</strong>
+          <DropdownModule academicYear={academicYear} rule={module.rule} />
+        </div>
+      );
+    }
 
     return (
       <div>
