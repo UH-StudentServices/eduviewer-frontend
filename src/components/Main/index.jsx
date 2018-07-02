@@ -6,6 +6,7 @@ import {
   getDegreeProgramForAcademicYear
 } from '../../api';
 
+import DegreeProgram from '../DegreeProgram';
 import Element from '../OldApp/Element';
 import styles from './main.css';
 
@@ -17,8 +18,9 @@ class Main extends Component {
     academicYears: [],
     academicYearNames: {},
     isLoading: false,
-    degreeProgram: '',
-    academicYear: ''
+    degreeProgram: {},
+    academicYear: '',
+    showAll: false
   }
 
   async componentDidMount() {
@@ -28,10 +30,13 @@ class Main extends Component {
     );
 
     const degreePrograms = degreeProgramsResponse.educations;
+    console.log(degreePrograms[0].id);
     const academicYears = await getAcademicYearsForDegreeProgram(degreePrograms[0].id);
+    const academicYear = this.getAcademicYear(academicYears);
 
     this.setState({
       degreePrograms,
+      academicYear,
       academicYearNames,
       academicYears,
       isLoading: false
@@ -53,9 +58,21 @@ class Main extends Component {
      });
    }
 
-  onAcademicYearsChange = (event) => {
+  onAcademicYearsChange = async (event) => {
+    const { degreeProgram: { id } } = this.state;
+    this.setState({ isLoading: true });
     const academicYear = event.target.value;
-    this.setState({ academicYear });
+    const degreeProgram = await getDegreeProgramForAcademicYear(id, academicYear);
+    this.setState({
+      degreeProgram,
+      academicYear,
+      isLoading: false
+    });
+  }
+
+  onShowAll = () => {
+    const { showAll } = this.state;
+    this.setState({ showAll: !showAll });
   }
 
   getAcademicYear = (academicYears) => {
@@ -73,7 +90,13 @@ class Main extends Component {
 
   renderSelections = () => {
     const {
-      degreeProgram, degreePrograms, academicYears, academicYearNames, academicYear, isLoading
+      degreeProgram,
+      degreePrograms,
+      academicYears,
+      academicYearNames,
+      academicYear,
+      isLoading,
+      showAll
     } = this.state;
 
     if (isLoading) {
@@ -81,9 +104,21 @@ class Main extends Component {
     }
     const ACADEMIC_YEARS_ID = 'academicYear';
     const DEGREE_PROGRAMS_ID = 'degreePrograms';
+    const SHOW_ALL_ID = 'showAll';
 
     return (
       <div>
+        <label htmlFor={DEGREE_PROGRAMS_ID}>
+          Koulutusohjelmat
+          <select
+            name={DEGREE_PROGRAMS_ID}
+            id={DEGREE_PROGRAMS_ID}
+            value={degreeProgram.id}
+            onChange={this.onDegreeProgramsChange}
+          >
+            { degreePrograms.map(dp => <option key={dp.id} value={dp.id}>{dp.name.fi}</option>) }
+          </select>
+        </label>
         <label htmlFor={ACADEMIC_YEARS_ID}>
           Lukuvuodet
           <select
@@ -99,16 +134,14 @@ class Main extends Component {
             ))}
           </select>
         </label>
-        <label htmlFor={DEGREE_PROGRAMS_ID}>
-          Koulutusohjelmat
-          <select
-            name={DEGREE_PROGRAMS_ID}
-            id={DEGREE_PROGRAMS_ID}
-            value={degreeProgram}
-            onChange={this.onDegreeProgramsChange}
-          >
-            { degreePrograms.map(dp => <option key={dp.id} value={dp.id}>{dp.name.fi}</option>) }
-          </select>
+        <label htmlFor={SHOW_ALL_ID}>
+          Näytä kaikki
+          <input
+            type="checkbox"
+            id={SHOW_ALL_ID}
+            value={showAll}
+            onChange={this.onShowAll}
+          />
         </label>
       </div>
     );
@@ -118,12 +151,16 @@ class Main extends Component {
     const {
       degreeProgram, academicYear
     } = this.state;
-    if (!academicYear) {
+    if (!academicYear || !degreeProgram.name) {
       return <div>Ei lukuvuosia</div>;
     }
-    console.log(degreeProgram);
     return (
       <div>
+        <DegreeProgram
+          key={degreeProgram.id}
+          degreeProgram={degreeProgram}
+          academicYear={academicYear}
+        />
         <Element
           key={degreeProgram.id}
           id={degreeProgram.id}
