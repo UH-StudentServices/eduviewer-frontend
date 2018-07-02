@@ -21,7 +21,8 @@ export function getSelectValues(select) {
 }
 
 export function isViewAllEnabled() {
-  return false;
+  // console.log(`is view enabled: ${document.getElementById('viewAll').checked}`);
+  // return document.getElementById('viewAll').checked;
 }
 
 export function isNotEmpty(html) {

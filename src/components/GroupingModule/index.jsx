@@ -3,8 +3,15 @@ import { string } from 'prop-types';
 
 import { elemType } from '../../types';
 import { fetchAllIdsJson } from '../../api';
+import { rules, modules } from '../../constants';
 import StudyModule from '../StudyModule'; // eslint-disable-line
 import CourseUnitRule from '../CourseUnitRule';
+
+const {
+  ANY_COURSE_UNIT_RULE, ANY_MODULE_RULE, COMPOSITE_RULE, COURSE_UNIT_RULE,
+  CREDITS_RULE, MODULE_RULE
+} = rules;
+const { GROUPING_MODULE, STUDY_MODULE } = modules;
 
 const getDescription = (rule) => {
   const { description } = rule;
@@ -20,14 +27,14 @@ export default class GroupingModule extends Component {
     const { academicYear, module } = this.props;
     const { rule } = module;
 
-    if (rule && rule.type === 'CompositeRule') {
+    if (rule && rule.type === COMPOSITE_RULE) {
       this.fetchSubmodules(module, academicYear);
     }
   }
 
   fetchSubmodules(module, academicYear) {
     const moduleIds = module.rule.rules
-      .filter(rule => rule.type === 'ModuleRule')
+      .filter(rule => rule.type === MODULE_RULE)
       .map(rule => rule.moduleGroupId);
 
     fetchAllIdsJson(academicYear, moduleIds)
@@ -37,7 +44,7 @@ export default class GroupingModule extends Component {
   renderRule = (rule) => {
     const { academicYear } = this.props;
 
-    if (rule.type === 'CompositeRule') {
+    if (rule.type === COMPOSITE_RULE) {
       return (
         <div>
           {getDescription(rule)}
@@ -46,15 +53,15 @@ export default class GroupingModule extends Component {
       );
     }
 
-    if (rule.type === 'AnyCourseUnitRule') {
+    if (rule.type === ANY_COURSE_UNIT_RULE) {
       return <li>Mikä tahansa opintojakso</li>;
     }
 
-    if (rule.type === 'AnyModuleRule') {
+    if (rule.type === ANY_MODULE_RULE) {
       return <li>Mikä tahansa opintokokonaisuus</li>;
     }
 
-    if (rule.type === 'CourseUnitRule') {
+    if (rule.type === COURSE_UNIT_RULE) {
       return (
         <CourseUnitRule
           key={rule.localId}
@@ -64,7 +71,7 @@ export default class GroupingModule extends Component {
       );
     }
 
-    if (rule.type === 'CreditsRule') {
+    if (rule.type === CREDITS_RULE) {
       return this.renderRule(rule.rule);
     }
 
@@ -74,10 +81,10 @@ export default class GroupingModule extends Component {
   renderModule = (module) => {
     const { academicYear } = this.props;
 
-    if (module.type === 'GroupingModule') {
+    if (module.type === GROUPING_MODULE) {
       return <GroupingModule academicYear={academicYear} module={module} />;
     }
-    if (module.type === 'StudyModule') {
+    if (module.type === STUDY_MODULE) {
       return (
         <StudyModule
           key={module.code}
