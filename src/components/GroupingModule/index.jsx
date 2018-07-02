@@ -4,10 +4,11 @@ import { string } from 'prop-types';
 import { elemType } from '../../types';
 import { fetchAllIdsJson } from '../../api';
 import { rules, modules } from '../../constants';
-import StudyModule from '../StudyModule'; // eslint-disable-line
-import CourseUnitRule from '../CourseUnitRule';
 import { creditsToString } from '../../utils';
-import DropdownModule from '../DropdownModule';
+
+import StudyModule from '../StudyModule'; // eslint-disable-line
+import DropdownModule from '../DropdownModule'; // eslint-disable-line
+import CourseUnitRule from '../CourseUnitRule';
 
 const {
   ANY_COURSE_UNIT_RULE, ANY_MODULE_RULE, COMPOSITE_RULE, COURSE_UNIT_RULE,
