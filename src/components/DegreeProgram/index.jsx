@@ -28,7 +28,7 @@ class DegreeProgram extends Component {
 
     const moduleGroupIds = rule.rules
       ? rule.rules.filter(isModuleRule).map(module => module.moduleGroupId)
-      : [isModuleRule(rule) && module.moduleGroupId];
+      : [isModuleRule(rule) && rule.moduleGroupId];
 
     const moduleGroups = await fetchAllIdsJson(academicYear, moduleGroupIds);
 

@@ -63,7 +63,7 @@ const LoaderDropdown = (props) => {
   const selectedValue = options.find(o => o.value === value);
   const selectedText = selectedValue ? selectedValue.text : '';
   return (
-    <div className={styles.dropdownContainer}>
+    <div>
       { isLoading
         ? <LoadingDropdown text={selectedText} {...props} />
         : <LoadedDropdown {...props} />
