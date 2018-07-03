@@ -51,7 +51,7 @@ export default class GroupingModule extends Component {
 
     if (rule.type === COMPOSITE_RULE) {
       return (
-        <div>
+        <div key={rule.localId}>
           {getDescription(rule)}
           <ul>{rule.rules.map(this.renderRule)}</ul>
         </div>
@@ -59,11 +59,11 @@ export default class GroupingModule extends Component {
     }
 
     if (rule.type === ANY_COURSE_UNIT_RULE) {
-      return <li>Mikä tahansa opintojakso</li>;
+      return <li key={rule.localId}>Mikä tahansa opintojakso</li>;
     }
 
     if (rule.type === ANY_MODULE_RULE) {
-      return <li>Mikä tahansa opintokokonaisuus</li>;
+      return <li key={rule.localId}>Mikä tahansa opintokokonaisuus</li>;
     }
 
     if (rule.type === COURSE_UNIT_RULE) {
@@ -78,7 +78,7 @@ export default class GroupingModule extends Component {
 
     if (rule.type === CREDITS_RULE) {
       return (
-        <Fragment>
+        <Fragment key={rule.localId}>
           <div>Valitse {creditsToString(rule.credits)} op</div>
           {this.renderRule(rule.rule)}
         </Fragment>
@@ -122,7 +122,7 @@ export default class GroupingModule extends Component {
 
     if (shouldRenderDropdown() && !showAll) {
       return (
-        <div>
+        <div key={module.localId}>
           <strong>{name.fi}</strong>
           <DropdownModule academicYear={academicYear} rule={module.rule} showAll={showAll} />
         </div>
@@ -130,7 +130,7 @@ export default class GroupingModule extends Component {
     }
 
     return (
-      <div>
+      <div key={module.localId}>
         <strong>{name.fi}</strong>
         {getDescription(module)}
         {this.renderRule(rule)}

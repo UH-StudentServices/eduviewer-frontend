@@ -25,10 +25,15 @@ class DegreeProgram extends Component {
     const { rule } = degreeProgram;
 
     const isModuleRule = r => r.type === rules.MODULE_RULE;
+    let moduleGroupIds;
 
-    const moduleGroupIds = rule.rules
-      ? rule.rules.filter(isModuleRule).map(module => module.moduleGroupId)
-      : [isModuleRule(rule) && module.moduleGroupId];
+    if (rule.type === rules.MODULE_RULE) {
+      moduleGroupIds = [rule.moduleGroupId];
+    } else {
+      moduleGroupIds = rule.rules
+        ? rule.rules.filter(isModuleRule).map(module => module.moduleGroupId)
+        : [isModuleRule(rule) && module.moduleGroupId];
+    }
 
     const moduleGroups = await fetchAllIdsJson(academicYear, moduleGroupIds);
 

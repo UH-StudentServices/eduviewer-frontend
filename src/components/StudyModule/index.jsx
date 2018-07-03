@@ -53,11 +53,15 @@ export default class StudyModule extends Component {
 
   render() {
     const { academicYear, module, showAll } = this.props;
-    const { name, code } = module;
+    const { name, code, rule } = module;
     const { courses, subModules, error } = this.state;
 
     if (error) {
       return <ErrorMessage errorMessage={error} />;
+    }
+
+    if (!rule || !rule.rules) {
+      return <GroupingModule academicYear={academicYear} module={module} showAll={showAll} />;
     }
 
     return (
