@@ -1,15 +1,9 @@
 .loader {
   display: flex;
-  width: 100%;
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.7);
   font-size: 2rem;
   z-index: 2;
   color: var(--darkSilver)
-}
-
-.selectLoader {
-  border: 1px solid var(--darkSilver);
-  padding: 10px;
 }

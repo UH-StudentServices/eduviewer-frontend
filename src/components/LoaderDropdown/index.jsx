@@ -1,19 +1,24 @@
 import React from 'react';
 import {
-  oneOfType, string, number, bool, func, shape, arrayOf
+  oneOfType, string, number, bool, func
 } from 'prop-types';
 import Loader from '../Loader';
+import { selectOptionsType } from '../../types';
 
 import styles from './loaderDropdown.css';
 
-const LoadingDropdown = ({ label }) => (
+const LoadingDropdown = ({ label, text }) => (
   <div className={styles.loaderContainer}>
     <span className={styles.labelText}>{label}</span>
-    <Loader isSelect />
+    <div className={styles.loadingContainer}>
+      <div className={styles.loadingText}>{text}</div>
+      <Loader />
+    </div>
   </div>);
 
 LoadingDropdown.propTypes = {
-  label: string.isRequired
+  label: string.isRequired,
+  text: string.isRequired
 };
 
 const LoadedDropdown = ({
@@ -45,11 +50,7 @@ LoadedDropdown.propTypes = {
   id: string.isRequired,
   value: oneOfType([string, number]),
   onChange: func.isRequired,
-  options: arrayOf(shape({
-    id: oneOfType([string, number]).isRequired,
-    value: oneOfType([string, number]).isRequired,
-    text: string.isRequired
-  })).isRequired,
+  options: selectOptionsType.isRequired,
   label: string.isRequired
 };
 
@@ -58,11 +59,13 @@ LoadedDropdown.defaultProps = {
 };
 
 const LoaderDropdown = (props) => {
-  const { isLoading } = props;
+  const { isLoading, value, options } = props;
+  const selectedValue = options.find(o => o.value === value);
+  const selectedText = selectedValue ? selectedValue.text : '';
   return (
     <div className={styles.dropdownContainer}>
       { isLoading
-        ? <LoadingDropdown {...props} />
+        ? <LoadingDropdown text={selectedText} {...props} />
         : <LoadedDropdown {...props} />
       }
     </div>
@@ -70,7 +73,9 @@ const LoaderDropdown = (props) => {
 };
 
 LoaderDropdown.propTypes = {
-  isLoading: bool.isRequired
+  isLoading: bool.isRequired,
+  value: oneOfType([string, number]).isRequired,
+  options: selectOptionsType.isRequired
 };
 
 export default LoaderDropdown;
