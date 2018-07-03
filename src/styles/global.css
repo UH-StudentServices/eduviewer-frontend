@@ -34,15 +34,35 @@ h6 {
 
 ul {
   list-style-type: none;
-  margin: 5px;
-  padding-left: 20px;
+  margin-bottom: 0.5em;
+  margin-top: 0.3em;
 }
 
 li {
-  border-bottom: 1px solid var(--lightGray);
-  padding-left: 20px;
+  color: black;
+  border-right: 0.1em solid var(--silver);
+  border-left: 0.1em solid var(--silver);
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+li:nth-child(odd) {
+  background-color: var(--silver);
+}
+
+li:nth-child(even) {
+  background-color: var(--white);
+}
+
+li:first-child {
+  border-top: 0.1em solid var(--silver);
 }
 
 li:last-child {
-  border: none;
+  margin-bottom: 0.5em;
+  border-bottom: 0.1em solid var(--silver);
+}
+
+strong {
+  color: var(--black);
 }

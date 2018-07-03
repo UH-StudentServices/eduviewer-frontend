@@ -1,0 +1,7 @@
+.description {
+  font-size: 1em;
+  color: var(--black);
+  font-weight: 300;
+  padding: 0.5em;
+  border: 0.1em dashed var(--blue);
+}

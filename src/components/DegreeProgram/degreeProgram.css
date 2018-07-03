@@ -4,12 +4,10 @@
 
 .moduleGroups {
   padding-left: 1em;
-  border: dashed 0.1em red;
 }
 
 .moduleGroups > div > strong {
-  font-size: 1.25em;
-  color: var(--black);
+  font-size: 1.5em;
 }
 
 .moduleGroups > div > div {
@@ -17,7 +15,9 @@
 }
 
 .moduleGroups > div > div > strong {
-  font-size: 1.15em;
-  color: var(--black);
+  font-size: 1.25em;
 }
 
+.moduleGroups > div > div > div {
+  padding-left: 1em;
+}

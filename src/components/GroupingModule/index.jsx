@@ -10,6 +10,8 @@ import StudyModule from '../StudyModule'; // eslint-disable-line
 import DropdownModule from '../DropdownModule'; // eslint-disable-line
 import CourseUnitRule from '../CourseUnitRule';
 
+import styles from './groupingModule.css';
+
 const {
   ANY_COURSE_UNIT_RULE,
   ANY_MODULE_RULE,
@@ -24,7 +26,9 @@ const DROPDOWN_MODULES = ['opintosuunta', 'study track', 'vieras kieli', 'foreig
 
 const getDescription = (rule) => {
   const { description } = rule;
-  return description ? <div dangerouslySetInnerHTML={{ __html: description.fi }} /> : null;
+  return description
+    ? <div className={styles.description} dangerouslySetInnerHTML={{ __html: description.fi }} />
+    : null;
 };
 
 export default class GroupingModule extends Component {
