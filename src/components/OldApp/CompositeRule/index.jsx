@@ -1,48 +1,48 @@
-/* eslint-disable */
-
-import React from 'react';
+import React, { Component } from 'react';
+import { string, node } from 'prop-types';
 
 import CourseList from '../CourseList/index';
-import Dropdown from '../Dropdown/index';
-import ElementList from '../ElementList/index';
-import Rule from '../Rule/index';
+import Dropdown from '../Dropdown/index'; // eslint-disable-line
+import ElementList from '../ElementList/index'; // eslint-disable-line
 
 import { isNotEmpty, isViewAllEnabled, parseRuleData } from '../utils/index';
+import { elemType, oneOfRulesType } from '../../../types';
 
-export default class CompositeRule extends React.Component {
-  constructor(props) {
-    super(props);
-    this.createMarkUp = this.createMarkUp.bind(this);
-    this.renderModules = this.renderModules.bind(this);
+export default class CompositeRule extends Component {
+  createMarkUp = rule => ({ __html: rule.description.fi });
+
+  shouldRenderDropdown() {
+    const { elem } = this.props;
+    const name = elem.name.fi.toLowerCase();
+    return ['opintosuunta', 'study track', 'vieras kieli', 'foreign language'].includes(name);
   }
 
-  isModules(array) {
-    return array.length == 0 || array[0].type == 'ModuleRule';
-  }
+  renderModules = (rule, rulesData) => {
+    const { academicYear } = this.props;
+    const shouldRenderDropdown = this.shouldRenderDropdown();
 
-  createMarkUp(rule) {
-    return { __html: rule.description.fi };
-  }
-
-  renderModules(rule, rulesData) {
-    const name = this.props.elem.name.fi.toLowerCase();
-    const dropDownTime = (name == 'opintosuunta' || name == 'stuydy track') || (name == 'vieras kieli' || name == 'foreign language');
     return (
       <div>
-        { !isViewAllEnabled() && dropDownTime
+        { !isViewAllEnabled() && shouldRenderDropdown
         && (
           <li>
-            <Dropdown key={`dd-${rule.localId}`} rule={rule} id={`dd-${rule.localId}`} ids={rulesData.modules} lv={this.props.lv} />
+            <Dropdown
+              key={`dd-${rule.localId}`}
+              rule={rule}
+              id={`dd-${rule.localId}`}
+              ids={rulesData.modules}
+              lv={academicYear}
+            />
           </li>
         )
         }
-        { !isViewAllEnabled() && !dropDownTime
+        { !isViewAllEnabled() && !shouldRenderDropdown
         && (
           <ElementList
             key={`mods-${rule.localId}`}
             id={`mods-${rule.localId}`}
             ids={rulesData.modules}
-            lv={this.props.lv}
+            lv={academicYear}
             rule={rule}
           />
         )
@@ -53,23 +53,22 @@ export default class CompositeRule extends React.Component {
             key={`mods-${rule.localId}`}
             id={`mods-${rule.localId}`}
             ids={rulesData.modules}
-            lv={this.props.lv}
+            lv={academicYear}
             rule={rule}
           />
         )
         }
       </div>
     );
-  }
+  };
 
-  renderCourses(rule, rulesData) {
-    return (
-      <CourseList key={`cu-${rule.id}`} ids={rulesData.courses} lv={this.props.lv} />
-    );
+  renderCourses = (rule, rulesData) => {
+    const { academicYear } = this.props;
+    return <CourseList key={`cu-${rule.id}`} ids={rulesData.courses} lv={academicYear} />;
   }
 
   render() {
-    const rule = this.props.rule;
+    const { rule, children } = this.props;
     const rulesData = parseRuleData(rule);
 
     if (rulesData.anyMR != null) {
@@ -84,17 +83,23 @@ export default class CompositeRule extends React.Component {
         && (
           <li>
             <i>
-              <div name="description" dangerouslySetInnerHTML={this.createMarkUp(rule)} />
+              <div dangerouslySetInnerHTML={this.createMarkUp(rule)} />
             </i>
           </li>
         )
         }
         {rulesData.courses.length > 0 && this.renderCourses(rule, rulesData)}
         {rulesData.modules.length > 0 && this.renderModules(rule, rulesData)}
-        {rulesData.anyMR != null && <Rule key={rulesData.anyMR.localId} rule={rulesData.anyMR} lv={this.props.lv} elem={this.props.elem} />}
-        {rulesData.anyCUR != null && <Rule key={rulesData.anyCUR.localId} rule={rulesData.anyCUR} lv={this.props.lv} elem={this.props.elem} />}
-        {rulesData.creditsRules.length > 0 && <Rule key={rulesData.creditsRules[0].localId} rule={rulesData.creditsRules[0]} lv={this.props.lv} elem={this.props.elem} />}
+        {children}
       </div>
+
     );
   }
 }
+
+CompositeRule.propTypes = {
+  academicYear: string.isRequired,
+  children: node.isRequired,
+  rule: oneOfRulesType.isRequired,
+  elem: elemType.isRequired
+};

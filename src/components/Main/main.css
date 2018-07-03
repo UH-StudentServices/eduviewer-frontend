@@ -1,0 +1,13 @@
+.mainContainer {
+  margin: 1em;
+  padding: 0.5em 1em;
+  border: 0.0125em solid var(--mediumSilver);
+}
+
+.selectContainer {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0.05em;
+  margin-bottom: 2em;
+  border-bottom: 0.05em dashed var(--mediumSilver);
+}

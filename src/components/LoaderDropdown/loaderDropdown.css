@@ -1,0 +1,29 @@
+.loaderContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.labelText {
+  font-size: 1.125em;
+  color: var(--lightGray);
+  font-weight: 300;
+  line-height: 2.4em;
+  padding: 0;
+  margin: 0;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid var(--darkSilver);
+  padding: 10px;
+}
+
+.loadingText {
+  font-weight: bold;
+  color: var(--darkSilver);
+  font-size: 1rem;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
