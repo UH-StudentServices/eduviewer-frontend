@@ -107,7 +107,7 @@ class Main extends Component {
     const academicYearOptions = academicYears.map(ay => getOption(ay, ay, academicYearNames[ay]));
 
     const academicYearsLabel = 'Lukuvuodet';
-    const degreeProgramsLabel = 'Koulutusohjelmat';
+    const degreeProgramsLabel = 'Tutkinto-ohjelmat';
     const showAllLabel = 'Näytä kaikki';
 
     return (
