@@ -11,3 +11,9 @@ export const modules = {
   GROUPING_MODULE: 'GroupingModule',
   STUDY_MODULE: 'StudyModule'
 };
+
+export const availableLanguages = {
+  FI: 'fi',
+  EN: 'en',
+  SV: 'sv'
+};
