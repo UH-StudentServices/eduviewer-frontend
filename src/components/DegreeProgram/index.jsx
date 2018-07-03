@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { string, bool } from 'prop-types';
 import { degreeProgramType } from '../../types';
-import { fetchEducation } from '../../api';
+import { fetchDegreeProgram } from '../../api';
 
 import GroupingModule from '../GroupingModule';
 import Loader from '../Loader';
@@ -24,7 +24,7 @@ class DegreeProgram extends Component {
     const { academicYear, degreeProgram } = this.props;
 
     try {
-      const education = await fetchEducation(academicYear, degreeProgram.groupId);
+      const education = await fetchDegreeProgram(academicYear, degreeProgram.groupId);
       this.setState({ isLoading: false, degreeProgram: education });
     } catch (error) {
       this.setState({ error: error.message });
@@ -32,7 +32,7 @@ class DegreeProgram extends Component {
   }
 
   render() {
-    const { academicYear, showAll } = this.props;
+    const { showAll } = this.props;
     const { isLoading, degreeProgram, error } = this.state;
 
     if (error) {
@@ -43,17 +43,15 @@ class DegreeProgram extends Component {
       return <Loader />;
     }
 
-    console.log(degreeProgram);
-    const { name } = degreeProgram;
+    const { name, dataNode } = degreeProgram;
 
     return (
       <div className={styles.degreeProgram}>
         <h4>{name.fi}</h4>
         <div className={styles.moduleGroups}>
           <GroupingModule
-            key={degreeProgram.dataNode.rule.localId}
-            academicYear={academicYear}
-            rule={degreeProgram.dataNode.rule}
+            key={dataNode.rule.localId}
+            rule={dataNode.rule}
             showAll={showAll}
           />
         </div>

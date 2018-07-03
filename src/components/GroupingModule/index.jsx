@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { bool, shape } from 'prop-types';
 
 import { rules } from '../../constants';
-import { creditsToString } from '../../utils';
+import { creditsToString, getName } from '../../utils';
 
 import DropdownModule from '../DropdownModule'; // eslint-disable-line
 import Course from '../Course';
@@ -20,6 +20,16 @@ const getDescription = (rule) => {
   }
   const { description } = rule.dataNode;
   return description ? <div dangerouslySetInnerHTML={{ __html: description.fi }} /> : null;
+};
+
+const getSubRules = (rule) => {
+  let subRules = rule.rules || rule.dataNode.rules || [];
+
+  if (subRules.length === 0) {
+    subRules = [rule.dataNode.rule];
+  }
+
+  return subRules;
 };
 
 export default class GroupingModule extends Component {
@@ -63,35 +73,29 @@ export default class GroupingModule extends Component {
       return <GroupingModule key={rule.localId} rule={rule} showAll={showAll} />;
     }
 
+    // Log rule if it is not rendered
     console.log(rule);
     return null;
   };
 
   render() {
     const { rule, showAll } = this.props;
-    const shouldRenderDropdown = () =>
-      rule.dataNode && DROPDOWN_MODULES.includes(rule.dataNode.name.fi.toLowerCase());
+    const shouldRenderDropdown = () => DROPDOWN_MODULES.includes(getName(rule).toLowerCase());
 
     if (shouldRenderDropdown() && !showAll) {
       return (
         <div key={rule.localId}>
-          <strong>{rule.dataNode.name.fi}</strong>
+          <strong>{getName(rule)}</strong>
           <DropdownModule rule={rule} showAll={showAll} />
         </div>
       );
     }
 
-    let subRules = rule.rules || rule.dataNode.rules || [];
-
-    if (subRules.length === 0) {
-      subRules = [rule.dataNode.rule];
-    }
-
     return (
       <div key={rule.localId}>
-        <strong>{rule.dataNode ? rule.dataNode.name.fi : ''}</strong>
+        <strong>{getName(rule)}</strong>
         { getDescription(rule) }
-        { subRules.map(r => this.renderRule(r)) }
+        { getSubRules(rule).map(r => this.renderRule(r)) }
       </div>
     );
   }

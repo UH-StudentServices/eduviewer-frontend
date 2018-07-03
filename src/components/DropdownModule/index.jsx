@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { bool } from 'prop-types';
+
 import { oneOfRulesType } from '../../types';
 import GroupingModule from '../GroupingModule'; // eslint-disable-line
+import { getName } from '../../utils';
 
 const NOTHING_SELECTED = '-';
 
@@ -52,7 +54,7 @@ class DropdownModule extends Component {
           <option value="-">-</option>
           {rule.dataNode.rule.rules.map(subRule => (
             <option key={subRule.dataNode.id} value={subRule.dataNode.id}>
-              {subRule.dataNode.name.fi}
+              {getName(subRule)}
             </option>
           ))}
         </select>
