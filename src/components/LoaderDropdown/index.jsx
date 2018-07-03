@@ -33,10 +33,9 @@ const LoadedDropdown = ({
     <label htmlFor={id}>
       {label}
       <select
-        className={styles.select}
         name={id}
         id={id}
-        value={value}
+        value={value || ''}
         onChange={onChange}
         disabled={!hasOptions}
       >

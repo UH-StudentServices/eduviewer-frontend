@@ -11,9 +11,13 @@ import DropdownModule from '../DropdownModule'; // eslint-disable-line
 import CourseUnitRule from '../CourseUnitRule';
 
 const {
-  ANY_COURSE_UNIT_RULE, ANY_MODULE_RULE, COMPOSITE_RULE, COURSE_UNIT_RULE,
+  ANY_COURSE_UNIT_RULE,
+  ANY_MODULE_RULE,
+  COMPOSITE_RULE,
+  COURSE_UNIT_RULE,
   CREDITS_RULE
 } = rules;
+
 const { GROUPING_MODULE, STUDY_MODULE } = modules;
 
 const DROPDOWN_MODULES = ['opintosuunta', 'study track', 'vieras kieli', 'foreign language'];

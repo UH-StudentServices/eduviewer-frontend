@@ -4,4 +4,20 @@
 
 .moduleGroups {
   padding-left: 1em;
+  border: dashed 0.1em red;
 }
+
+.moduleGroups > div > strong {
+  font-size: 1.25em;
+  color: var(--black);
+}
+
+.moduleGroups > div > div {
+  padding-left: 1em;
+}
+
+.moduleGroups > div > div > strong {
+  font-size: 1.15em;
+  color: var(--black);
+}
+
