@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { string } from 'prop-types';
-import { ruleType } from '../../types';
+import { oneOfRulesType } from '../../types';
 import { fetchAllIdsJson } from '../../api';
 import GroupingModule from '../GroupingModule'; // eslint-disable-line
 
@@ -58,7 +58,7 @@ class DropdownModule extends Component {
 
 DropdownModule.propTypes = {
   academicYear: string.isRequired,
-  rule: ruleType.isRequired
+  rule: oneOfRulesType.isRequired
 };
 
 export default DropdownModule;

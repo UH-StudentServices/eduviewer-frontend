@@ -74,8 +74,12 @@ const LoaderDropdown = (props) => {
 
 LoaderDropdown.propTypes = {
   isLoading: bool.isRequired,
-  value: oneOfType([string, number]).isRequired,
+  value: oneOfType([string, number]),
   options: selectOptionsType.isRequired
+};
+
+LoaderDropdown.defaultProps = {
+  value: ''
 };
 
 export default LoaderDropdown;

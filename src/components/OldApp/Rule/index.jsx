@@ -3,7 +3,7 @@ import { string } from 'prop-types';
 
 import CompositeRule from '../CompositeRule'; // eslint-disable-line
 import { parseRuleData } from '../utils';
-import { elemType, ruleType } from '../../../types';
+import { elemType, oneOfRulesType } from '../../../types';
 
 const renderCreditsRow = (credits) => {
   const { max, min } = credits;
@@ -53,7 +53,7 @@ const Rule = (props) => {
 };
 
 Rule.propTypes = {
-  rule: ruleType.isRequired,
+  rule: oneOfRulesType.isRequired,
   lv: string.isRequired,
   elem: elemType.isRequired
 };
