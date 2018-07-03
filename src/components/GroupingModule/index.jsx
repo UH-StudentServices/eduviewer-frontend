@@ -46,7 +46,7 @@ export default class GroupingModule extends Component {
     if (rule.type === COURSE_UNIT_RULE) {
       const { code, name, credits } = rule.dataNode;
       return (
-        <Course code={code} name={name} credits={credits} />
+        <Course key={rule.localId} code={code} name={name} credits={credits} />
       );
     }
 
