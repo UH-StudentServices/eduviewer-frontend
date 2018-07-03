@@ -1,52 +1,30 @@
 import React, { Component, Fragment } from 'react';
-import { bool, string } from 'prop-types';
+import { bool, shape } from 'prop-types';
 
-import { elemType } from '../../types';
-import { fetchAllIdsJson } from '../../api';
-import { rules, modules } from '../../constants';
-import { creditsToString, getModuleGroupIds } from '../../utils';
+import { rules } from '../../constants';
+import { creditsToString } from '../../utils';
 
-import StudyModule from '../StudyModule'; // eslint-disable-line
-import DropdownModule from '../DropdownModule'; // eslint-disable-line
-import CourseUnitRule from '../CourseUnitRule';
+// import DropdownModule from '../DropdownModule'; // eslint-disable-line
+import Course from '../Course';
 
 const {
   ANY_COURSE_UNIT_RULE, ANY_MODULE_RULE, COMPOSITE_RULE, COURSE_UNIT_RULE,
-  CREDITS_RULE
+  CREDITS_RULE, MODULE_RULE
 } = rules;
-const { GROUPING_MODULE, STUDY_MODULE } = modules;
 
-const DROPDOWN_MODULES = ['opintosuunta', 'study track', 'vieras kieli', 'foreign language'];
+// const DROPDOWN_MODULES = ['opintosuunta', 'study track', 'vieras kieli', 'foreign language'];
 
 const getDescription = (rule) => {
-  const { description } = rule;
+  if (!rule.dataNode) {
+    return null;
+  }
+  const { description } = rule.dataNode;
   return description ? <div dangerouslySetInnerHTML={{ __html: description.fi }} /> : null;
 };
 
 export default class GroupingModule extends Component {
-  state = {
-    subModules: []
-  };
-
-  componentDidMount() {
-    const { academicYear, module } = this.props;
-    const { rule } = module;
-
-    if (rule && rule.type === COMPOSITE_RULE) {
-      this.fetchSubmodules(module, academicYear);
-    }
-  }
-
-  fetchSubmodules(module, academicYear) {
-    const { rule } = module;
-    const moduleIds = getModuleGroupIds(rule);
-
-    fetchAllIdsJson(academicYear, moduleIds)
-      .then(subModules => this.setState({ subModules }));
-  }
-
   renderRule = (rule) => {
-    const { academicYear } = this.props;
+    const { showAll } = this.props;
 
     if (rule.type === COMPOSITE_RULE) {
       return (
@@ -66,12 +44,9 @@ export default class GroupingModule extends Component {
     }
 
     if (rule.type === COURSE_UNIT_RULE) {
+      const { code, name, credits } = rule.dataNode;
       return (
-        <CourseUnitRule
-          key={rule.localId}
-          academicYear={academicYear}
-          code={rule.courseUnitGroupId}
-        />
+        <Course code={code} name={name} credits={credits} />
       );
     }
 
@@ -84,63 +59,46 @@ export default class GroupingModule extends Component {
       );
     }
 
-    return null;
-  };
-
-  renderModule = (module) => {
-    const { academicYear, showAll } = this.props;
-
-    if (module.type === GROUPING_MODULE) {
-      return (
-        <GroupingModule
-          key={module.localId}
-          academicYear={academicYear}
-          module={module}
-          showAll={showAll}
-        />);
+    if (rule.type === MODULE_RULE) {
+      return <GroupingModule key={rule.localId} rule={rule} showAll={showAll} />;
     }
-    if (module.type === STUDY_MODULE) {
-      return (
-        <StudyModule
-          key={module.code}
-          academicYear={academicYear}
-          module={module}
-          showAll={showAll}
-        />
-      );
-    }
-    console.log('warning: module not rendered');
+
+    console.log(rule);
     return null;
   };
 
   render() {
-    const { academicYear, module, showAll } = this.props;
-    const { subModules } = this.state;
-    const { name, rule } = module;
-    const shouldRenderDropdown = () => DROPDOWN_MODULES.includes(module.name.fi.toLowerCase());
+    const {
+      rule // , showAll
+    } = this.props;
+    // const shouldRenderDropdown = () => DROPDOWN_MODULES.includes(module.name.fi.toLowerCase());
 
-    if (shouldRenderDropdown() && !showAll) {
-      return (
-        <div key={module.localId}>
-          <strong>{name.fi}</strong>
-          <DropdownModule academicYear={academicYear} rule={module.rule} showAll={showAll} />
-        </div>
-      );
+    // if (shouldRenderDropdown() && !showAll) {
+    //   return (
+    //     <div key={module.localId}>
+    //       <strong>jee</strong>
+    //       <DropdownModule academicYear={academicYear} rule={module.rule} showAll={showAll} />
+    //     </div>
+    //   );
+    // }
+
+    let subRules = rule.rules || rule.dataNode.rules || [];
+
+    if (subRules.length === 0) {
+      subRules = [rule.dataNode.rule];
     }
 
     return (
-      <div key={module.localId}>
-        <strong>{name.fi}</strong>
-        {getDescription(module)}
-        {this.renderRule(rule)}
-        {subModules.map(subModule => this.renderModule(subModule))}
+      <div key={rule.localId}>
+        <strong>{rule.dataNode ? rule.dataNode.name.fi : ''}</strong>
+        { getDescription(rule) }
+        { subRules.map(r => this.renderRule(r)) }
       </div>
     );
   }
 }
 
 GroupingModule.propTypes = {
-  academicYear: string.isRequired,
-  module: elemType.isRequired,
-  showAll: bool.isRequired
+  showAll: bool.isRequired,
+  rule: shape({}).isRequired
 };

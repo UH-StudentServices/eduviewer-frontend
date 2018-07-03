@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import { string, bool } from 'prop-types';
 import { degreeProgramType } from '../../types';
-import { fetchAllIdsJson } from '../../api';
+import { fetchEducation } from '../../api';
 
 import GroupingModule from '../GroupingModule';
 import Loader from '../Loader';
 
 import styles from './degreeProgram.css';
-import { getModuleGroupIds } from '../../utils';
 
 class DegreeProgram extends Component {
   state = {
-    isLoading: false,
-    moduleGroups: []
+    isLoading: true,
+    degreeProgram: {}
   }
 
   componentDidMount() {
@@ -22,36 +21,33 @@ class DegreeProgram extends Component {
   async fetchRules() {
     this.setState({ isLoading: true });
     const { academicYear, degreeProgram } = this.props;
-    const { rule } = degreeProgram;
 
-    const moduleGroupIds = getModuleGroupIds(rule);
-    const moduleGroups = await fetchAllIdsJson(academicYear, moduleGroupIds);
+    const education = await fetchEducation(academicYear, degreeProgram.groupId);
 
-    this.setState({ moduleGroups, isLoading: false });
+    this.setState({ isLoading: false, degreeProgram: education });
   }
 
   render() {
-    const { academicYear, degreeProgram, showAll } = this.props;
-    const { isLoading, moduleGroups } = this.state;
+    const { academicYear, showAll } = this.props;
+    const { isLoading, degreeProgram } = this.state;
+
+    if (isLoading) {
+      return <Loader />;
+    }
+
+    console.log(degreeProgram);
     const { name } = degreeProgram;
 
     return (
       <div className={styles.degreeProgram}>
         <h4>{name.fi}</h4>
-        {
-          isLoading && <Loader />
-        }
         <div className={styles.moduleGroups}>
-          {
-            moduleGroups.map(group => (
-              <GroupingModule
-                key={group.code}
-                academicYear={academicYear}
-                module={group}
-                showAll={showAll}
-              />
-            ))
-          }
+          <GroupingModule
+            key={degreeProgram.dataNode.rule.localId}
+            academicYear={academicYear}
+            rule={degreeProgram.dataNode.rule}
+            showAll={showAll}
+          />
         </div>
       </div>);
   }

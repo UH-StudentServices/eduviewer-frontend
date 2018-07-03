@@ -153,7 +153,7 @@ const createConfig = options => ({
     cleanWebPackPlugin
   ],
   devServer: devServerConfig,
-  devtool: options.isDevelopment ? 'eval-source-map' : ''
+  devtool: 'eval-source-map'
 });
 
 module.exports = createVariants(baseOptions, variants, createConfig);

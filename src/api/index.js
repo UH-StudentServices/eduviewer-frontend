@@ -33,3 +33,5 @@ export const getDegreeProgramForAcademicYear = (degreeProgramId, academicYear) =
 export const fetchAllIdsJson = (academicYear = '', ids) => postForJson(`/api/all_ids?lv=${academicYear}`, JSON.stringify(ids));
 
 export const fetchCourseNames = (academicYear = '', ids) => postForJson(`/api/cu/names?lv=${academicYear}`, JSON.stringify(ids));
+
+export const fetchEducation = (academicYear = '', id) => getJson(`/api/tree/${id}/?lv=${academicYear}`);
