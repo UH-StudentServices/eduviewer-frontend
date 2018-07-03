@@ -6,7 +6,7 @@ import Dropdown from '../Dropdown/index'; // eslint-disable-line
 import ElementList from '../ElementList/index'; // eslint-disable-line
 
 import { isNotEmpty, isViewAllEnabled, parseRuleData } from '../utils/index';
-import { elemType, ruleType } from '../../../types/index';
+import { elemType, oneOfRulesType } from '../../../types';
 
 export default class CompositeRule extends Component {
   createMarkUp = rule => ({ __html: rule.description.fi });
@@ -100,6 +100,6 @@ export default class CompositeRule extends Component {
 CompositeRule.propTypes = {
   academicYear: string.isRequired,
   children: node.isRequired,
-  rule: ruleType.isRequired,
+  rule: oneOfRulesType.isRequired,
   elem: elemType.isRequired
 };

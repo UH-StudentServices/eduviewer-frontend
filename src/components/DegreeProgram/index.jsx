@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { string, bool } from 'prop-types';
 import { degreeProgramType } from '../../types';
 import { fetchAllIdsJson } from '../../api';
-import { rules } from '../../constants';
 
 import GroupingModule from '../GroupingModule';
 import Loader from '../Loader';
 
 import styles from './degreeProgram.css';
+import { getModuleGroupIds } from '../../utils';
 
 class DegreeProgram extends Component {
   state = {
@@ -24,12 +24,7 @@ class DegreeProgram extends Component {
     const { academicYear, degreeProgram } = this.props;
     const { rule } = degreeProgram;
 
-    const isModuleRule = r => r.type === rules.MODULE_RULE;
-
-    const moduleGroupIds = rule.rules
-      ? rule.rules.filter(isModuleRule).map(module => module.moduleGroupId)
-      : [isModuleRule(rule) && module.moduleGroupId];
-
+    const moduleGroupIds = getModuleGroupIds(rule);
     const moduleGroups = await fetchAllIdsJson(academicYear, moduleGroupIds);
 
     this.setState({ moduleGroups, isLoading: false });

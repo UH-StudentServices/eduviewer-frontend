@@ -14,6 +14,11 @@ export const creditsType = shape({
 });
 
 export const ruleType = shape({
+  localId: string.isRequired,
+  moduleGroupId: string
+});
+
+export const rulesType = shape({
   allMandatory: bool,
   description: localizedTextType,
   localId: string.isRequired,
@@ -21,12 +26,12 @@ export const ruleType = shape({
     min: number.isRequired,
     max: number
   }),
-  rules: arrayOf(shape({
-    localId: string.isRequired,
-    moduleGroupId: string
-  })).isRequired,
+  rules: arrayOf(ruleType),
+  rule: ruleType,
   type: string.isRequired
 });
+
+export const oneOfRulesType = oneOfType([ruleType, rulesType]);
 
 export const elemType = shape({
   code: string,
@@ -57,7 +62,7 @@ export const elemType = shape({
 export const degreeProgramType = shape({
   id: string.isRequired,
   name: localizedTextType,
-  rule: ruleType.isRequired
+  rule: oneOfRulesType.isRequired
 });
 
 export const selectOptionsType = arrayOf(shape({

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { string, oneOf } from 'prop-types';
 import {
   getDegreePrograms,
   getAcademicYearNames,
@@ -11,10 +12,23 @@ import LoaderDropdown from '../LoaderDropdown';
 
 import styles from './main.css';
 import ToggleSelect from '../ToggleSelect';
-
-const DEFAULT_ACADEMIC_YEAR = 'hy-lv-68';
+import { availableLanguages } from '../../constants';
 
 class Main extends Component {
+  static propTypes = {
+    academicYearCode: string,
+    degreeProgramId: string,
+    lang: oneOf(Object.values(availableLanguages)),
+    header: string
+  };
+
+  static defaultProps = {
+    academicYearCode: 'hy-lv-68',
+    degreeProgramId: null,
+    lang: availableLanguages.FI,
+    header: null
+  }
+
   state = {
     degreePrograms: [],
     academicYears: [],
@@ -26,24 +40,14 @@ class Main extends Component {
   }
 
   async componentDidMount() {
-    this.setState({ isLoading: true });
-    const [degreeProgramsResponse, academicYearNames] = await Promise.all(
-      [getDegreePrograms(), getAcademicYearNames()]
-    );
-
-    const degreePrograms = degreeProgramsResponse.educations;
-    const degreeProgram = degreePrograms[0];
-    const academicYears = await getAcademicYearsForDegreeProgram(degreeProgram.id);
-    const academicYear = this.getAcademicYear(academicYears);
-
-    this.setState({
-      degreePrograms,
-      degreeProgram,
-      academicYear,
-      academicYearNames,
-      academicYears,
-      isLoading: false
-    });
+    const { degreeProgramId, academicYearCode } = this.props;
+    if (degreeProgramId && academicYearCode) {
+      await this.initSpecificView(degreeProgramId, academicYearCode);
+    } else if (degreeProgramId) {
+      await this.initAcademicYears(degreeProgramId);
+    } else {
+      await this.initAllSelects();
+    }
   }
 
    onDegreeProgramsChange = async (event) => {
@@ -82,11 +86,64 @@ class Main extends Component {
 
   getAcademicYear = (academicYears) => {
     const { academicYear: oldSelection } = this.state;
+    const { academicYearCode } = this.props;
 
     const isOldSelectionValid = oldSelection && academicYears.includes(oldSelection);
-    return isOldSelectionValid ? oldSelection : DEFAULT_ACADEMIC_YEAR;
+    return isOldSelectionValid ? oldSelection : academicYearCode;
   }
 
+  initAllSelects = async () => {
+    this.setState({ isLoading: true });
+
+    const [degreeProgramsResponse, academicYearNames] = await Promise.all(
+      [getDegreePrograms(), getAcademicYearNames()]
+    );
+
+    const degreePrograms = degreeProgramsResponse.educations;
+    const degreeProgram = degreePrograms[0];
+
+    const academicYears = await getAcademicYearsForDegreeProgram(degreeProgram.id);
+    const academicYear = this.getAcademicYear(academicYears);
+
+    this.setState({
+      degreePrograms,
+      degreeProgram,
+      academicYear,
+      academicYearNames,
+      academicYears,
+      isLoading: false
+    });
+  }
+
+  initAcademicYears = async (degreeProgramId) => {
+    this.setState({ isLoading: true });
+    const [academicYearNames, academicYears] = await Promise.all(
+      [getAcademicYearNames(), getAcademicYearsForDegreeProgram(degreeProgramId)]
+    );
+
+    const academicYear = this.getAcademicYear(academicYears);
+
+    this.setState({
+      academicYearNames,
+      academicYear,
+      academicYears,
+      isLoading: false
+    });
+  }
+
+  initSpecificView = async (degreeProgramId, academicYear) => {
+    this.setState({ isLoading: true });
+
+    const degreeProgram = await getDegreeProgramForAcademicYear(
+      degreeProgramId,
+      academicYear
+    );
+
+    this.setState({
+      degreeProgram,
+      isLoading: false
+    });
+  }
 
   renderSelections = () => {
     const {
@@ -99,6 +156,8 @@ class Main extends Component {
       isLoading
     } = this.state;
 
+    const { degreeProgramId, academicYearCode, lang } = this.props;
+
     const getOption = (id, value, text) => ({ id, value, text });
 
     const ACADEMIC_YEARS_ID = 'academicYear';
@@ -107,27 +166,36 @@ class Main extends Component {
     const academicYearOptions = academicYears.map(ay => getOption(ay, ay, academicYearNames[ay]));
 
     const academicYearsLabel = 'Lukuvuodet';
-    const degreeProgramsLabel = 'Koulutusohjelmat';
+    const degreeProgramsLabel = 'Tutkinto-ohjelmat';
     const showAllLabel = 'Näytä kaikki';
 
     return (
       <div className={styles.selectContainer}>
-        <LoaderDropdown
-          id={DEGREE_PROGRAMS_ID}
-          value={degreeProgram.id}
-          onChange={this.onDegreeProgramsChange}
-          options={degreeProgramOptions}
-          label={degreeProgramsLabel}
-          isLoading={isLoading}
-        />
-        <LoaderDropdown
-          id={ACADEMIC_YEARS_ID}
-          value={academicYear}
-          onChange={this.onAcademicYearsChange}
-          options={academicYearOptions}
-          label={academicYearsLabel}
-          isLoading={isLoading}
-        />
+        <div>{`Kielivalinta: ${lang}`}</div>
+        {!degreeProgramId
+        && (
+          <LoaderDropdown
+            id={DEGREE_PROGRAMS_ID}
+            value={degreeProgram.id}
+            onChange={this.onDegreeProgramsChange}
+            options={degreeProgramOptions}
+            label={degreeProgramsLabel}
+            isLoading={isLoading}
+          />
+        )
+        }
+        {(!degreeProgramId || !academicYearCode)
+          && (
+          <LoaderDropdown
+            id={ACADEMIC_YEARS_ID}
+            value={academicYear}
+            onChange={this.onAcademicYearsChange}
+            options={academicYearOptions}
+            label={academicYearsLabel}
+            isLoading={isLoading}
+          />
+          )
+        }
         <ToggleSelect
           onChange={this.onShowAll}
           checked={showAll}
@@ -160,10 +228,11 @@ class Main extends Component {
   }
 
   render() {
+    const { header } = this.props;
     return (
       <div>
         <main className={styles.mainContainer}>
-          <h2>Eduviewer</h2>
+          {header && <h2>{header}</h2>}
           { this.renderSelections()}
           { this.renderContent()}
         </main>
