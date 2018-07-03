@@ -5,9 +5,28 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { createVariants } = require('parallel-webpack');
 
-const htmlPlugin = new HtmlWebPackPlugin({
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+const baseOptions = {
+  isDevelopment
+};
+
+const defaultTarget = 'var';
+
+const variants = {
+  target: isDevelopment ? [defaultTarget] : [defaultTarget, 'commonjs2', 'umd', 'amd']
+};
+
+const getHtmlFileName = (target) => {
+  const isDefaultTarget = target === defaultTarget;
+  return isDefaultTarget ? 'index.html ' : `index_${target}.html`;
+};
+
+const getHtmlPlugin = target => new HtmlWebPackPlugin({
   inject: false,
+  filename: getHtmlFileName(target),
   template: htmlTemplate,
   appMountId: 'root',
   title: 'Eduviewer',
@@ -43,7 +62,7 @@ const devServerConfig = {
   ]
 };
 
-module.exports = {
+const createConfig = options => ({
   context: path.join(__dirname, 'src'),
   entry: [
     'react-hot-loader/patch',
@@ -52,8 +71,9 @@ module.exports = {
   ],
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[hash].js',
-    publicPath: ''
+    publicPath: options.isDevelopment ? 'dist' : '',
+    filename: `eduviewer.${options.target}.js`,
+    libraryTarget: options.target
   },
   resolve: {
     extensions: ['.js', '.jsx']
@@ -62,7 +82,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
+        exclude: /(node_modules|dist)/,
         use: ['babel-loader', 'eslint-loader']
       },
       {
@@ -126,12 +146,14 @@ module.exports = {
     ]
   },
   plugins: [
-    htmlPlugin,
+    getHtmlPlugin(options.target),
     miniCssExtractPlugin,
     reactHotLoader,
     webpackMd5Hash,
     cleanWebPackPlugin
   ],
   devServer: devServerConfig,
-  devtool: 'eval-source-map'
-};
+  devtool: options.isDevelopment ? 'eval-source-map' : ''
+});
+
+module.exports = createVariants(baseOptions, variants, createConfig);
