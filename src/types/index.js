@@ -1,5 +1,5 @@
 import {
-  arrayOf, shape, bool, string, number
+  arrayOf, shape, bool, string, number, oneOfType
 } from 'prop-types';
 
 export const localizedTextType = shape({
@@ -59,3 +59,9 @@ export const degreeProgramType = shape({
   name: localizedTextType,
   rule: ruleType.isRequired
 });
+
+export const selectOptionsType = arrayOf(shape({
+  id: oneOfType([string, number]).isRequired,
+  value: oneOfType([string, number]).isRequired,
+  text: string.isRequired
+}));

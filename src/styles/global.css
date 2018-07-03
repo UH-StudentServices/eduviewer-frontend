@@ -31,3 +31,18 @@ h6 {
   letter-spacing: unset;
   line-height: unset;
 }
+
+ul {
+  list-style-type: none;
+  margin: 5px;
+  padding-left: 20px;
+}
+
+li {
+  border-bottom: 1px solid var(--lightGray);
+  padding-left: 20px;
+}
+
+li:last-child {
+  border: none;
+}
