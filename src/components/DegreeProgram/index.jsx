@@ -7,6 +7,7 @@ import GroupingModule from '../GroupingModule';
 import Loader from '../Loader';
 
 import styles from './degreeProgram.css';
+import ErrorMessage from '../ErrorMessage';
 
 class DegreeProgram extends Component {
   state = {
@@ -22,14 +23,21 @@ class DegreeProgram extends Component {
     this.setState({ isLoading: true });
     const { academicYear, degreeProgram } = this.props;
 
-    const education = await fetchEducation(academicYear, degreeProgram.groupId);
-
-    this.setState({ isLoading: false, degreeProgram: education });
+    try {
+      const education = await fetchEducation(academicYear, degreeProgram.groupId);
+      this.setState({ isLoading: false, degreeProgram: education });
+    } catch (error) {
+      this.setState({ error: error.message });
+    }
   }
 
   render() {
     const { academicYear, showAll } = this.props;
-    const { isLoading, degreeProgram } = this.state;
+    const { isLoading, degreeProgram, error } = this.state;
+
+    if (error) {
+      return <ErrorMessage errorMessage={error} />;
+    }
 
     if (isLoading) {
       return <Loader />;
