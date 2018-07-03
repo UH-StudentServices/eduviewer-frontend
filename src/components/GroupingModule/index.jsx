@@ -4,7 +4,7 @@ import { bool, shape } from 'prop-types';
 import { rules } from '../../constants';
 import { creditsToString } from '../../utils';
 
-// import DropdownModule from '../DropdownModule'; // eslint-disable-line
+import DropdownModule from '../DropdownModule'; // eslint-disable-line
 import Course from '../Course';
 
 const {
@@ -12,7 +12,7 @@ const {
   CREDITS_RULE, MODULE_RULE
 } = rules;
 
-// const DROPDOWN_MODULES = ['opintosuunta', 'study track', 'vieras kieli', 'foreign language'];
+const DROPDOWN_MODULES = ['opintosuunta', 'study track', 'vieras kieli', 'foreign language'];
 
 const getDescription = (rule) => {
   if (!rule.dataNode) {
@@ -68,19 +68,18 @@ export default class GroupingModule extends Component {
   };
 
   render() {
-    const {
-      rule // , showAll
-    } = this.props;
-    // const shouldRenderDropdown = () => DROPDOWN_MODULES.includes(module.name.fi.toLowerCase());
+    const { rule, showAll } = this.props;
+    const shouldRenderDropdown = () =>
+      rule.dataNode && DROPDOWN_MODULES.includes(rule.dataNode.name.fi.toLowerCase());
 
-    // if (shouldRenderDropdown() && !showAll) {
-    //   return (
-    //     <div key={module.localId}>
-    //       <strong>jee</strong>
-    //       <DropdownModule academicYear={academicYear} rule={module.rule} showAll={showAll} />
-    //     </div>
-    //   );
-    // }
+    if (shouldRenderDropdown() && !showAll) {
+      return (
+        <div key={rule.localId}>
+          <strong>{rule.dataNode.name.fi}</strong>
+          <DropdownModule rule={rule} showAll={showAll} />
+        </div>
+      );
+    }
 
     let subRules = rule.rules || rule.dataNode.rules || [];
 

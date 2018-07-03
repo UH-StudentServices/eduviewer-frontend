@@ -1,24 +1,14 @@
 import React, { Component, Fragment } from 'react';
-import { string, bool } from 'prop-types';
+import { bool } from 'prop-types';
 import { oneOfRulesType } from '../../types';
-import { fetchAllIdsJson } from '../../api';
 import GroupingModule from '../GroupingModule'; // eslint-disable-line
 
 const NOTHING_SELECTED = '-';
 
 class DropdownModule extends Component {
   state = {
-    selected: NOTHING_SELECTED,
-    modules: []
+    selected: NOTHING_SELECTED
   };
-
-  componentDidMount() {
-    const { academicYear, rule } = this.props;
-    const moduleGroupIds = rule.rules.map(r => r.moduleGroupId);
-
-    fetchAllIdsJson(academicYear, moduleGroupIds)
-      .then(modules => this.setState({ modules }));
-  }
 
   onSelectChange = (event) => {
     const { value } = event.target;
@@ -26,29 +16,29 @@ class DropdownModule extends Component {
   };
 
   renderSelectedModule() {
-    const { academicYear, showAll } = this.props;
-    const { selected, modules } = this.state;
+    const { showAll, rule } = this.props;
+    const { selected } = this.state;
+    const subRules = rule.dataNode.rule.rules;
 
     if (selected !== NOTHING_SELECTED) {
-      const module = modules.find(m => m.id === selected);
-      return <GroupingModule academicYear={academicYear} module={module} showAll={showAll} />;
+      const selectedRule = subRules.find(subRule => subRule.moduleGroupId === selected);
+      return <GroupingModule rule={selectedRule} showAll={showAll} />;
     }
 
     return null;
   }
 
   render() {
-    const { selected, modules } = this.state;
-    const { academicYear, showAll } = this.props;
+    const { selected } = this.state;
+    const { showAll, rule } = this.props;
 
     if (showAll) {
       return (
         <Fragment>
-          {modules.map(module => (
+          {rule.dataNode.rules.map(r => (
             <GroupingModule
-              key={module.localId}
-              academicYear={academicYear}
-              module={module}
+              key={r.localId}
+              rule={rule}
               showAll={showAll}
             />
           ))}
@@ -60,9 +50,9 @@ class DropdownModule extends Component {
       <div>
         <select value={selected} onChange={this.onSelectChange}>
           <option value="-">-</option>
-          {modules.map(module => (
-            <option key={module.id} value={module.id}>
-              {module.name.fi}
+          {rule.dataNode.rule.rules.map(subRule => (
+            <option key={subRule.dataNode.id} value={subRule.dataNode.id}>
+              {subRule.dataNode.name.fi}
             </option>
           ))}
         </select>
@@ -73,7 +63,6 @@ class DropdownModule extends Component {
 }
 
 DropdownModule.propTypes = {
-  academicYear: string.isRequired,
   rule: oneOfRulesType.isRequired,
   showAll: bool.isRequired
 };
