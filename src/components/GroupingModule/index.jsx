@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { string } from 'prop-types';
+import { bool, string } from 'prop-types';
 
 import { elemType } from '../../types';
 import { fetchAllIdsJson } from '../../api';
@@ -88,10 +88,16 @@ export default class GroupingModule extends Component {
   };
 
   renderModule = (module) => {
-    const { academicYear } = this.props;
+    const { academicYear, showAll } = this.props;
 
     if (module.type === GROUPING_MODULE) {
-      return <GroupingModule key={module.localId} academicYear={academicYear} module={module} />;
+      return (
+        <GroupingModule
+          key={module.localId}
+          academicYear={academicYear}
+          module={module}
+          showAll={showAll}
+        />);
     }
     if (module.type === STUDY_MODULE) {
       return (
@@ -99,6 +105,7 @@ export default class GroupingModule extends Component {
           key={module.code}
           academicYear={academicYear}
           module={module}
+          showAll={showAll}
         />
       );
     }
@@ -107,15 +114,16 @@ export default class GroupingModule extends Component {
   };
 
   render() {
-    const { academicYear, module } = this.props;
+    const { academicYear, module, showAll } = this.props;
     const { subModules } = this.state;
     const { name, rule } = module;
+    const shouldRenderDropdown = () => DROPDOWN_MODULES.includes(module.name.fi.toLowerCase());
 
-    if (DROPDOWN_MODULES.includes(module.name.fi.toLowerCase())) {
+    if (shouldRenderDropdown() && !showAll) {
       return (
         <div>
           <strong>{name.fi}</strong>
-          <DropdownModule academicYear={academicYear} rule={module.rule} />
+          <DropdownModule academicYear={academicYear} rule={module.rule} showAll={showAll} />
         </div>
       );
     }
@@ -133,5 +141,6 @@ export default class GroupingModule extends Component {
 
 GroupingModule.propTypes = {
   academicYear: string.isRequired,
-  module: elemType.isRequired
+  module: elemType.isRequired,
+  showAll: bool.isRequired
 };
