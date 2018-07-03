@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { string } from 'prop-types';
+import React, { Component, Fragment } from 'react';
+import { bool, string } from 'prop-types';
 import { ruleType } from '../../types';
 import { fetchAllIdsJson } from '../../api';
 import GroupingModule from '../GroupingModule'; // eslint-disable-line
@@ -26,12 +26,12 @@ class DropdownModule extends Component {
   };
 
   renderSelectedModule() {
-    const { academicYear } = this.props;
+    const { academicYear, showAll } = this.props;
     const { selected, modules } = this.state;
 
     if (selected !== NOTHING_SELECTED) {
       const module = modules.find(m => m.id === selected);
-      return <GroupingModule academicYear={academicYear} module={module} />;
+      return <GroupingModule academicYear={academicYear} module={module} showAll={showAll} />;
     }
 
     return null;
@@ -39,6 +39,22 @@ class DropdownModule extends Component {
 
   render() {
     const { selected, modules } = this.state;
+    const { academicYear, showAll } = this.props;
+
+    if (showAll) {
+      return (
+        <Fragment>
+          {modules.map(module => (
+            <GroupingModule
+              key={module.localId}
+              academicYear={academicYear}
+              module={module}
+              showAll={showAll}
+            />
+          ))}
+        </Fragment>
+      );
+    }
 
     return (
       <div>
@@ -58,7 +74,8 @@ class DropdownModule extends Component {
 
 DropdownModule.propTypes = {
   academicYear: string.isRequired,
-  rule: ruleType.isRequired
+  rule: ruleType.isRequired,
+  showAll: bool.isRequired
 };
 
 export default DropdownModule;

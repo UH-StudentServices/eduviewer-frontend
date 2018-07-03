@@ -47,13 +47,13 @@ class DegreeProgram extends Component {
           isLoading && <Loader />
         }
         <div className={styles.moduleGroups}>
-          { showAll && <div>SHOW ALL TOGGLED</div>}
           {
             moduleGroups.map(group => (
               <GroupingModule
                 key={group.code}
                 academicYear={academicYear}
                 module={group}
+                showAll={showAll}
               />
             ))
           }

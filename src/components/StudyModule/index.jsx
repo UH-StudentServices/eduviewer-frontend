@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { string } from 'prop-types';
+import { bool, string } from 'prop-types';
 
 import { elemType } from '../../types';
 import { fetchAllIdsJson, fetchCourseNames } from '../../api';
@@ -52,7 +52,7 @@ export default class StudyModule extends Component {
   }
 
   render() {
-    const { academicYear, module } = this.props;
+    const { academicYear, module, showAll } = this.props;
     const { name, code } = module;
     const { courses, subModules, error } = this.state;
 
@@ -77,6 +77,7 @@ export default class StudyModule extends Component {
               key={subModule.id}
               academicYear={academicYear}
               module={subModule}
+              showAll={showAll}
             />
           ))}
         </ul>
@@ -87,5 +88,6 @@ export default class StudyModule extends Component {
 
 StudyModule.propTypes = {
   academicYear: string.isRequired,
-  module: elemType.isRequired
+  module: elemType.isRequired,
+  showAll: bool.isRequired
 };
