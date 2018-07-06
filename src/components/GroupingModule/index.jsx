@@ -51,7 +51,6 @@ export default class GroupingModule extends Component {
     const { showAll } = this.props;
 
     if (rule.type === COMPOSITE_RULE) {
-      console.log(rule);
       return (
         <div key={rule.localId}>
           {getDescription(rule)}
