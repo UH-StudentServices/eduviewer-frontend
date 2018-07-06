@@ -18,6 +18,7 @@ class Main extends Component {
   static propTypes = {
     academicYearCode: string,
     degreeProgramId: string,
+    // eslint-disable-next-line react/no-unused-prop-types
     lang: oneOf(Object.values(availableLanguages)),
     header: string
   };
@@ -156,7 +157,7 @@ class Main extends Component {
       isLoading
     } = this.state;
 
-    const { degreeProgramId, academicYearCode, lang } = this.props;
+    const { degreeProgramId, academicYearCode } = this.props;
 
     const getOption = (id, value, text) => ({ id, value, text });
 
@@ -171,7 +172,6 @@ class Main extends Component {
 
     return (
       <div className={styles.selectContainer}>
-        <div>{`Kielivalinta: ${lang}`}</div>
         {!degreeProgramId
         && (
           <LoaderDropdown
@@ -221,7 +221,7 @@ class Main extends Component {
               showAll={showAll}
             />
           )
-          : <div>Ei näytettävää koulutusohjelmaa</div>
+          : <div className={styles.noContent}>Ei näytettävää koulutusohjelmaa</div>
         }
       </div>
     );

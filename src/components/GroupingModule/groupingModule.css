@@ -1,0 +1,27 @@
+.descriptionContainer {
+  margin-top: 0.2em;
+  padding: 0.35em;
+  border: 0.075em dashed var(--blue);
+  display: flex;
+}
+
+.iconContainer {
+  font-size: 1.25em;
+  margin-right: 0.2em;
+  color: var(--blue);
+}
+
+.description {
+  font-size: 1em;
+  color: var(--black);
+  font-weight: 300;
+}
+
+.description > p {
+  font-size: 1em;
+  color: var(--black);
+  font-weight: 300;
+  line-height: 1.4em;
+  margin-bottom: 0;
+}
+
