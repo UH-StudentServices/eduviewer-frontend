@@ -7,6 +7,8 @@ import { creditsToString, getName } from '../../utils';
 import DropdownModule from '../DropdownModule'; // eslint-disable-line
 import Course from '../Course';
 
+import styles from './groupingModule.css';
+
 const {
   ANY_COURSE_UNIT_RULE, ANY_MODULE_RULE, COMPOSITE_RULE, COURSE_UNIT_RULE,
   CREDITS_RULE, MODULE_RULE
@@ -19,7 +21,14 @@ const getDescription = (rule) => {
     return null;
   }
   const { description } = rule.dataNode;
-  return description ? <div dangerouslySetInnerHTML={{ __html: description.fi }} /> : null;
+  return description
+    ? (
+      <div className={styles.descriptionContainer}>
+        <span className={`${styles.iconContainer} icon--info`} />
+        <div className={styles.description} dangerouslySetInnerHTML={{ __html: description.fi }} />
+      </div>
+    )
+    : null;
 };
 
 const getSubRules = (rule) => {

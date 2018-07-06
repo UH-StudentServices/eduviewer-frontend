@@ -47,7 +47,7 @@ class DegreeProgram extends Component {
 
     return (
       <div className={styles.degreeProgram}>
-        <h4>{name.fi}</h4>
+        <h3>{name.fi}</h3>
         <div className={styles.moduleGroups}>
           <GroupingModule
             key={dataNode.rule.localId}
