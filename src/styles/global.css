@@ -42,8 +42,7 @@ li {
   color: black;
   border-right: 0.1em solid var(--silver);
   border-left: 0.1em solid var(--silver);
-  padding-left: 0.5em;
-  padding-right: 0.5em;
+  padding: 0.2em 0.5em;
 }
 
 li:nth-child(odd) {

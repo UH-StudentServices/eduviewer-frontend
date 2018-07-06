@@ -221,7 +221,7 @@ class Main extends Component {
               showAll={showAll}
             />
           )
-          : <div>Ei näytettävää koulutusohjelmaa</div>
+          : <div className={styles.noContent}>Ei näytettävää koulutusohjelmaa</div>
         }
       </div>
     );

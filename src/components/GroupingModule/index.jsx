@@ -27,7 +27,12 @@ const DROPDOWN_MODULES = ['opintosuunta', 'study track', 'vieras kieli', 'foreig
 const getDescription = (rule) => {
   const { description } = rule;
   return description
-    ? <div className={styles.description} dangerouslySetInnerHTML={{ __html: description.fi }} />
+    ? (
+      <div className={styles.descriptionContainer}>
+        <span className={`${styles.iconContainer} icon--info`} />
+        <div className={styles.description} dangerouslySetInnerHTML={{ __html: description.fi }} />
+      </div>
+    )
     : null;
 };
 
@@ -137,7 +142,7 @@ export default class GroupingModule extends Component {
     }
 
     return (
-      <div>
+      <div id="groupingModule">
         <strong>{name.fi}</strong>
         {getDescription(module)}
         {this.renderRule(rule)}
