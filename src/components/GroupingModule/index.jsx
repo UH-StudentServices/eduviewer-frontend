@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { bool, shape } from 'prop-types';
 
-import { rules } from '../../constants';
+import { ruleTypes } from '../../constants';
 import { creditsToString, getName } from '../../utils';
 
 import DropdownModule from '../DropdownModule'; // eslint-disable-line
@@ -12,15 +12,18 @@ import styles from './groupingModule.css';
 const {
   ANY_COURSE_UNIT_RULE, ANY_MODULE_RULE, COMPOSITE_RULE, COURSE_UNIT_RULE,
   CREDITS_RULE, MODULE_RULE
-} = rules;
+} = ruleTypes;
 
 const DROPDOWN_MODULES = ['opintosuunta', 'study track', 'vieras kieli', 'foreign language'];
 
 const getDescription = (rule) => {
-  if (!rule.dataNode) {
+  const { description: ruleDesc, dataNode } = rule;
+  const nodeDesc = dataNode && dataNode.description;
+
+  if (!ruleDesc && !nodeDesc) {
     return null;
   }
-  const { description } = rule.dataNode;
+  const description = ruleDesc || nodeDesc;
   return description
     ? (
       <div className={styles.descriptionContainer}>
@@ -32,10 +35,12 @@ const getDescription = (rule) => {
 };
 
 const getSubRules = (rule) => {
-  let subRules = rule.rules || rule.dataNode.rules || [];
+  const { rules, dataNode } = rule;
+
+  let subRules = rules || (dataNode && dataNode.rules) || [];
 
   if (subRules.length === 0) {
-    subRules = [rule.dataNode.rule];
+    subRules = [dataNode ? dataNode.rule : rule];
   }
 
   return subRules;
@@ -46,6 +51,7 @@ export default class GroupingModule extends Component {
     const { showAll } = this.props;
 
     if (rule.type === COMPOSITE_RULE) {
+      console.log(rule);
       return (
         <div key={rule.localId}>
           {getDescription(rule)}

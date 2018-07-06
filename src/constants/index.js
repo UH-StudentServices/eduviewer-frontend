@@ -1,4 +1,4 @@
-export const rules = {
+export const ruleTypes = {
   ANY_COURSE_UNIT_RULE: 'AnyCourseUnitRule',
   ANY_MODULE_RULE: 'AnyModuleRule',
   COMPOSITE_RULE: 'CompositeRule',
@@ -7,7 +7,7 @@ export const rules = {
   MODULE_RULE: 'ModuleRule'
 };
 
-export const modules = {
+export const moduleTypes = {
   GROUPING_MODULE: 'GroupingModule',
   STUDY_MODULE: 'StudyModule'
 };
