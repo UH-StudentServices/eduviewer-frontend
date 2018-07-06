@@ -52,7 +52,7 @@ export default class GroupingModule extends Component {
 
     if (rule.type === COMPOSITE_RULE) {
       return (
-        <div key={rule.localId}>
+        <div key={rule.localId} className={styles.compositeRule}>
           {getDescription(rule)}
           <ul>{rule.rules.map(this.renderRule)}</ul>
         </div>
@@ -77,7 +77,10 @@ export default class GroupingModule extends Component {
     if (rule.type === CREDITS_RULE) {
       return (
         <Fragment key={rule.localId}>
-          <div>Valitse {creditsToString(rule.credits)} op</div>
+          <div className={styles.descriptionContainer}>
+            <span className={`${styles.iconContainer} icon--info`} />
+            <div className={styles.description}>Valitse {creditsToString(rule.credits)} op</div>
+          </div>
           {this.renderRule(rule.rule)}
         </Fragment>
       );
@@ -94,20 +97,23 @@ export default class GroupingModule extends Component {
 
   render() {
     const { rule, showAll } = this.props;
-    const shouldRenderDropdown = () => DROPDOWN_MODULES.includes(getName(rule).toLowerCase());
+    if (!rule) {
+      return null;
+    }
+    const shouldRenderDropdown = DROPDOWN_MODULES.includes(getName(rule).toLowerCase());
 
-    if (shouldRenderDropdown() && !showAll) {
+    if (shouldRenderDropdown && !showAll) {
       return (
-        <div key={rule.localId}>
-          <strong>{getName(rule)}</strong>
+        <div key={rule.localId} className={styles.groupingModule}>
+          <strong className={styles.groupingTitle}>{getName(rule)}</strong>
           <DropdownModule rule={rule} showAll={showAll} />
         </div>
       );
     }
 
     return (
-      <div key={rule.localId}>
-        <strong>{getName(rule)}</strong>
+      <div id={rule.localId} key={rule.localId} className={styles.groupingModule}>
+        <strong className={styles.groupingTitle}>{getName(rule)}</strong>
         { getDescription(rule) }
         { getSubRules(rule).map(r => this.renderRule(r)) }
       </div>

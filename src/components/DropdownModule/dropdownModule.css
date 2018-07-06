@@ -1,0 +1,12 @@
+.dropdownContainer {
+  margin-bottom: 1em;
+  margin-top: 0.125em;
+ }
+
+.selectContainer {
+  margin-bottom: 0.5em;
+}
+
+.selectedContainer ul > div {
+  margin-top: 0.5em;
+}

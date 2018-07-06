@@ -5,20 +5,3 @@
 .moduleGroups {
   padding-left: 1em;
 }
-
-.moduleGroups > div > strong {
-  font-size: 1.5em;
-}
-
-.moduleGroups > div > div {
-  padding-left: 1em;
-}
-
-.moduleGroups > div > div > strong {
-  font-size: 1.25em;
-}
-
-.moduleGroups > div > div > div {
-  padding-left: 1em;
-}
-

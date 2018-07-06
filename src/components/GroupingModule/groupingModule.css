@@ -1,5 +1,5 @@
 .descriptionContainer {
-  margin-top: 0.2em;
+  margin-top: 0.3em;
   padding: 0.35em;
   border: 0.075em dashed var(--blue);
   display: flex;
@@ -28,5 +28,25 @@
 
 .description > p > a {
   word-break: break-all;
+}
+
+.groupingModule strong {
+  font-size: 1.5em;
+}
+
+.groupingModule .groupingModule strong {
+  font-size: 1.5em;
+}
+
+.groupingModule .groupingModule .groupingModule {
+  padding-left:1em;
+}
+
+.groupingModule .groupingModule .groupingModule strong {
+  font-size: 1.125em;
+}
+
+.groupingModule .groupingModule .groupingModule .groupingModule strong {
+  font-size: 1em;
 }
 
