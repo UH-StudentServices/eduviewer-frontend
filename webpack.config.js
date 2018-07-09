@@ -28,7 +28,7 @@ const getHtmlPlugin = target => new HtmlWebPackPlugin({
   inject: false,
   filename: getHtmlFileName(target),
   template: htmlTemplate,
-  appMountId: 'root',
+  appMountId: 'eduviewer-root',
   title: 'Eduviewer',
   baseHref: '/',
   meta: [
