@@ -10,6 +10,7 @@
 }
 
 .toggleLabelText {
+  position: absolute;
   display: inline-block;
   vertical-align: bottom;
   padding: 0 0 0 0.3em;

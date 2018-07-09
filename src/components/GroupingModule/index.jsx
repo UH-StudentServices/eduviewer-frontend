@@ -34,7 +34,7 @@ const getDescription = (rule, isCompositeRule = false) => {
   return description
     ? (
       <div className={styles.descriptionContainer}>
-        <span className={`${styles.iconContainer} icon--info`} />
+        <span className={`icon--info ${styles.iconContainer}`} />
         <div className={styles.description} dangerouslySetInnerHTML={{ __html: description.fi }} />
       </div>
     )
