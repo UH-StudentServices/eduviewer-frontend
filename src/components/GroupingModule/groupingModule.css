@@ -26,6 +26,11 @@
   margin-bottom: 0;
 }
 
+.description b {
+  color: var(--black);
+  font-weight: 600;
+}
+
 .description > p > a {
   word-break: break-all;
 }
