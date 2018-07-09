@@ -1,6 +1,6 @@
 .descriptionContainer {
   margin-top: 0.3em;
-  padding: 0.35em;
+  padding: 0.45em 0.35em 0.15em;
   border: 0.075em dashed var(--blue);
   display: flex;
   width: 100%;
@@ -10,6 +10,9 @@
   font-size: 1.25em;
   margin-right: 0.2em;
   color: var(--blue);
+}
+.iconContainer::after {
+  vertical-align: baseline !important;
 }
 
 .description {
