@@ -1,31 +1,32 @@
 import React, { Component, Fragment } from 'react';
-import { bool, string } from 'prop-types';
+import { bool, shape } from 'prop-types';
 
-import { elemType } from '../../types';
-import { fetchAllIdsJson } from '../../api';
-import { rules, modules } from '../../constants';
-import { creditsToString, getModuleGroupIds } from '../../utils';
+import { ruleTypes } from '../../constants';
+import { creditsToString, getName } from '../../utils';
 
-import StudyModule from '../StudyModule'; // eslint-disable-line
 import DropdownModule from '../DropdownModule'; // eslint-disable-line
-import CourseUnitRule from '../CourseUnitRule';
+import Course from '../Course';
 
 import styles from './groupingModule.css';
 
 const {
-  ANY_COURSE_UNIT_RULE,
-  ANY_MODULE_RULE,
-  COMPOSITE_RULE,
-  COURSE_UNIT_RULE,
-  CREDITS_RULE
-} = rules;
-
-const { GROUPING_MODULE, STUDY_MODULE } = modules;
+  ANY_COURSE_UNIT_RULE, ANY_MODULE_RULE, COMPOSITE_RULE, COURSE_UNIT_RULE,
+  CREDITS_RULE, MODULE_RULE
+} = ruleTypes;
 
 const DROPDOWN_MODULES = ['opintosuunta', 'study track', 'vieras kieli', 'foreign language'];
 
-const getDescription = (rule) => {
-  const { description } = rule;
+const getDescription = (rule, isCompositeRule = false) => {
+  const { description: ruleDesc, dataNode, allMandatory } = rule;
+  const nodeDesc = dataNode && dataNode.description;
+
+  const description = ruleDesc || nodeDesc;
+  const renderDescription = !(isCompositeRule && allMandatory);
+
+  if (!description || !renderDescription) {
+    return null;
+  }
+
   return description
     ? (
       <div className={styles.descriptionContainer}>
@@ -36,124 +37,94 @@ const getDescription = (rule) => {
     : null;
 };
 
+const getSubRules = (rule) => {
+  const { rules, dataNode } = rule;
+
+  let subRules = rules || (dataNode && dataNode.rules) || [];
+
+  if (subRules.length === 0) {
+    subRules = [dataNode ? dataNode.rule : rule];
+  }
+
+  return subRules;
+};
+
 export default class GroupingModule extends Component {
-  state = {
-    subModules: []
-  };
-
-  componentDidMount() {
-    const { academicYear, module } = this.props;
-    const { rule } = module;
-
-    if (rule && rule.type === COMPOSITE_RULE) {
-      this.fetchSubmodules(module, academicYear);
-    }
-  }
-
-  fetchSubmodules(module, academicYear) {
-    const { rule } = module;
-    const moduleIds = getModuleGroupIds(rule);
-
-    fetchAllIdsJson(academicYear, moduleIds)
-      .then(subModules => this.setState({ subModules }));
-  }
-
   renderRule = (rule) => {
-    const { academicYear } = this.props;
+    const { showAll } = this.props;
 
     if (rule.type === COMPOSITE_RULE) {
       return (
-        <div key={rule.localId}>
-          {getDescription(rule)}
+        <div key={rule.localId} className={styles.compositeRule}>
+          {getDescription(rule, true)}
           <ul>{rule.rules.map(this.renderRule)}</ul>
         </div>
       );
     }
 
     if (rule.type === ANY_COURSE_UNIT_RULE) {
-      return <li>Mikä tahansa opintojakso</li>;
+      return <li key={rule.localId}>Mikä tahansa opintojakso</li>;
     }
 
     if (rule.type === ANY_MODULE_RULE) {
-      return <li>Mikä tahansa opintokokonaisuus</li>;
+      return <li key={rule.localId}>Mikä tahansa opintokokonaisuus</li>;
     }
 
     if (rule.type === COURSE_UNIT_RULE) {
+      const { code, name, credits } = rule.dataNode;
       return (
-        <CourseUnitRule
-          key={rule.localId}
-          academicYear={academicYear}
-          code={rule.courseUnitGroupId}
-        />
+        <Course key={rule.localId} code={code} name={name} credits={credits} />
       );
     }
 
     if (rule.type === CREDITS_RULE) {
       return (
-        <Fragment>
-          <div>Valitse {creditsToString(rule.credits)} op</div>
+        <Fragment key={rule.localId}>
+          <div className={styles.descriptionContainer}>
+            <span className={`${styles.iconContainer} icon--info`} />
+            <div className={styles.description}>Valitse {creditsToString(rule.credits)} op</div>
+          </div>
           {this.renderRule(rule.rule)}
         </Fragment>
       );
     }
 
-    return null;
-  };
-
-  renderModule = (module) => {
-    const { academicYear, showAll } = this.props;
-
-    if (module.type === GROUPING_MODULE) {
-      return (
-        <GroupingModule
-          key={module.localId}
-          academicYear={academicYear}
-          module={module}
-          showAll={showAll}
-        />);
+    if (rule.type === MODULE_RULE) {
+      return <GroupingModule key={rule.localId} rule={rule} showAll={showAll} />;
     }
-    if (module.type === STUDY_MODULE) {
-      return (
-        <StudyModule
-          key={module.code}
-          academicYear={academicYear}
-          module={module}
-          showAll={showAll}
-        />
-      );
-    }
-    console.log('warning: module not rendered');
+
+    // Log rule if it is not rendered
+    console.log(rule);
     return null;
   };
 
   render() {
-    const { academicYear, module, showAll } = this.props;
-    const { subModules } = this.state;
-    const { name, rule } = module;
-    const shouldRenderDropdown = () => DROPDOWN_MODULES.includes(module.name.fi.toLowerCase());
+    const { rule, showAll } = this.props;
+    if (!rule) {
+      return null;
+    }
+    const shouldRenderDropdown = DROPDOWN_MODULES.includes(getName(rule).toLowerCase());
 
-    if (shouldRenderDropdown() && !showAll) {
+    if (shouldRenderDropdown && !showAll) {
       return (
-        <div>
-          <strong>{name.fi}</strong>
-          <DropdownModule academicYear={academicYear} rule={module.rule} showAll={showAll} />
+        <div key={rule.localId} className={styles.groupingModule}>
+          <strong className={styles.groupingTitle}>{getName(rule)}</strong>
+          <DropdownModule rule={rule} showAll={showAll} />
         </div>
       );
     }
 
     return (
-      <div id="groupingModule">
-        <strong>{name.fi}</strong>
-        {getDescription(module)}
-        {this.renderRule(rule)}
-        {subModules.map(subModule => this.renderModule(subModule))}
+      <div id={rule.localId} key={rule.localId} className={styles.groupingModule}>
+        <strong className={styles.groupingTitle}>{getName(rule)}</strong>
+        { getDescription(rule) }
+        { getSubRules(rule).map(r => this.renderRule(r)) }
       </div>
     );
   }
 }
 
 GroupingModule.propTypes = {
-  academicYear: string.isRequired,
-  module: elemType.isRequired,
-  showAll: bool.isRequired
+  showAll: bool.isRequired,
+  rule: shape({}).isRequired
 };

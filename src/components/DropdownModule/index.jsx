@@ -1,24 +1,18 @@
 import React, { Component, Fragment } from 'react';
-import { string, bool } from 'prop-types';
+import { bool } from 'prop-types';
+
 import { oneOfRulesType } from '../../types';
-import { fetchAllIdsJson } from '../../api';
 import GroupingModule from '../GroupingModule'; // eslint-disable-line
+import { getName } from '../../utils';
+
+import styles from './dropdownModule.css';
 
 const NOTHING_SELECTED = '-';
 
 class DropdownModule extends Component {
   state = {
-    selected: NOTHING_SELECTED,
-    modules: []
+    selected: NOTHING_SELECTED
   };
-
-  componentDidMount() {
-    const { academicYear, rule } = this.props;
-    const moduleGroupIds = rule.rules.map(r => r.moduleGroupId);
-
-    fetchAllIdsJson(academicYear, moduleGroupIds)
-      .then(modules => this.setState({ modules }));
-  }
 
   onSelectChange = (event) => {
     const { value } = event.target;
@@ -26,46 +20,54 @@ class DropdownModule extends Component {
   };
 
   renderSelectedModule() {
-    const { academicYear, showAll } = this.props;
-    const { selected, modules } = this.state;
+    const { showAll, rule } = this.props;
+    const { selected } = this.state;
+
+    const subRules = rule.dataNode.rule.rules;
 
     if (selected !== NOTHING_SELECTED) {
-      const module = modules.find(m => m.id === selected);
-      return <GroupingModule academicYear={academicYear} module={module} showAll={showAll} />;
+      const selectedRule = subRules.find(subRule => subRule.dataNode.id === selected);
+      return (
+        <div className={styles.selectedContainer}>
+          <GroupingModule rule={selectedRule} showAll={showAll} />
+        </div>
+      );
     }
 
     return null;
   }
 
   render() {
-    const { selected, modules } = this.state;
-    const { academicYear, showAll } = this.props;
+    const { selected } = this.state;
+    const { showAll, rule } = this.props;
 
     if (showAll) {
       return (
-        <Fragment>
-          {modules.map(module => (
-            <GroupingModule
-              key={module.localId}
-              academicYear={academicYear}
-              module={module}
-              showAll={showAll}
-            />
-          ))}
-        </Fragment>
+        <div className={styles.selectedContainer}>
+          <Fragment>
+            {rule.dataNode.rules.map(r => (
+              <GroupingModule
+                key={r.localId}
+                rule={rule}
+                showAll={showAll}
+              />
+            ))}
+          </Fragment>
+        </div>
       );
     }
-
     return (
-      <div>
-        <select value={selected} onChange={this.onSelectChange}>
-          <option value="-">-</option>
-          {modules.map(module => (
-            <option key={module.id} value={module.id}>
-              {module.name.fi}
-            </option>
-          ))}
-        </select>
+      <div className={styles.dropdownContainer}>
+        <div className={styles.selectContainer}>
+          <select value={selected} onChange={this.onSelectChange}>
+            <option value="-">-</option>
+            {rule.dataNode.rule.rules.map(subRule => (
+              <option key={subRule.dataNode.id} value={subRule.dataNode.id}>
+                {getName(subRule)}
+              </option>
+            ))}
+          </select>
+        </div>
         {this.renderSelectedModule()}
       </div>
     );
@@ -73,7 +75,6 @@ class DropdownModule extends Component {
 }
 
 DropdownModule.propTypes = {
-  academicYear: string.isRequired,
   rule: oneOfRulesType.isRequired,
   showAll: bool.isRequired
 };

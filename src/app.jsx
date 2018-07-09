@@ -8,7 +8,7 @@ import './styles';
 const EDUVIEWER_ROOT_ID = 'eduviewer-root';
 const LANGUAGE_ATTR_NAME = 'lang';
 const DEGREE_PROGRAM_ATTR_NAME = 'degree-program-id';
-const ACADEMIC_YEAR_ATTR_NAME = 'default-academic-year';
+const ACADEMIC_YEAR_ATTR_NAME = 'academic-year';
 const HEADER_ATTR_NAME = 'header';
 
 const getRoot = () => document.getElementById(EDUVIEWER_ROOT_ID);

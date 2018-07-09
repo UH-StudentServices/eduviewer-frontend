@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { string, bool } from 'prop-types';
 import { degreeProgramType } from '../../types';
-import { fetchAllIdsJson } from '../../api';
+import { fetchDegreeProgram } from '../../api';
 
 import GroupingModule from '../GroupingModule';
 import Loader from '../Loader';
 
 import styles from './degreeProgram.css';
-import { getModuleGroupIds } from '../../utils';
+import ErrorMessage from '../ErrorMessage';
 
 class DegreeProgram extends Component {
   state = {
-    isLoading: false,
-    moduleGroups: []
+    isLoading: true,
+    degreeProgram: {}
   }
 
   componentDidMount() {
@@ -22,36 +22,38 @@ class DegreeProgram extends Component {
   async fetchRules() {
     this.setState({ isLoading: true });
     const { academicYear, degreeProgram } = this.props;
-    const { rule } = degreeProgram;
 
-    const moduleGroupIds = getModuleGroupIds(rule);
-    const moduleGroups = await fetchAllIdsJson(academicYear, moduleGroupIds);
-
-    this.setState({ moduleGroups, isLoading: false });
+    try {
+      const education = await fetchDegreeProgram(academicYear, degreeProgram.groupId);
+      this.setState({ isLoading: false, degreeProgram: education });
+    } catch (error) {
+      this.setState({ error: error.message });
+    }
   }
 
   render() {
-    const { academicYear, degreeProgram, showAll } = this.props;
-    const { isLoading, moduleGroups } = this.state;
-    const { name } = degreeProgram;
+    const { showAll } = this.props;
+    const { isLoading, degreeProgram, error } = this.state;
+
+    if (error) {
+      return <ErrorMessage errorMessage={error} />;
+    }
+
+    if (isLoading) {
+      return <Loader />;
+    }
+
+    const { name, dataNode } = degreeProgram;
 
     return (
       <div className={styles.degreeProgram}>
         <h3>{name.fi}</h3>
-        {
-          isLoading && <Loader />
-        }
         <div className={styles.moduleGroups}>
-          {
-            moduleGroups.map(group => (
-              <GroupingModule
-                key={group.code}
-                academicYear={academicYear}
-                module={group}
-                showAll={showAll}
-              />
-            ))
-          }
+          <GroupingModule
+            key={dataNode.rule.localId}
+            rule={dataNode.rule}
+            showAll={showAll}
+          />
         </div>
       </div>);
   }
