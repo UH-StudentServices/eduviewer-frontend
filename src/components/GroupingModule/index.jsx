@@ -16,14 +16,17 @@ const {
 
 const DROPDOWN_MODULES = ['opintosuunta', 'study track', 'vieras kieli', 'foreign language'];
 
-const getDescription = (rule) => {
-  const { description: ruleDesc, dataNode } = rule;
+const getDescription = (rule, isCompositeRule = false) => {
+  const { description: ruleDesc, dataNode, allMandatory } = rule;
   const nodeDesc = dataNode && dataNode.description;
 
-  if (!ruleDesc && !nodeDesc) {
+  const description = ruleDesc || nodeDesc;
+  const renderDescription = !(isCompositeRule && allMandatory);
+
+  if (!description || !renderDescription) {
     return null;
   }
-  const description = ruleDesc || nodeDesc;
+
   return description
     ? (
       <div className={styles.descriptionContainer}>
@@ -53,7 +56,7 @@ export default class GroupingModule extends Component {
     if (rule.type === COMPOSITE_RULE) {
       return (
         <div key={rule.localId} className={styles.compositeRule}>
-          {getDescription(rule)}
+          {getDescription(rule, true)}
           <ul>{rule.rules.map(this.renderRule)}</ul>
         </div>
       );
