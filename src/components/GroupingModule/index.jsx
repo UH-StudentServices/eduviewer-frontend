@@ -10,8 +10,12 @@ import Course from '../Course';
 import styles from './groupingModule.css';
 
 const {
-  ANY_COURSE_UNIT_RULE, ANY_MODULE_RULE, COMPOSITE_RULE, COURSE_UNIT_RULE,
-  CREDITS_RULE, MODULE_RULE
+  ANY_COURSE_UNIT_RULE,
+  ANY_MODULE_RULE,
+  COMPOSITE_RULE,
+  COURSE_UNIT_RULE,
+  CREDITS_RULE,
+  MODULE_RULE
 } = ruleTypes;
 
 const DROPDOWN_MODULES = ['opintosuunta', 'study track', 'vieras kieli', 'foreign language'];
