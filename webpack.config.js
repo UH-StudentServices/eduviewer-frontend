@@ -21,7 +21,7 @@ const variants = {
 
 const getHtmlFileName = (target) => {
   const isDefaultTarget = target === defaultTarget;
-  return isDefaultTarget ? 'index.html ' : `index_${target}.html`;
+  return isDefaultTarget ? 'index.html' : `index_${target}.html`;
 };
 
 const getHtmlPlugin = target => new HtmlWebPackPlugin({
