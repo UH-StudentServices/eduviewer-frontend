@@ -13,22 +13,18 @@ import LoaderDropdown from '../LoaderDropdown';
 import styles from './main.css';
 import ToggleSelect from '../ToggleSelect';
 import { availableLanguages } from '../../constants';
+import ErrorMessage from '../ErrorMessage';
+
+const DEFAULT_ACADEMIC_YEAR = 'hy-lv-68';
 
 class Main extends Component {
   static propTypes = {
-    academicYearCode: string,
-    degreeProgramId: string,
+    academicYearCode: string.isRequired,
+    degreeProgramId: string.isRequired,
     // eslint-disable-next-line react/no-unused-prop-types
-    lang: oneOf(Object.values(availableLanguages)),
-    header: string
+    lang: oneOf(Object.values(availableLanguages)).isRequired,
+    header: string.isRequired
   };
-
-  static defaultProps = {
-    academicYearCode: 'hy-lv-68',
-    degreeProgramId: null,
-    lang: availableLanguages.FI,
-    header: null
-  }
 
   state = {
     degreePrograms: [],
@@ -52,32 +48,40 @@ class Main extends Component {
   }
 
    onDegreeProgramsChange = async (event) => {
+     this.setState({ isLoading: true, errorMessage: '' });
      const degreeProgramId = event.target.value;
-     this.setState({ isLoading: true });
-     const academicYears = await getAcademicYearsForDegreeProgram(degreeProgramId);
-     const academicYear = this.getAcademicYear(academicYears);
-     const degreeProgram = await getDegreeProgramForAcademicYear(degreeProgramId, academicYear);
+     try {
+       const academicYears = await getAcademicYearsForDegreeProgram(degreeProgramId);
+       const academicYear = this.getAcademicYear(academicYears);
+       const degreeProgram = await getDegreeProgramForAcademicYear(degreeProgramId, academicYear);
 
-     this.setState({
-       degreeProgram,
-       academicYear,
-       academicYears,
-       isLoading: false
-     });
+       this.setState({
+         degreeProgram,
+         academicYear,
+         academicYears,
+         isLoading: false
+       });
+     } catch (error) {
+       this.handleError(error);
+     }
    }
 
   onAcademicYearsChange = async (event) => {
     const { degreeProgram: { id } } = this.state;
 
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, errorMessage: '' });
     const academicYear = event.target.value;
-    const degreeProgram = await getDegreeProgramForAcademicYear(id, academicYear);
+    try {
+      const degreeProgram = await getDegreeProgramForAcademicYear(id, academicYear);
 
-    this.setState({
-      degreeProgram,
-      academicYear,
-      isLoading: false
-    });
+      this.setState({
+        degreeProgram,
+        academicYear,
+        isLoading: false
+      });
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   onShowAll = () => {
@@ -90,60 +94,80 @@ class Main extends Component {
     const { academicYearCode } = this.props;
 
     const isOldSelectionValid = oldSelection && academicYears.includes(oldSelection);
-    return isOldSelectionValid ? oldSelection : academicYearCode;
+    return isOldSelectionValid ? oldSelection : academicYearCode || DEFAULT_ACADEMIC_YEAR;
+  }
+
+  handleError = (error) => {
+    this.setState({ errorMessage: error.message, isLoading: false });
   }
 
   initAllSelects = async () => {
     this.setState({ isLoading: true });
+    try {
+      const [degreeProgramsResponse, academicYearNames] = await Promise.all(
+        [getDegreePrograms(), getAcademicYearNames()]
+      );
 
-    const [degreeProgramsResponse, academicYearNames] = await Promise.all(
-      [getDegreePrograms(), getAcademicYearNames()]
-    );
+      const degreePrograms = degreeProgramsResponse.educations;
+      const degreeProgram = degreePrograms[0];
 
-    const degreePrograms = degreeProgramsResponse.educations;
-    const degreeProgram = degreePrograms[0];
+      const academicYears = await getAcademicYearsForDegreeProgram(degreeProgram.id);
+      const academicYear = this.getAcademicYear(academicYears);
 
-    const academicYears = await getAcademicYearsForDegreeProgram(degreeProgram.id);
-    const academicYear = this.getAcademicYear(academicYears);
-
-    this.setState({
-      degreePrograms,
-      degreeProgram,
-      academicYear,
-      academicYearNames,
-      academicYears,
-      isLoading: false
-    });
+      this.setState({
+        degreePrograms,
+        degreeProgram,
+        academicYear,
+        academicYearNames,
+        academicYears,
+        isLoading: false
+      });
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   initAcademicYears = async (degreeProgramId) => {
     this.setState({ isLoading: true });
-    const [academicYearNames, academicYears] = await Promise.all(
-      [getAcademicYearNames(), getAcademicYearsForDegreeProgram(degreeProgramId)]
-    );
+    try {
+      const [academicYearNames, academicYears] = await Promise.all(
+        [getAcademicYearNames(), getAcademicYearsForDegreeProgram(degreeProgramId)]
+      );
 
-    const academicYear = this.getAcademicYear(academicYears);
+      const academicYear = this.getAcademicYear(academicYears);
+      const degreeProgram = await getDegreeProgramForAcademicYear(
+        degreeProgramId,
+        academicYear
+      );
 
-    this.setState({
-      academicYearNames,
-      academicYear,
-      academicYears,
-      isLoading: false
-    });
+      this.setState({
+        academicYearNames,
+        academicYear,
+        academicYears,
+        degreeProgram,
+        isLoading: false
+      });
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   initSpecificView = async (degreeProgramId, academicYear) => {
     this.setState({ isLoading: true });
+    try {
+      const degreeProgram = await getDegreeProgramForAcademicYear(
+        degreeProgramId,
+        academicYear
+      );
 
-    const degreeProgram = await getDegreeProgramForAcademicYear(
-      degreeProgramId,
-      academicYear
-    );
-
-    this.setState({
-      degreeProgram,
-      isLoading: false
-    });
+      this.setState({
+        academicYear,
+        degreeProgram,
+        isLoading: false
+      });
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   renderSelections = () => {
@@ -206,12 +230,15 @@ class Main extends Component {
   }
 
   renderContent = () => {
-    const { degreeProgram, academicYear, showAll } = this.state;
+    const {
+      degreeProgram, academicYear, showAll, errorMessage, isLoading
+    } = this.state;
 
-    const hasContent = academicYear && degreeProgram.name;
+    const hasContent = !isLoading && academicYear && degreeProgram.name;
 
     return (
       <div className={styles.contentContainer}>
+        {errorMessage && <ErrorMessage errorMessage={errorMessage} /> }
         {hasContent
           ? (
             <DegreeProgram
@@ -219,6 +246,8 @@ class Main extends Component {
               degreeProgram={degreeProgram}
               academicYear={academicYear}
               showAll={showAll}
+              handleError={this.handleError}
+              showContent={!errorMessage}
             />
           )
           : <div className={styles.noContent}>Ei näytettävää koulutusohjelmaa</div>

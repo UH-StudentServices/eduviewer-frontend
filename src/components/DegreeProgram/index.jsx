@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { string, bool } from 'prop-types';
+import { string, bool, func } from 'prop-types';
 import { degreeProgramType } from '../../types';
 import { fetchDegreeProgram } from '../../api';
 
@@ -7,40 +7,47 @@ import GroupingModule from '../GroupingModule';
 import Loader from '../Loader';
 
 import styles from './degreeProgram.css';
-import ErrorMessage from '../ErrorMessage';
 
 class DegreeProgram extends Component {
+  static propTypes = {
+    academicYear: string.isRequired,
+    degreeProgram: degreeProgramType.isRequired,
+    showAll: bool.isRequired,
+    handleError: func.isRequired,
+    showContent: bool.isRequired
+  };
+
   state = {
     isLoading: true,
     degreeProgram: {}
   }
 
-  componentDidMount() {
-    this.fetchRules();
+  async componentDidMount() {
+    await this.fetchRules();
   }
 
   async fetchRules() {
     this.setState({ isLoading: true });
-    const { academicYear, degreeProgram } = this.props;
+    const { academicYear, degreeProgram, handleError } = this.props;
 
     try {
       const education = await fetchDegreeProgram(academicYear, degreeProgram.groupId);
       this.setState({ isLoading: false, degreeProgram: education });
     } catch (error) {
-      this.setState({ error: error.message });
+      this.setState({ isLoading: false }, handleError(error));
     }
   }
 
   render() {
-    const { showAll } = this.props;
-    const { isLoading, degreeProgram, error } = this.state;
-
-    if (error) {
-      return <ErrorMessage errorMessage={error} />;
-    }
+    const { showAll, showContent } = this.props;
+    const { isLoading, degreeProgram } = this.state;
 
     if (isLoading) {
       return <Loader />;
+    }
+
+    if (!showContent) {
+      return null;
     }
 
     const { name, dataNode } = degreeProgram;
@@ -58,11 +65,5 @@ class DegreeProgram extends Component {
       </div>);
   }
 }
-
-DegreeProgram.propTypes = {
-  academicYear: string.isRequired,
-  degreeProgram: degreeProgramType.isRequired,
-  showAll: bool.isRequired
-};
 
 export default DegreeProgram;
