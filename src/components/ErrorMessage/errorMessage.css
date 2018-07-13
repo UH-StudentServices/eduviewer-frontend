@@ -12,6 +12,7 @@
   font-size: 2.5em;
   margin-right: 0.35em;
 }
+
 .iconContainer::after {
   vertical-align: baseline !important;
 }
