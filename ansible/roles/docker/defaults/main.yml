@@ -2,7 +2,8 @@
 # If we wanted to get whatever is the latest not
 # marked as a release candidate we could instead
 # not specify a version but simply `docker-ce`.
-docker_version: '18.03.0~ce-0~ubuntu'
+docker_version_number: "18.03.0"
+docker_version: "{{ docker_version_number }}~ce-0~ubuntu"
 # docker_edition: "ce"
 # docker_version: "18.04.0"
 # docker_apt_package_name: "{{ docker_version }}~{{ docker_edition }}~3-0~{{ ansible_distribution | lower }}"
