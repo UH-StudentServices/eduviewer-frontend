@@ -35,6 +35,30 @@
     update_cache: yes
     cache_valid_time: 86400 #One day
 
+- name: check if docker is installed
+  command: 'docker -v'
+  register: docker_installed_result
+  failed_when: false
+  changed_when: false
+
+- name: store docker installed result
+  set_fact:
+    docker_installed: "{{ docker_installed_result.rc == 0 }}"
+
+- name: check installed docker version
+  shell: "{{ docker_bin }} -v | awk -F'[ ,]' '{ print $3; }'"
+  register: docker_version_installed_result
+  failed_when: false
+  changed_when: false
+  when: docker_installed == true
+
+- name: store installed docker version result
+  set_fact:
+    docker_desired_version_or_higher_installed: "{{ docker_version_installed_result.stdout is version(item, '>=') }}"
+  with_items:
+    - "{{ docker_version_number }}-ce"
+  when: docker_installed == true
+
 # With the list of packages updated we can install
 # a specific version of the `docker-ce` package. This
 # way we can declaratively tell the role which version
@@ -45,6 +69,7 @@
     name: 'docker-ce={{ docker_version }}'
     # name: "docker-{{ docker_edition }}={{ docker_apt_package_name }}"
     state: 'present'
+  when: docker_installed == false or docker_desired_version_or_higher_installed == false
 
 - name: Create docker root dir
   file:
