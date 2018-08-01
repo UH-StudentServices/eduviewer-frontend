@@ -5,16 +5,24 @@ server {
 }
 
 server {
-    listen 443 ssl;
+    listen 443 ssl http2;
 
     ssl on;
     ssl_certificate ${CERT_PATH};
     ssl_certificate_key ${KEY_PATH};
 
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:10m;
+
+    gzip on;
+    gzip_types      text/plain text/css application/javascript application/x-javascript text/javascript;
+
+
     server_name ${SERVER_NAME};
 
     etag off;
-    if_modified_since off;
 
     location /api {
       proxy_set_header X-Forwarded-Host $host;
@@ -32,17 +40,8 @@ server {
       alias /usr/src/app;
       try_files /$uri /index.html =404;
 
-      add_header Cache-Control "no-store, no-cache, max-age=0";
-      add_header Access-Control-Allow-Origin * always;
-      expires off;
-    }
-
-    location ~* \.(js|css|png|jpe?g|svg|gif|ico|eot|woff|woff2|ttf)$ {
-      alias /usr/src/app;
-      try_files /$uri /index.html =404;
-
       add_header Cache-Control "public";
       add_header Access-Control-Allow-Origin * always;
-      expires 1y;
+      expires off;
     }
 }
