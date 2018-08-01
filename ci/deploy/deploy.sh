@@ -24,9 +24,8 @@ cp ci/deploy/.env-$CI_ENVIRONMENT_NAME .env
 echo "DOCKER_TAG=$DOCKER_TAG" >> .env
 echo "REGISTRY_URL=$REGISTRY_URL" >> .env
 
-ssh $SSH_FLAGS -t -i keyfile deployer@$TARGET_HOST "mkdir /home/deployer/$DOCKER_TAG"
+ssh $SSH_FLAGS -t -i keyfile deployer@$TARGET_HOST "rm -rf /home/deployer/$DOCKER_TAG &> /dev/null;mkdir /home/deployer/$DOCKER_TAG"
 scp $SSH_FLAGS -i keyfile -r ci/deploy/remote/* deployer@$TARGET_HOST:/home/deployer/$DOCKER_TAG/
 scp $SSH_FLAGS -i keyfile .env deployer@$TARGET_HOST:/home/deployer/$DOCKER_TAG/
 ssh $SSH_FLAGS -t -i keyfile deployer@$TARGET_HOST "sudo cp /home/deployer/$DOCKER_TAG/* /opt/eduviewer-frontend/ && sudo cp /home/deployer/$DOCKER_TAG/.env /opt/eduviewer-frontend/ && cd /opt/eduviewer-frontend && sudo ./run.sh $DOCKER_TAG $REGISTRY_USER $REGISTRY_TOKEN $REGISTRY_URL"
 ssh $SSH_FLAGS -t -i keyfile deployer@$TARGET_HOST "rm -rf /home/deployer/$DOCKER_TAG"
-
