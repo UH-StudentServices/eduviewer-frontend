@@ -98,8 +98,6 @@ export default class GroupingModule extends Component {
       return <GroupingModule key={rule.localId} rule={rule} showAll={showAll} />;
     }
 
-    // Log rule if it is not rendered
-    console.log(rule); // eslint-disable-line no-console
     return null;
   };
 
