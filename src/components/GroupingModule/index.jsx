@@ -35,6 +35,7 @@ const getDescription = (rule, isCompositeRule = false) => {
     ? (
       <div className={styles.descriptionContainer}>
         <span className={`icon--info ${styles.iconContainer}`} />
+        { /* eslint-disable-next-line react/no-danger */ }
         <div className={styles.description} dangerouslySetInnerHTML={{ __html: description.fi }} />
       </div>
     )
@@ -98,7 +99,7 @@ export default class GroupingModule extends Component {
     }
 
     // Log rule if it is not rendered
-    console.log(rule);
+    console.log(rule); // eslint-disable-line no-console
     return null;
   };
 
