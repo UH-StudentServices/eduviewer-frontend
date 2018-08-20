@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { bool, shape } from 'prop-types';
 
 import { ruleTypes } from '../../constants';
-import { creditsToString, getName } from '../../utils';
+import { compareSubRules, creditsToString, getName } from '../../utils';
 
 import DropdownModule from '../DropdownModule'; // eslint-disable-line
 import Course from '../Course';
@@ -62,7 +62,7 @@ export default class GroupingModule extends Component {
       return (
         <div key={rule.localId} className={styles.compositeRule}>
           {getDescription(rule, true)}
-          <ul>{rule.rules.map(this.renderRule)}</ul>
+          <ul>{rule.rules.sort(compareSubRules).map(this.renderRule)}</ul>
         </div>
       );
     }
@@ -123,7 +123,7 @@ export default class GroupingModule extends Component {
       <div id={rule.localId} key={rule.localId} className={styles.groupingModule}>
         <strong className={styles.groupingTitle}>{getName(rule)}</strong>
         { getDescription(rule) }
-        { getSubRules(rule).map(r => this.renderRule(r)) }
+        { getSubRules(rule).sort(compareSubRules).map(r => this.renderRule(r)) }
       </div>
     );
   }
