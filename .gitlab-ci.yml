@@ -7,7 +7,7 @@ stages:
   stage: provision
   script:
     - eval `ssh-agent -s`
-    - echo "$OPINTOTARJONTA_DEPLOYER_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - echo "$DEPLOYER_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - export ANSIBLE_HOST_KEY_CHECKING=false
     - ansible-playbook -u deployer --limit $ENVIRONMENT -i ansible/hosts/inventory ansible/provision.yml
   when: manual
