@@ -4,7 +4,7 @@
 #  target server name or IP
 #
 # Required environment variables (provided by GitLab group level Secret variables):
-#  OPINTOTARJONTA_DEPLOYER_SSH_KEY
+#  DEPLOYER_SSH_KEY
 #  REGISTRY_TOKEN
 #  REGISTRY_USER
 #  REGISTRY_URL
@@ -17,7 +17,7 @@ DOCKER_TAG=$1
 TARGET_HOST=$2
 SSH_FLAGS="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 
-echo "$OPINTOTARJONTA_DEPLOYER_SSH_KEY" > keyfile
+echo "$DEPLOYER_SSH_KEY" > keyfile
 chmod 600 keyfile
 
 cp ci/deploy/.env-$CI_ENVIRONMENT_NAME .env
