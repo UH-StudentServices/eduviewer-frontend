@@ -2,21 +2,21 @@ import { ruleTypes } from '../constants';
 
 const { COURSE_UNIT_RULE } = ruleTypes;
 
-export const creditsToString = (credits) => {
+export const creditsToString = (credits, showMinSPRequirement = false) => {
   if (!credits) {
     return null;
   }
 
   const { max, min } = credits;
   const spLabel = 'op';
-  const minLabel = 'min.';
+  const minLabel = 'väh.';
 
   let creditsString;
 
-  if (min === max) {
-    creditsString = min;
-  } else if (!max) {
+  if (!max && showMinSPRequirement) {
     creditsString = `${minLabel} ${min}`;
+  } else if (min === max || !max) {
+    creditsString = min;
   } else {
     creditsString = `${min} - ${max}`;
   }

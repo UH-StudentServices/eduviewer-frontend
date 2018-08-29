@@ -107,7 +107,7 @@ export default class GroupingModule extends Component {
       return null;
     }
     const shouldRenderDropdown = DROPDOWN_MODULES.includes(getName(rule).toLowerCase());
-    const moduleCredits = rule.type === MODULE_RULE && creditsToString(rule.dataNode.targetCredits);
+    const moduleCredits = rule.type === MODULE_RULE && creditsToString(rule.dataNode.targetCredits, true);
     const moduleCode = rule.type === MODULE_RULE && rule.dataNode.code;
 
     if (shouldRenderDropdown && !showAll) {
