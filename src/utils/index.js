@@ -3,8 +3,25 @@ import { ruleTypes } from '../constants';
 const { COURSE_UNIT_RULE } = ruleTypes;
 
 export const creditsToString = (credits) => {
+  if (!credits) {
+    return null;
+  }
+
   const { max, min } = credits;
-  return (max === min || max === null) ? min : `${min}–${max}`;
+  const spLabel = 'op';
+  const minLabel = 'min.';
+
+  let creditsString;
+
+  if (min === max) {
+    creditsString = min;
+  } else if (!max) {
+    creditsString = `${minLabel} ${min}`;
+  } else {
+    creditsString = `${min} - ${max}`;
+  }
+
+  return `${creditsString} ${spLabel}`;
 };
 
 export const getName = rule => (rule.dataNode ? rule.dataNode.name.fi : '');
