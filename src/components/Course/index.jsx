@@ -1,6 +1,7 @@
 import React from 'react';
 import { string } from 'prop-types';
 import { creditsType, localizedTextType } from '../../types';
+import { creditsToString } from '../../utils';
 
 import styles from './course.css';
 
@@ -8,7 +9,7 @@ const Course = ({ code, name, credits }) => (
   <li>
     {`${code} ${name.fi} `}
     <span className={styles.credits}>
-      ({credits.min === credits.max ? credits.min : `${credits.min}–${credits.max}`} op)
+      ({creditsToString(credits)})
     </span>
   </li>
 );
