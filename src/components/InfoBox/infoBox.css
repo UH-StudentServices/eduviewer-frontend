@@ -1,0 +1,39 @@
+.infoContainer {
+  margin-top: 0.3em;
+  padding: 0.45em 0.35em 0.15em;
+  border: 0.075em dashed var(--blue);
+  display: flex;
+  width: 100%;
+}
+
+.iconContainer {
+  font-size: 1.25em;
+  margin-right: 0.2em;
+  color: var(--blue);
+}
+.iconContainer::after {
+  vertical-align: baseline !important;
+}
+
+.content {
+  font-size: 1em;
+  color: var(--black);
+  font-weight: 300;
+}
+
+.content > p {
+  font-size: 1em;
+  color: var(--black);
+  font-weight: 300;
+  line-height: 1.4;
+  margin-bottom: 0;
+}
+
+.content b {
+  color: var(--black);
+  font-weight: 600;
+}
+
+.content > p > a {
+  word-break: break-all;
+}
