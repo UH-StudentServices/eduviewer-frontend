@@ -2,12 +2,15 @@ import React, { Component, Fragment } from 'react';
 import { bool, shape } from 'prop-types';
 
 import { ruleTypes } from '../../constants';
-import { compareSubRules, creditsToString, getName } from '../../utils';
+import {
+  compareSubRules, creditsToString, getName, requiredCoursesToString
+} from '../../utils';
 
 import DropdownModule from '../DropdownModule'; // eslint-disable-line
 import Course from '../Course';
 
 import styles from './groupingModule.css';
+import InfoBox from '../InfoBox';
 
 const {
   ANY_COURSE_UNIT_RULE,
@@ -31,15 +34,7 @@ const getDescription = (rule, isCompositeRule = false) => {
     return null;
   }
 
-  return description
-    ? (
-      <div className={styles.descriptionContainer}>
-        <span className={`icon--info ${styles.iconContainer}`} />
-        { /* eslint-disable-next-line react/no-danger */ }
-        <div className={styles.description} dangerouslySetInnerHTML={{ __html: description.fi }} />
-      </div>
-    )
-    : null;
+  return <InfoBox content={description.fi} setInnerHtml />;
 };
 
 const getSubRules = (rule) => {
@@ -59,8 +54,15 @@ export default class GroupingModule extends Component {
     const { showAll } = this.props;
 
     if (rule.type === COMPOSITE_RULE) {
+      const { require, allMandatory } = rule;
+      const hasRequiredCoursesRange = require && (require.max || require.min > 0);
+      const renderRequiredCourseAmount = !allMandatory && hasRequiredCoursesRange;
+
       return (
         <div key={rule.localId} className={styles.compositeRule}>
+          {renderRequiredCourseAmount
+            && <InfoBox content={`Valitse ${requiredCoursesToString(require)}`} />
+          }
           {getDescription(rule, true)}
           <ul>{rule.rules.sort(compareSubRules).map(this.renderRule)}</ul>
         </div>
@@ -85,10 +87,7 @@ export default class GroupingModule extends Component {
     if (rule.type === CREDITS_RULE) {
       return (
         <Fragment key={rule.localId}>
-          <div className={styles.descriptionContainer}>
-            <span className={`${styles.iconContainer} icon--info`} />
-            <div className={styles.description}>Valitse {creditsToString(rule.credits)}</div>
-          </div>
+          <InfoBox content={`Valitse ${creditsToString(rule.credits)}`} />
           {this.renderRule(rule.rule)}
         </Fragment>
       );

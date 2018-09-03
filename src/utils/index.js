@@ -2,6 +2,21 @@ import { ruleTypes } from '../constants';
 
 const { COURSE_UNIT_RULE } = ruleTypes;
 
+const getMinMaxString = (min, max, showMinRequirement = false) => {
+  const minLabel = 'väh.';
+
+  let minMaxString;
+
+  if (!max && showMinRequirement) {
+    minMaxString = `${minLabel} ${min}`;
+  } else if (min === max || !max) {
+    minMaxString = `${min}`;
+  } else {
+    minMaxString = `${min} - ${max}`;
+  }
+  return minMaxString;
+};
+
 export const creditsToString = (credits, showMinSPRequirement = false) => {
   if (!credits) {
     return null;
@@ -9,19 +24,15 @@ export const creditsToString = (credits, showMinSPRequirement = false) => {
 
   const { max, min } = credits;
   const spLabel = 'op';
-  const minLabel = 'väh.';
 
-  let creditsString;
-
-  if (!max && showMinSPRequirement) {
-    creditsString = `${minLabel} ${min}`;
-  } else if (min === max || !max) {
-    creditsString = min;
-  } else {
-    creditsString = `${min} - ${max}`;
-  }
+  const creditsString = getMinMaxString(min, max, showMinSPRequirement);
 
   return `${creditsString} ${spLabel}`;
+};
+
+export const requiredCoursesToString = (requiredCourses) => {
+  const { max, min } = requiredCourses;
+  return getMinMaxString(min, max);
 };
 
 export const getName = rule => (rule.dataNode ? rule.dataNode.name.fi : '');
