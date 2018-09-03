@@ -24,4 +24,4 @@ export const getAcademicYearNames = () => getJson('/api/lv_names');
 
 export const getDegreeProgramForAcademicYear = (degreeProgramId, academicYear) => getJson(`/api/by_id/${degreeProgramId}?lv=${academicYear}`);
 
-export const fetchDegreeProgram = (academicYear = '', id) => getJson(`/api/tree/${id}/?lv=${academicYear}`);
+export const fetchDegreeProgramByCode = (code, academicYear = '') => getJson(`/api/tree_by_code/${code}?lv=${academicYear}`);

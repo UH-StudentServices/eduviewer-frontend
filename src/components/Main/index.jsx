@@ -4,7 +4,8 @@ import {
   getDegreePrograms,
   getAcademicYearNames,
   getAcademicYearsForDegreeProgram,
-  getDegreeProgramForAcademicYear
+  getDegreeProgramForAcademicYear,
+  fetchDegreeProgramByCode
 } from '../../api';
 
 import DegreeProgram from '../DegreeProgram';
@@ -135,10 +136,7 @@ class Main extends Component {
       );
 
       const academicYear = this.getAcademicYear(academicYears);
-      const degreeProgram = await getDegreeProgramForAcademicYear(
-        degreeProgramId,
-        academicYear
-      );
+      const degreeProgram = await fetchDegreeProgramByCode(degreeProgramId, academicYear);
 
       this.setState({
         academicYearNames,
@@ -155,10 +153,7 @@ class Main extends Component {
   initSpecificView = async (degreeProgramId, academicYear) => {
     this.setState({ isLoading: true });
     try {
-      const degreeProgram = await getDegreeProgramForAcademicYear(
-        degreeProgramId,
-        academicYear
-      );
+      const degreeProgram = await fetchDegreeProgramByCode(degreeProgramId, academicYear);
 
       this.setState({
         academicYear,
