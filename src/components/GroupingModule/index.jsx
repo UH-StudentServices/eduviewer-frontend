@@ -54,14 +54,14 @@ export default class GroupingModule extends Component {
     const { showAll } = this.props;
 
     if (rule.type === COMPOSITE_RULE) {
-      const requiredCourseAmount = rule.require;
-      const renderRequiredCourseAmount = !rule.allMandatory && requiredCourseAmount
-        && !(!requiredCourseAmount.max && requiredCourseAmount.min === 0);
+      const { require, allMandatory } = rule;
+      const hasRequiredCoursesRange = require && (require.max || require.min > 0);
+      const renderRequiredCourseAmount = !allMandatory && hasRequiredCoursesRange;
 
       return (
         <div key={rule.localId} className={styles.compositeRule}>
           {renderRequiredCourseAmount
-            && <InfoBox content={`Valitse ${requiredCoursesToString(requiredCourseAmount)}`} />
+            && <InfoBox content={`Valitse ${requiredCoursesToString(require)}`} />
           }
           {getDescription(rule, true)}
           <ul>{rule.rules.sort(compareSubRules).map(this.renderRule)}</ul>
