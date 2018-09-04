@@ -5,6 +5,6 @@
        <title><%= htmlWebpackPlugin.options.title %></title>
     </head>
     <body>
-        <div id="eduviewer-root" degree-program-id="MH50_004" academic-year="current" lang="fi" header=""></div>
+        <div id="eduviewer-root" degree-program-id="" academic-year="current" lang="fi" header=""></div>
     </body>
 </html>
