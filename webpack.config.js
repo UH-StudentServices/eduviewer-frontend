@@ -1,6 +1,5 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
-const htmlTemplate = require('html-webpack-template');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const webpack = require('webpack');
@@ -25,9 +24,9 @@ const getHtmlFileName = (target) => {
 };
 
 const getHtmlPlugin = target => new HtmlWebPackPlugin({
-  inject: false,
+  inject: true,
   filename: getHtmlFileName(target),
-  template: htmlTemplate,
+  template: '../index.html.template',
   appMountId: 'eduviewer-root',
   title: 'Eduviewer',
   baseHref: '/',

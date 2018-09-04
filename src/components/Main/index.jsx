@@ -15,6 +15,7 @@ import styles from './main.css';
 import ToggleSelect from '../ToggleSelect';
 import { availableLanguages, CURRENT_ACADEMIC_YEAR_CODE } from '../../constants';
 import ErrorMessage from '../ErrorMessage';
+import Loader from '../Loader';
 
 class Main extends Component {
   static propTypes = {
@@ -258,6 +259,10 @@ class Main extends Component {
     const {
       degreeProgram, academicYear, showAll, errorMessage, isLoading
     } = this.state;
+
+    if (isLoading) {
+      return <Loader />;
+    }
 
     const hasContent = !isLoading && academicYear && degreeProgram.name;
 
