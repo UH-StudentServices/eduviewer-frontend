@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+      <meta charset="UTF-8">
     </head>
     <body>
         <div id="eduviewer-root" degree-program-id="MH50_004" academic-year="current" lang="fi" header=""></div>
