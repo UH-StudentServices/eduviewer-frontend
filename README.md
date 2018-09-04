@@ -36,7 +36,7 @@ Eduviewer frontend can be embedded to any web page using the following `div` tag
 ```
 All attributes are optional.
 * `lang` defaults to `fi`, other valid values are: `sv` & `en`
-* `academic-year` defaults to current academic year
+* `academic-year` defaults to the current academic year
 * Example `acedemic-year` exact values: `hy-lv-68`, `hy-lv-69`.  
 * If `degree-program-id` is set, embedded app won't show select for Degree Program
 * If `degree-program-id` and `academic-year` are set, embedded app won't show selects for Degree Program or Academic Year
