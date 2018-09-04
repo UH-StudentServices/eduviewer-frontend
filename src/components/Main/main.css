@@ -19,3 +19,18 @@
   color: var(--black);
   font-weight: 300;
 }
+
+.academicYearContainer {
+  margin-top: 0.5em;
+  font-size: 1.45em;
+}
+
+.academicYearLabel {
+  color: var(--lightGray);
+  font-weight: 400;
+}
+
+.academicYearText {
+  color: var(--black);
+  font-weight: 600;
+}

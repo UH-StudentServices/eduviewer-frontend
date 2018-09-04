@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { string, bool, func } from 'prop-types';
 import { degreeProgramType } from '../../types';
-import { fetchDegreeProgramByCode } from '../../api';
+import { fetchDegreeProgram } from '../../api';
 
 import GroupingModule from '../GroupingModule';
 import Loader from '../Loader';
@@ -31,8 +31,7 @@ class DegreeProgram extends Component {
     const { academicYear, degreeProgram, handleError } = this.props;
 
     try {
-      const { code: degreeProgramCode } = degreeProgram.dataNode;
-      const education = await fetchDegreeProgramByCode(degreeProgramCode, academicYear);
+      const education = await fetchDegreeProgram(academicYear, degreeProgram.groupId);
       this.setState({ isLoading: false, degreeProgram: education });
     } catch (error) {
       this.setState({ isLoading: false }, handleError(error));

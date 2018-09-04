@@ -13,10 +13,8 @@ import LoaderDropdown from '../LoaderDropdown';
 
 import styles from './main.css';
 import ToggleSelect from '../ToggleSelect';
-import { availableLanguages } from '../../constants';
+import { availableLanguages, CURRENT_ACADEMIC_YEAR_CODE } from '../../constants';
 import ErrorMessage from '../ErrorMessage';
-
-const DEFAULT_ACADEMIC_YEAR = 'hy-lv-68';
 
 class Main extends Component {
   static propTypes = {
@@ -39,13 +37,16 @@ class Main extends Component {
 
   async componentDidMount() {
     const { degreeProgramId, academicYearCode } = this.props;
+    this.setState({ isLoading: true });
+    await this.initAcademicYears(academicYearCode);
     if (degreeProgramId && academicYearCode) {
-      await this.initSpecificView(degreeProgramId, academicYearCode);
+      await this.initSpecificView(degreeProgramId);
     } else if (degreeProgramId) {
-      await this.initAcademicYears(degreeProgramId);
+      await this.initAcademicYearsForDegreeProgram(degreeProgramId);
     } else {
       await this.initAllSelects();
     }
+    this.setState({ isLoading: false });
   }
 
    onDegreeProgramsChange = async (event) => {
@@ -74,7 +75,6 @@ class Main extends Component {
     const academicYear = event.target.value;
     try {
       const degreeProgram = await getDegreeProgramForAcademicYear(id, academicYear);
-
       this.setState({
         degreeProgram,
         academicYear,
@@ -91,11 +91,36 @@ class Main extends Component {
   }
 
   getAcademicYear = (academicYears) => {
-    const { academicYear: oldSelection } = this.state;
-    const { academicYearCode } = this.props;
+    const { academicYear: oldSelection, defaultAcademicYearCode } = this.state;
 
     const isOldSelectionValid = oldSelection && academicYears.includes(oldSelection);
-    return isOldSelectionValid ? oldSelection : academicYearCode || DEFAULT_ACADEMIC_YEAR;
+    return isOldSelectionValid ? oldSelection : defaultAcademicYearCode;
+  }
+
+  initAcademicYears = async (academicYearCode) => {
+    const academicYearNames = await getAcademicYearNames();
+
+    const hasValidAcademicYear = academicYearCode
+      && academicYearCode !== CURRENT_ACADEMIC_YEAR_CODE;
+
+    const getCurrentAcademicYear = () => {
+      const dateNow = new Date();
+      const currentMonth = dateNow.getMonth();
+      const zeroBasedAugust = 7;
+      const isMonthBeforeAugust = currentMonth < zeroBasedAugust;
+      if (isMonthBeforeAugust) {
+        dateNow.setFullYear(dateNow.getFullYear() - 1);
+      }
+      const currentAcademicYear = dateNow.getFullYear();
+      const isCurrentAcademicYear = ay => academicYearNames[ay].startsWith(currentAcademicYear);
+      return Object.keys(academicYearNames).find(isCurrentAcademicYear);
+    };
+
+    const defaultAcademicYearCode = hasValidAcademicYear
+      ? academicYearCode
+      : getCurrentAcademicYear();
+
+    this.setState({ academicYearNames, defaultAcademicYearCode });
   }
 
   handleError = (error) => {
@@ -103,11 +128,8 @@ class Main extends Component {
   }
 
   initAllSelects = async () => {
-    this.setState({ isLoading: true });
     try {
-      const [degreeProgramsResponse, academicYearNames] = await Promise.all(
-        [getDegreePrograms(), getAcademicYearNames()]
-      );
+      const degreeProgramsResponse = await getDegreePrograms();
 
       const degreePrograms = degreeProgramsResponse.educations;
       const degreeProgram = degreePrograms[0];
@@ -119,46 +141,44 @@ class Main extends Component {
         degreePrograms,
         degreeProgram,
         academicYear,
-        academicYearNames,
-        academicYears,
-        isLoading: false
+        academicYears
       });
     } catch (error) {
       this.handleError(error);
     }
   }
 
-  initAcademicYears = async (degreeProgramId) => {
-    this.setState({ isLoading: true });
+  initAcademicYearsForDegreeProgram = async (degreeProgramId) => {
     try {
-      const [academicYearNames, academicYears] = await Promise.all(
-        [getAcademicYearNames(), getAcademicYearsForDegreeProgram(degreeProgramId)]
-      );
+      const academicYears = await getAcademicYearsForDegreeProgram(degreeProgramId);
 
       const academicYear = this.getAcademicYear(academicYears);
       const degreeProgram = await fetchDegreeProgramByCode(degreeProgramId, academicYear);
 
       this.setState({
-        academicYearNames,
         academicYear,
         academicYears,
-        degreeProgram,
-        isLoading: false
+        degreeProgram
+      });
+      this.handleError({
+        message: 'Embedding Eduviewer with only degree-program-id attribute without academic-year attribute is not suppoted'
       });
     } catch (error) {
       this.handleError(error);
     }
   }
 
-  initSpecificView = async (degreeProgramId, academicYear) => {
-    this.setState({ isLoading: true });
+  initSpecificView = async (degreeProgramId) => {
+    const { defaultAcademicYearCode } = this.state;
     try {
-      const degreeProgram = await fetchDegreeProgramByCode(degreeProgramId, academicYear);
+      const degreeProgram = await fetchDegreeProgramByCode(
+        degreeProgramId,
+        defaultAcademicYearCode
+      );
 
       this.setState({
-        academicYear,
-        degreeProgram,
-        isLoading: false
+        academicYear: defaultAcademicYearCode,
+        degreeProgram
       });
     } catch (error) {
       this.handleError(error);
@@ -204,15 +224,25 @@ class Main extends Component {
         )
         }
         {(!degreeProgramId || !academicYearCode)
-          && (
-          <LoaderDropdown
-            id={ACADEMIC_YEARS_ID}
-            value={academicYear}
-            onChange={this.onAcademicYearsChange}
-            options={academicYearOptions}
-            label={academicYearsLabel}
-            isLoading={isLoading}
-          />
+          ? (
+            <LoaderDropdown
+              id={ACADEMIC_YEARS_ID}
+              value={academicYear}
+              onChange={this.onAcademicYearsChange}
+              options={academicYearOptions}
+              label={academicYearsLabel}
+              isLoading={isLoading}
+            />
+          )
+          : (
+            <div className={styles.academicYearContainer}>
+              <div className={styles.academicYearLabel}>
+                {'Lukuvuosi '}
+                <span className={styles.academicYearText}>
+                  {academicYearNames[academicYear]}
+                </span>
+              </div>
+            </div>
           )
         }
         <ToggleSelect
@@ -232,7 +262,7 @@ class Main extends Component {
     const hasContent = !isLoading && academicYear && degreeProgram.name;
 
     return (
-      <div className={styles.contentContainer}>
+      <div>
         {errorMessage && <ErrorMessage errorMessage={errorMessage} /> }
         {hasContent
           ? (
