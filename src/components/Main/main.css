@@ -1,6 +1,6 @@
 .mainContainer {
   margin: 1em;
-  padding: 0.5em 1em;
+  padding: 0.5em 1em 1em;
   border: 0.0125em solid var(--mediumSilver);
 }
 
