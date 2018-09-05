@@ -17,3 +17,5 @@ export const availableLanguages = {
   EN: 'en',
   SV: 'sv'
 };
+
+export const CURRENT_ACADEMIC_YEAR_CODE = 'current';
