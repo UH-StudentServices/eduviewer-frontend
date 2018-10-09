@@ -1,4 +1,5 @@
 import fetchIntercept from 'fetch-intercept';
+import { DEFAULT_BASE_URL } from '../config';
 
 fetchIntercept.register({
   response: (response) => {
@@ -10,20 +11,20 @@ fetchIntercept.register({
   }
 });
 
-const getJson = path => fetch(path, {
+const getJson = path => fetch(`${DEFAULT_BASE_URL}${path}`, {
   headers: {
     Accept: 'application/json'
   }
 });
 
-export const getDegreePrograms = () => getJson('/api/educations');
+export const getDegreePrograms = () => getJson('/educations');
 
-export const getAcademicYearsForDegreeProgram = degreeProgram => getJson(`/api/available_lvs/${degreeProgram}`);
+export const getAcademicYearsForDegreeProgram = degreeProgram => getJson(`/available_lvs/${degreeProgram}`);
 
-export const getAcademicYearNames = () => getJson('/api/lv_names');
+export const getAcademicYearNames = () => getJson('/lv_names');
 
-export const getDegreeProgramForAcademicYear = (degreeProgramId, academicYear) => getJson(`/api/by_id/${degreeProgramId}?lv=${academicYear}`);
+export const getDegreeProgramForAcademicYear = (degreeProgramId, academicYear) => getJson(`/by_id/${degreeProgramId}?lv=${academicYear}`);
 
-export const fetchDegreeProgramByCode = (code, academicYear = '') => getJson(`/api/tree_by_code/${code}?lv=${academicYear}`);
+export const fetchDegreeProgramByCode = (code, academicYear = '') => getJson(`/tree_by_code/${code}?lv=${academicYear}`);
 
-export const fetchDegreeProgram = (academicYear = '', id) => getJson(`/api/tree/${id}/?lv=${academicYear}`);
+export const fetchDegreeProgram = (academicYear = '', id) => getJson(`/tree/${id}/?lv=${academicYear}`);
