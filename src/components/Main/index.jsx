@@ -272,9 +272,7 @@ class Main extends Component {
             <DegreeProgram
               key={degreeProgram.id}
               degreeProgram={degreeProgram}
-              academicYear={academicYear}
               showAll={showAll}
-              handleError={this.handleError}
               showContent={!errorMessage}
             />
           )
