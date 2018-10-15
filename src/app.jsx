@@ -19,14 +19,14 @@ const getRootAttribute = (attributeName) => {
 };
 
 const render = () => {
-  const degreeProgramId = getRootAttribute(DEGREE_PROGRAM_ATTR_NAME) || '';
+  const degreeProgramCode = getRootAttribute(DEGREE_PROGRAM_ATTR_NAME) || '';
   const academicYearCode = getRootAttribute(ACADEMIC_YEAR_ATTR_NAME) || CURRENT_ACADEMIC_YEAR_CODE;
   const lang = getRootAttribute(LANGUAGE_ATTR_NAME) || availableLanguages.FI;
   const header = getRootAttribute(HEADER_ATTR_NAME) || '';
   ReactDOM.render(
     <AppContainer>
       <Main
-        degreeProgramId={degreeProgramId}
+        degreeProgramCode={degreeProgramCode}
         academicYearCode={academicYearCode}
         lang={lang}
         header={header}

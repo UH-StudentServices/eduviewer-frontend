@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { string, bool, func } from 'prop-types';
 import { degreeProgramType } from '../../types';
-import { fetchDegreeProgram } from '../../api';
+import { getDegreeProgram } from '../../api';
 
 import GroupingModule from '../GroupingModule';
 import Loader from '../Loader';
@@ -28,10 +28,10 @@ class DegreeProgram extends Component {
 
   async fetchRules() {
     this.setState({ isLoading: true });
-    const { academicYear, degreeProgram, handleError } = this.props;
+    const { academicYear, degreeProgram: { degreeProgrammeCode }, handleError } = this.props;
 
     try {
-      const education = await fetchDegreeProgram(academicYear, degreeProgram.groupId);
+      const education = await getDegreeProgram(degreeProgrammeCode, academicYear);
       this.setState({ isLoading: false, degreeProgram: education });
     } catch (error) {
       this.setState({ isLoading: false }, handleError(error));
