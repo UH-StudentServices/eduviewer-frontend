@@ -3,9 +3,8 @@ import { string, oneOf } from 'prop-types';
 import {
   getDegreePrograms,
   getAcademicYearNames,
-  getAcademicYearsForDegreeProgram,
-  getDegreeProgramForAcademicYear,
-  fetchDegreeProgramByCode
+  getAcademicYearsByDegreeProgramCode,
+  getDegreeProgram
 } from '../../api';
 
 import DegreeProgram from '../DegreeProgram';
@@ -20,7 +19,7 @@ import Loader from '../Loader';
 class Main extends Component {
   static propTypes = {
     academicYearCode: string.isRequired,
-    degreeProgramId: string.isRequired,
+    degreeProgramCode: string.isRequired,
     // eslint-disable-next-line react/no-unused-prop-types
     lang: oneOf(Object.values(availableLanguages)).isRequired,
     header: string.isRequired
@@ -37,13 +36,13 @@ class Main extends Component {
   }
 
   async componentDidMount() {
-    const { degreeProgramId, academicYearCode } = this.props;
+    const { degreeProgramCode, academicYearCode } = this.props;
     this.setState({ isLoading: true });
     await this.initAcademicYears(academicYearCode);
-    if (degreeProgramId && academicYearCode) {
-      await this.initSpecificView(degreeProgramId);
-    } else if (degreeProgramId) {
-      await this.initAcademicYearsForDegreeProgram(degreeProgramId);
+    if (degreeProgramCode && academicYearCode) {
+      await this.initSpecificView(degreeProgramCode);
+    } else if (degreeProgramCode) {
+      await this.initAcademicYearsForDegreeProgram(degreeProgramCode);
     } else {
       await this.initAllSelects();
     }
@@ -52,11 +51,11 @@ class Main extends Component {
 
    onDegreeProgramsChange = async (event) => {
      this.setState({ isLoading: true, errorMessage: '' });
-     const degreeProgramId = event.target.value;
+     const degreeProgramCode = event.target.value;
      try {
-       const academicYears = await getAcademicYearsForDegreeProgram(degreeProgramId);
+       const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgramCode);
        const academicYear = this.getAcademicYear(academicYears);
-       const degreeProgram = await getDegreeProgramForAcademicYear(degreeProgramId, academicYear);
+       const degreeProgram = await getDegreeProgram(degreeProgramCode, academicYear);
 
        this.setState({
          degreeProgram,
@@ -70,12 +69,12 @@ class Main extends Component {
    }
 
   onAcademicYearsChange = async (event) => {
-    const { degreeProgram: { id } } = this.state;
+    const { degreeProgram: { degreeProgrammeCode } } = this.state;
 
     this.setState({ isLoading: true, errorMessage: '' });
     const academicYear = event.target.value;
     try {
-      const degreeProgram = await getDegreeProgramForAcademicYear(id, academicYear);
+      const degreeProgram = await getDegreeProgram(degreeProgrammeCode, academicYear);
       this.setState({
         degreeProgram,
         academicYear,
@@ -130,12 +129,12 @@ class Main extends Component {
 
   initAllSelects = async () => {
     try {
-      const degreeProgramsResponse = await getDegreePrograms();
+      const degreePrograms = await getDegreePrograms();
 
-      const degreePrograms = degreeProgramsResponse.educations;
       const degreeProgram = degreePrograms[0];
+      const { degreeProgrammeCode } = degreeProgram;
 
-      const academicYears = await getAcademicYearsForDegreeProgram(degreeProgram.id);
+      const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgrammeCode);
       const academicYear = this.getAcademicYear(academicYears);
 
       this.setState({
@@ -149,31 +148,28 @@ class Main extends Component {
     }
   }
 
-  initAcademicYearsForDegreeProgram = async (degreeProgramId) => {
+  initAcademicYearsForDegreeProgram = async (degreeProgramCode) => {
     try {
-      const academicYears = await getAcademicYearsForDegreeProgram(degreeProgramId);
+      const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgramCode);
 
       const academicYear = this.getAcademicYear(academicYears);
-      const degreeProgram = await fetchDegreeProgramByCode(degreeProgramId, academicYear);
+      const degreeProgram = await getDegreeProgram(degreeProgramCode, academicYear);
 
       this.setState({
         academicYear,
         academicYears,
         degreeProgram
       });
-      this.handleError({
-        message: 'Embedding Eduviewer with only degree-program-id attribute without academic-year attribute is not suppoted'
-      });
     } catch (error) {
       this.handleError(error);
     }
   }
 
-  initSpecificView = async (degreeProgramId) => {
+  initSpecificView = async (degreeProgramCode) => {
     const { defaultAcademicYearCode } = this.state;
     try {
-      const degreeProgram = await fetchDegreeProgramByCode(
-        degreeProgramId,
+      const degreeProgram = await getDegreeProgram(
+        degreeProgramCode,
         defaultAcademicYearCode
       );
 
@@ -197,13 +193,15 @@ class Main extends Component {
       isLoading
     } = this.state;
 
-    const { degreeProgramId, academicYearCode } = this.props;
+    const { degreeProgramCode, academicYearCode } = this.props;
 
     const getOption = (id, value, text) => ({ id, value, text });
 
     const ACADEMIC_YEARS_ID = 'academicYear';
     const DEGREE_PROGRAMS_ID = 'degreePrograms';
-    const degreeProgramOptions = degreePrograms.map(dp => getOption(dp.id, dp.id, dp.name.fi));
+    const degreeProgramOptions = degreePrograms
+      .filter(dp => dp.degreeProgrammeCode)
+      .map(dp => getOption(dp.id, dp.degreeProgrammeCode, dp.name.fi));
     const academicYearOptions = academicYears.map(ay => getOption(ay, ay, academicYearNames[ay]));
 
     const academicYearsLabel = 'Lukuvuodet';
@@ -212,11 +210,11 @@ class Main extends Component {
 
     return (
       <div className={styles.selectContainer}>
-        {!degreeProgramId
+        {!degreeProgramCode
         && (
           <LoaderDropdown
             id={DEGREE_PROGRAMS_ID}
-            value={degreeProgram.id}
+            value={degreeProgram.degreeProgrammeCode}
             onChange={this.onDegreeProgramsChange}
             options={degreeProgramOptions}
             label={degreeProgramsLabel}
@@ -224,7 +222,7 @@ class Main extends Component {
           />
         )
         }
-        {(!degreeProgramId || !academicYearCode)
+        {(!degreeProgramCode || !academicYearCode)
           ? (
             <LoaderDropdown
               id={ACADEMIC_YEARS_ID}
@@ -274,9 +272,7 @@ class Main extends Component {
             <DegreeProgram
               key={degreeProgram.id}
               degreeProgram={degreeProgram}
-              academicYear={academicYear}
               showAll={showAll}
-              handleError={this.handleError}
               showContent={!errorMessage}
             />
           )

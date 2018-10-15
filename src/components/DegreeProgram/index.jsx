@@ -1,69 +1,35 @@
-import React, { Component } from 'react';
-import { string, bool, func } from 'prop-types';
+import React from 'react';
+import { bool } from 'prop-types';
 import { degreeProgramType } from '../../types';
-import { fetchDegreeProgram } from '../../api';
 
 import GroupingModule from '../GroupingModule';
-import Loader from '../Loader';
 
 import styles from './degreeProgram.css';
 
-class DegreeProgram extends Component {
-  static propTypes = {
-    academicYear: string.isRequired,
-    degreeProgram: degreeProgramType.isRequired,
-    showAll: bool.isRequired,
-    handleError: func.isRequired,
-    showContent: bool.isRequired
-  };
-
-  state = {
-    isLoading: true,
-    degreeProgram: {}
+const DegreeProgram = ({ showAll, showContent, degreeProgram }) => {
+  if (!showContent) {
+    return null;
   }
 
-  async componentDidMount() {
-    await this.fetchRules();
-  }
+  const { name, dataNode: { rule } } = degreeProgram;
 
-  async fetchRules() {
-    this.setState({ isLoading: true });
-    const { academicYear, degreeProgram, handleError } = this.props;
+  return (
+    <div className={styles.degreeProgram}>
+      <h3>{name.fi}</h3>
+      <div className={styles.moduleGroups}>
+        <GroupingModule
+          key={rule.localId}
+          rule={rule}
+          showAll={showAll}
+        />
+      </div>
+    </div>);
+};
 
-    try {
-      const education = await fetchDegreeProgram(academicYear, degreeProgram.groupId);
-      this.setState({ isLoading: false, degreeProgram: education });
-    } catch (error) {
-      this.setState({ isLoading: false }, handleError(error));
-    }
-  }
-
-  render() {
-    const { showAll, showContent } = this.props;
-    const { isLoading, degreeProgram } = this.state;
-
-    if (isLoading) {
-      return <Loader />;
-    }
-
-    if (!showContent) {
-      return null;
-    }
-
-    const { name, dataNode } = degreeProgram;
-
-    return (
-      <div className={styles.degreeProgram}>
-        <h3>{name.fi}</h3>
-        <div className={styles.moduleGroups}>
-          <GroupingModule
-            key={dataNode.rule.localId}
-            rule={dataNode.rule}
-            showAll={showAll}
-          />
-        </div>
-      </div>);
-  }
-}
+DegreeProgram.propTypes = {
+  degreeProgram: degreeProgramType.isRequired,
+  showAll: bool.isRequired,
+  showContent: bool.isRequired
+};
 
 export default DegreeProgram;

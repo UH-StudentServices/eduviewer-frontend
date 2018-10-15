@@ -47,17 +47,7 @@ const cleanWebPackPlugin = new CleanWebpackPlugin('dist', [{}]);
 
 
 const devServerConfig = {
-  port: 8080,
-  proxy: [
-    {
-      context: ['/api/**'],
-      target: 'https://od.helsinki.fi/eduviewer/',
-      secure: false,
-      pathRewrite: {
-        '/api': ''
-      }
-    }
-  ]
+  port: 8080
 };
 
 const createConfig = options => ({
