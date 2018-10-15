@@ -11,15 +11,15 @@ const DegreeProgram = ({ showAll, showContent, degreeProgram }) => {
     return null;
   }
 
-  const { name, dataNode } = degreeProgram;
+  const { name, dataNode: { rule } } = degreeProgram;
 
   return (
     <div className={styles.degreeProgram}>
       <h3>{name.fi}</h3>
       <div className={styles.moduleGroups}>
         <GroupingModule
-          key={dataNode.rule.localId}
-          rule={dataNode.rule}
+          key={rule.localId}
+          rule={rule}
           showAll={showAll}
         />
       </div>
