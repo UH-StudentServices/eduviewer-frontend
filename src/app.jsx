@@ -4,7 +4,7 @@ import { AppContainer } from 'react-hot-loader';
 import Main from './components/Main';
 
 import './styles';
-import { availableLanguages, CURRENT_ACADEMIC_YEAR_CODE } from './constants';
+import { availableLanguages } from './constants';
 
 const EDUVIEWER_ROOT_ID = 'eduviewer-root';
 const LANGUAGE_ATTR_NAME = 'lang';
@@ -20,7 +20,7 @@ const getRootAttribute = (attributeName) => {
 
 const render = () => {
   const degreeProgramCode = getRootAttribute(DEGREE_PROGRAM_ATTR_NAME) || '';
-  const academicYearCode = getRootAttribute(ACADEMIC_YEAR_ATTR_NAME) || CURRENT_ACADEMIC_YEAR_CODE;
+  const academicYearCode = getRootAttribute(ACADEMIC_YEAR_ATTR_NAME) || '';
   const lang = getRootAttribute(LANGUAGE_ATTR_NAME) || availableLanguages.FI;
   const header = getRootAttribute(HEADER_ATTR_NAME) || '';
   ReactDOM.render(
