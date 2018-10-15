@@ -160,9 +160,6 @@ class Main extends Component {
         academicYears,
         degreeProgram
       });
-      this.handleError({
-        message: 'Embedding Eduviewer with only degree-program-id attribute without academic-year attribute is not suppoted'
-      });
     } catch (error) {
       this.handleError(error);
     }
