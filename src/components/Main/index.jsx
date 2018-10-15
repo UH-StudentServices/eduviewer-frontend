@@ -36,13 +36,13 @@ class Main extends Component {
   }
 
   async componentDidMount() {
-    const { degreeProgramId, academicYearCode } = this.props;
+    const { degreeProgramCode, academicYearCode } = this.props;
     this.setState({ isLoading: true });
     await this.initAcademicYears(academicYearCode);
-    if (degreeProgramId && academicYearCode) {
-      await this.initSpecificView(degreeProgramId);
-    } else if (degreeProgramId) {
-      await this.initAcademicYearsForDegreeProgram(degreeProgramId);
+    if (degreeProgramCode && academicYearCode) {
+      await this.initSpecificView(degreeProgramCode);
+    } else if (degreeProgramCode) {
+      await this.initAcademicYearsForDegreeProgram(degreeProgramCode);
     } else {
       await this.initAllSelects();
     }
