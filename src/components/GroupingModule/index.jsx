@@ -79,6 +79,12 @@ export default class GroupingModule extends Component {
 
     if (rule.type === COURSE_UNIT_RULE) {
       const { code, name, credits } = rule.dataNode;
+      const isValidCourse = code && name && credits;
+
+      if (!isValidCourse) {
+        return null;
+      }
+
       return (
         <Course key={rule.localId} code={code} name={name} credits={credits} />
       );

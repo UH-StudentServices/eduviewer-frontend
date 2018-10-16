@@ -38,7 +38,7 @@ export const requiredCoursesToString = (requiredCourses) => {
 export const getName = rule => (rule.dataNode ? rule.dataNode.name.fi : '');
 
 const compareCodes = (rule1, rule2) => {
-  const getCode = rule => rule.dataNode.code;
+  const getCode = rule => rule.dataNode.code || '';
   const codeLength = rule => getCode(rule).length;
 
   if (codeLength(rule1) === codeLength(rule2)) {
