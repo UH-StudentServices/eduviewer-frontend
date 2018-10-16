@@ -74,3 +74,6 @@ export const compareSubRules = (rule1, rule2) => {
 
   return 0;
 };
+
+export const getDegreeProgramCode = degreeProgram =>
+  (degreeProgram.dataNode ? degreeProgram.dataNode.code : null);

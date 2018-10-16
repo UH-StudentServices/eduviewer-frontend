@@ -15,6 +15,7 @@ import ToggleSelect from '../ToggleSelect';
 import { availableLanguages, CURRENT_ACADEMIC_YEAR_CODE } from '../../constants';
 import ErrorMessage from '../ErrorMessage';
 import Loader from '../Loader';
+import { getDegreeProgramCode } from '../../utils';
 
 class Main extends Component {
   static propTypes = {
@@ -69,14 +70,14 @@ class Main extends Component {
    }
 
   onAcademicYearsChange = async (event) => {
-    const { degreeProgram: { degreeProgrammeCode } } = this.state;
-
+    const { degreeProgram } = this.state;
     this.setState({ isLoading: true, errorMessage: '' });
     const academicYear = event.target.value;
+    const degreeProgramCode = getDegreeProgramCode(degreeProgram);
     try {
-      const degreeProgram = await getDegreeProgram(degreeProgrammeCode, academicYear);
+      const newDegreeProgram = await getDegreeProgram(degreeProgramCode, academicYear);
       this.setState({
-        degreeProgram,
+        degreeProgram: newDegreeProgram,
         academicYear,
         isLoading: false
       });
@@ -131,11 +132,12 @@ class Main extends Component {
     try {
       const degreePrograms = await getDegreePrograms();
 
-      const degreeProgram = degreePrograms[0];
-      const { degreeProgrammeCode } = degreeProgram;
+      const { degreeProgrammeCode } = degreePrograms[0];
 
       const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgrammeCode);
       const academicYear = this.getAcademicYear(academicYears);
+
+      const degreeProgram = await getDegreeProgram(degreeProgrammeCode, academicYear);
 
       this.setState({
         degreePrograms,
@@ -201,7 +203,7 @@ class Main extends Component {
     const DEGREE_PROGRAMS_ID = 'degreePrograms';
     const degreeProgramOptions = degreePrograms
       .filter(dp => dp.degreeProgrammeCode)
-      .map(dp => getOption(dp.degreeProgrammeCode, dp.degreeProgrammeCode, dp.name.fi));
+      .map((dp, i) => getOption(i, dp.degreeProgrammeCode, dp.name.fi));
     const academicYearOptions = academicYears.map(ay => getOption(ay, ay, academicYearNames[ay]));
 
     const academicYearsLabel = 'Lukuvuodet';
@@ -214,7 +216,7 @@ class Main extends Component {
         && (
           <LoaderDropdown
             id={DEGREE_PROGRAMS_ID}
-            value={degreeProgram.degreeProgrammeCode}
+            value={getDegreeProgramCode(degreeProgram)}
             onChange={this.onDegreeProgramsChange}
             options={degreeProgramOptions}
             label={degreeProgramsLabel}
@@ -262,7 +264,12 @@ class Main extends Component {
       return <Loader />;
     }
 
-    const hasContent = !isLoading && academicYear && degreeProgram.name;
+    const degreeProgramCode = getDegreeProgramCode(degreeProgram);
+
+    const hasContent = !isLoading
+      && academicYear
+      && degreeProgram.name
+      && degreeProgramCode;
 
     return (
       <div>
@@ -270,7 +277,7 @@ class Main extends Component {
         {hasContent
           ? (
             <DegreeProgram
-              key={degreeProgram.id}
+              key={degreeProgramCode}
               degreeProgram={degreeProgram}
               showAll={showAll}
               showContent={!errorMessage}
