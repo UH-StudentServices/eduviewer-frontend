@@ -201,7 +201,7 @@ class Main extends Component {
     const DEGREE_PROGRAMS_ID = 'degreePrograms';
     const degreeProgramOptions = degreePrograms
       .filter(dp => dp.degreeProgrammeCode)
-      .map(dp => getOption(dp.id, dp.degreeProgrammeCode, dp.name.fi));
+      .map(dp => getOption(dp.degreeProgrammeCode, dp.degreeProgrammeCode, dp.name.fi));
     const academicYearOptions = academicYears.map(ay => getOption(ay, ay, academicYearNames[ay]));
 
     const academicYearsLabel = 'Lukuvuodet';
