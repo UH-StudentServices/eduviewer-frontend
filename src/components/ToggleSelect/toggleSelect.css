@@ -17,3 +17,21 @@
   padding: 0 0 0 0.3em;
   cursor: pointer;
 }
+
+/* react-toggle-overrides */
+:global(.react-toggle-thumb) {
+  border-color: var(--darkSilver) !important;
+}
+
+:global(.react-toggle-track) {
+  font-size: 1rem;
+  background-color: var(--darkSilver) !important;
+}
+
+:global(.react-toggle--checked) :global(.react-toggle-track) {
+  background-color: var(--blueActive) !important;
+}
+
+:global(.react-toggle--checked) :global(.react-toggle-thumb) {
+  border-color: var(--blueActive) !important;
+}
