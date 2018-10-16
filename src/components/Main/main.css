@@ -33,6 +33,29 @@
     color: var(--black);
   }
 
+  & h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    letter-spacing: unset;
+    line-height: unset;
+  }
+
+  /* According to styleguide, select-menus are white boxes with no hint about their interactions. Add caret icon.
+  If the options are long and the select box is wide, locally adjust caret x-position to be >90% */
+  & select {
+    &::-ms-expand {
+      display: none;
+    }
+
+    background: url(../../images/caret-down.png) no-repeat right 1em top 60%;
+    font-weight: bold;
+    -moz-appearance: none;
+    font-size: 1rem;
+  }
+
   margin: 1em;
   padding: 0.5em 1em 1em;
   border: 0.0125em solid var(--mediumSilver);
