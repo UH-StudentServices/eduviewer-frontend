@@ -31,37 +31,3 @@ h6 {
   letter-spacing: unset;
   line-height: unset;
 }
-
-ul {
-  list-style-type: none;
-  margin-bottom: 0.5em;
-  margin-top: 0.3em;
-}
-
-li {
-  color: black;
-  border-right: 0.1em solid var(--silver);
-  border-left: 0.1em solid var(--silver);
-  padding: 0.2em 0.5em;
-}
-
-li:nth-child(odd) {
-  background-color: var(--silver);
-}
-
-li:nth-child(even) {
-  background-color: var(--white);
-}
-
-li:first-child {
-  border-top: 0.1em solid var(--silver);
-}
-
-li:last-child {
-  margin-bottom: 0.5em;
-  border-bottom: 0.1em solid var(--silver);
-}
-
-strong {
-  color: var(--black);
-}

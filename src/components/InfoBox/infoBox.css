@@ -11,6 +11,7 @@
   margin-right: 0.2em;
   color: var(--blue);
 }
+
 .iconContainer::after {
   vertical-align: baseline !important;
 }

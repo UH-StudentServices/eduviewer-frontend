@@ -1,4 +1,38 @@
 .mainContainer {
+  & ul {
+    list-style-type: none;
+    margin-bottom: 0.5em;
+    margin-top: 0.3em;
+  }
+
+  & li {
+    &:nth-child(odd) {
+      background-color: var(--silver);
+    }
+
+    &:nth-child(even) {
+      background-color: var(--white);
+    }
+
+    &:first-child {
+      border-top: 0.1em solid var(--silver);
+    }
+
+    &:last-child {
+      margin-bottom: 0.5em;
+      border-bottom: 0.1em solid var(--silver);
+    }
+
+    color: black;
+    border-right: 0.1em solid var(--silver);
+    border-left: 0.1em solid var(--silver);
+    padding: 0.2em 0.5em;
+  }
+
+  & strong {
+    color: var(--black);
+  }
+
   margin: 1em;
   padding: 0.5em 1em 1em;
   border: 0.0125em solid var(--mediumSilver);

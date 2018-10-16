@@ -37,13 +37,8 @@ select::-ms-expand {
   display: none;
 }
 
-/* react-toggle-overrides */
-.react-toggle--checked .react-toggle-track {
-  background-color: var(--blueActive) !important;
-}
-
-.react-toggle--checked .react-toggle-thumb {
-  border-color: var(--blueActive);
+.react-toggle-thumb {
+  border-color: var(--darkSilver);
 }
 
 .react-toggle-track {
@@ -51,6 +46,11 @@ select::-ms-expand {
   background-color: var(--darkSilver) !important;
 }
 
-.react-toggle-thumb {
-  border-color: var(--darkSilver);
+/* react-toggle-overrides */
+.react-toggle--checked .react-toggle-track {
+  background-color: var(--blueActive) !important;
+}
+
+.react-toggle--checked .react-toggle-thumb {
+  border-color: var(--blueActive);
 }
