@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
+import { initializeTracker } from './components/Tracker';
 import Main from './components/Main';
 
 import './styles';
@@ -23,6 +24,7 @@ const render = () => {
   const academicYearCode = getRootAttribute(ACADEMIC_YEAR_ATTR_NAME) || '';
   const lang = getRootAttribute(LANGUAGE_ATTR_NAME) || availableLanguages.FI;
   const header = getRootAttribute(HEADER_ATTR_NAME) || '';
+
   ReactDOM.render(
     <AppContainer>
       <Main
@@ -37,6 +39,7 @@ const render = () => {
 };
 
 const initializeApp = () => {
+  initializeTracker();
   render(Main);
 };
 
