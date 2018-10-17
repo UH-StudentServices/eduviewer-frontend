@@ -16,7 +16,7 @@ import { availableLanguages, CURRENT_ACADEMIC_YEAR_CODE } from '../../constants'
 import ErrorMessage from '../ErrorMessage';
 import Loader from '../Loader';
 import { getDegreeProgramCode } from '../../utils';
-import { trackEvent, CATEGORIES, trackPageView } from '../Tracker';
+import { trackEvent, CATEGORIES, trackPageView } from '../../tracking';
 
 class Main extends Component {
   static propTypes = {

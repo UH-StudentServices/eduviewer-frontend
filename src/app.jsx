@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-import { initializeTracker } from './components/Tracker';
+import { initializeTracker } from './tracking';
 import Main from './components/Main';
 
 import './styles';

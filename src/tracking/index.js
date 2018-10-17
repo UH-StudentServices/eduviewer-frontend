@@ -1,5 +1,5 @@
 import ReactGA from 'react-ga';
-import { TRACKING_ID } from '../../config';
+import { TRACKING_ID } from '../config';
 
 export const TRACKER_NAME = 'Eduviewer';
 
