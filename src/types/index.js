@@ -88,7 +88,6 @@ export const degreeProgramType = shape({
 });
 
 export const selectOptionsType = arrayOf(shape({
-  id: oneOfType([string, number]).isRequired,
   value: oneOfType([string, number]).isRequired,
   text: string.isRequired
 }));

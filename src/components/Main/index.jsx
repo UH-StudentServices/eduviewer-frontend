@@ -32,6 +32,7 @@ import { availableLanguages, CURRENT_ACADEMIC_YEAR_CODE } from '../../constants'
 import ErrorMessage from '../ErrorMessage';
 import Loader from '../Loader';
 import { getDegreeProgramCode } from '../../utils';
+import { trackEvent, CATEGORIES, trackPageView } from '../../tracking';
 
 class Main extends Component {
   static propTypes = {
@@ -53,9 +54,10 @@ class Main extends Component {
   }
 
   async componentDidMount() {
-    const { degreeProgramCode, academicYearCode } = this.props;
+    const { degreeProgramCode, academicYearCode, lang } = this.props;
     this.setState({ isLoading: true });
     await this.initAcademicYears(academicYearCode);
+
     if (degreeProgramCode && academicYearCode) {
       await this.initSpecificView(degreeProgramCode);
     } else if (degreeProgramCode) {
@@ -64,6 +66,9 @@ class Main extends Component {
       await this.initAllSelects();
     }
     this.setState({ isLoading: false });
+
+    const { academicYearNames, academicYear } = this.state;
+    trackPageView(degreeProgramCode, academicYearNames[academicYear], lang);
   }
 
    onDegreeProgramsChange = async (event) => {
@@ -74,6 +79,7 @@ class Main extends Component {
        const academicYear = this.getAcademicYear(academicYears);
        const degreeProgram = await getDegreeProgram(degreeProgramCode, academicYear);
 
+       trackEvent(CATEGORIES.SELECT_DEGREE_PROGRAMME, degreeProgramCode);
        this.setState({
          degreeProgram,
          academicYear,
@@ -92,6 +98,8 @@ class Main extends Component {
     const degreeProgramCode = getDegreeProgramCode(degreeProgram);
     try {
       const newDegreeProgram = await getDegreeProgram(degreeProgramCode, academicYear);
+      const { academicYearNames } = this.state;
+      trackEvent(CATEGORIES.SELECT_ACADEMIC_YEAR, academicYearNames[academicYear]);
       this.setState({
         degreeProgram: newDegreeProgram,
         academicYear,
@@ -104,7 +112,9 @@ class Main extends Component {
 
   onShowAll = () => {
     const { showAll } = this.state;
-    this.setState({ showAll: !showAll });
+    const newShowAll = !showAll;
+    trackEvent(CATEGORIES.TOGGLE_SHOW_ALL, newShowAll);
+    this.setState({ showAll: newShowAll });
   }
 
   getAcademicYear = (academicYears) => {
