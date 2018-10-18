@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-fronted.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 export const ruleTypes = {
   ANY_COURSE_UNIT_RULE: 'AnyCourseUnitRule',
   ANY_MODULE_RULE: 'AnyModuleRule',

@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-fronted.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import { ruleTypes } from '../constants';
 
 const { COURSE_UNIT_RULE } = ruleTypes;

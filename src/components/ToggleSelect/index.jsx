@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-fronted.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import React from 'react';
 import Toggle from 'react-toggle';
 import { func, bool, string } from 'prop-types';
