@@ -50,5 +50,5 @@ You'll also need to include the following `script` tag at the end of your page's
   <script src="address/to/eduviewer.var.js"></script>
 ```
 
-## Licence
-GPL-3.0-or-later
+## License
+GPL-3.0
