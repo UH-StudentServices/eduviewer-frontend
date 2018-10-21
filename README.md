@@ -49,5 +49,6 @@ You'll also need to include the following `script` tag at the end of your page's
 ```html
   <script src="address/to/eduviewer.var.js"></script>
 ```
-      
-`
+
+## License
+GPL-3.0

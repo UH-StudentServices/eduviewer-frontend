@@ -1,3 +1,20 @@
+/*
+ * This file is part of Eduviewer-frontend.
+ *
+ * Eduviewer-frontend is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Eduviewer-frontend is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import React, { Component } from 'react';
 import { string, oneOf } from 'prop-types';
 import {
@@ -16,6 +33,7 @@ import { availableLanguages, CURRENT_ACADEMIC_YEAR_CODE } from '../../constants'
 import ErrorMessage from '../ErrorMessage';
 import Loader from '../Loader';
 import { getDegreeProgramCode } from '../../utils';
+import { trackEvent, CATEGORIES, trackPageView } from '../../tracking';
 
 class Main extends Component {
   static propTypes = {
@@ -37,9 +55,10 @@ class Main extends Component {
   }
 
   async componentDidMount() {
-    const { degreeProgramCode, academicYearCode } = this.props;
+    const { degreeProgramCode, academicYearCode, lang } = this.props;
     this.setState({ isLoading: true });
     await this.initAcademicYears(academicYearCode);
+
     if (degreeProgramCode && academicYearCode) {
       await this.initSpecificView(degreeProgramCode);
     } else if (degreeProgramCode) {
@@ -48,6 +67,9 @@ class Main extends Component {
       await this.initAllSelects();
     }
     this.setState({ isLoading: false });
+
+    const { academicYearNames, academicYear } = this.state;
+    trackPageView(degreeProgramCode, academicYearNames[academicYear], lang);
   }
 
    onDegreeProgramsChange = async (event) => {
@@ -58,6 +80,7 @@ class Main extends Component {
        const academicYear = this.getAcademicYear(academicYears);
        const degreeProgram = await getDegreeProgram(degreeProgramCode, academicYear);
 
+       trackEvent(CATEGORIES.SELECT_DEGREE_PROGRAMME, degreeProgramCode);
        this.setState({
          degreeProgram,
          academicYear,
@@ -76,6 +99,8 @@ class Main extends Component {
     const degreeProgramCode = getDegreeProgramCode(degreeProgram);
     try {
       const newDegreeProgram = await getDegreeProgram(degreeProgramCode, academicYear);
+      const { academicYearNames } = this.state;
+      trackEvent(CATEGORIES.SELECT_ACADEMIC_YEAR, academicYearNames[academicYear]);
       this.setState({
         degreeProgram: newDegreeProgram,
         academicYear,
@@ -88,7 +113,9 @@ class Main extends Component {
 
   onShowAll = () => {
     const { showAll } = this.state;
-    this.setState({ showAll: !showAll });
+    const newShowAll = !showAll;
+    trackEvent(CATEGORIES.TOGGLE_SHOW_ALL, newShowAll);
+    this.setState({ showAll: newShowAll });
   }
 
   getAcademicYear = (academicYears) => {

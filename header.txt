@@ -14,7 +14,3 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import 'uh-living-styleguide/css/styles.css';
-import 'react-toggle/style.css';
-import './variables/colors';
