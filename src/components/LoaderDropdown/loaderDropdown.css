@@ -48,7 +48,7 @@
 If the options are long and the select box is wide, locally adjust caret x-position to be >90% */
 .loadedSelect {
   &::-ms-expand {
-     display: none;
+    display: none;
   }
 
   padding-right: 2.5em;

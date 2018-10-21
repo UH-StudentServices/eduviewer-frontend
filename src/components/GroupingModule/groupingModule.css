@@ -21,21 +21,21 @@
 
   & li {
     &:nth-child(odd) {
-       background-color: var(--silver);
-     }
+      background-color: var(--silver);
+    }
 
     &:nth-child(even) {
-       background-color: var(--white);
-     }
+      background-color: var(--white);
+    }
 
     &:first-child {
-       border-top: 0.1em solid var(--silver);
-     }
+      border-top: 0.1em solid var(--silver);
+    }
 
     &:last-child {
-       margin-bottom: 0.5em;
-       border-bottom: 0.1em solid var(--silver);
-     }
+      margin-bottom: 0.5em;
+      border-bottom: 0.1em solid var(--silver);
+    }
 
     color: var(--black);
     border-right: 0.1em solid var(--silver);
