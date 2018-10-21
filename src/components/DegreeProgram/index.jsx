@@ -32,7 +32,7 @@ const DegreeProgram = ({ showAll, showContent, degreeProgram }) => {
 
   return (
     <div className={styles.degreeProgram}>
-      <h3>{name.fi}</h3>
+      <h3 className={styles.degreeProgramTitle}>{name.fi}</h3>
       <div className={styles.moduleGroups}>
         <GroupingModule
           key={rule.localId}

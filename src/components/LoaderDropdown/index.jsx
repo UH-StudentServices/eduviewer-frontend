@@ -50,7 +50,7 @@ const LoadedDropdown = ({
     <label htmlFor={id}>
       {label}
       <select
-        className={styles.select}
+        className={styles.loadedSelect}
         name={id}
         id={id}
         value={value || ''}

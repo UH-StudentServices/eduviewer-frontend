@@ -44,6 +44,16 @@
   padding-bottom: 10px;
 }
 
-.select {
+/* According to styleguide, select-menus are white boxes with no hint about their interactions. Add caret icon.
+If the options are long and the select box is wide, locally adjust caret x-position to be >90% */
+.loadedSelect {
+  &::-ms-expand {
+     display: none;
+  }
+
   padding-right: 2.5em;
+  background: url(../../images/caret-down.png) no-repeat right 1em top 60%;
+  font-weight: bold;
+  -moz-appearance: none;
+  font-size: 1em;
 }

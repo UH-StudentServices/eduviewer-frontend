@@ -16,66 +16,14 @@
  */
 
 .mainContainer {
-  & ul {
-    list-style-type: none;
-    margin-bottom: 0.5em;
-    margin-top: 0.3em;
-  }
-
-  & li {
-    &:nth-child(odd) {
-      background-color: var(--silver);
-    }
-
-    &:nth-child(even) {
-      background-color: var(--white);
-    }
-
-    &:first-child {
-      border-top: 0.1em solid var(--silver);
-    }
-
-    &:last-child {
-      margin-bottom: 0.5em;
-      border-bottom: 0.1em solid var(--silver);
-    }
-
-    color: black;
-    border-right: 0.1em solid var(--silver);
-    border-left: 0.1em solid var(--silver);
-    padding: 0.2em 0.5em;
-  }
-
-  & strong {
-    color: var(--black);
-  }
-
-  & h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    letter-spacing: unset;
-    line-height: unset;
-  }
-
-  /* According to styleguide, select-menus are white boxes with no hint about their interactions. Add caret icon.
-  If the options are long and the select box is wide, locally adjust caret x-position to be >90% */
-  & select {
-    &::-ms-expand {
-      display: none;
-    }
-
-    background: url(../../images/caret-down.png) no-repeat right 1em top 60%;
-    font-weight: bold;
-    -moz-appearance: none;
-    font-size: 1rem;
-  }
-
   margin: 1em;
   padding: 0.5em 1em 1em;
   border: 0.0125em solid var(--mediumSilver);
+}
+
+.mainHeader {
+  letter-spacing: unset;
+  line-height: unset;
 }
 
 .selectContainer {
