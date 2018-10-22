@@ -16,7 +16,8 @@
  */
 
 // This frontend app can be embedded on any site.
-// So we use the PROD tracking id, unless we know we are embedded on the QA or DEV server
+// So we use the PROD tracking id and style url,
+// unless we know we are embedded on the QA or DEV server
 // or are running locally.
 
 const eduviewerHostnames = {
