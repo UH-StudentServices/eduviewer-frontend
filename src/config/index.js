@@ -26,12 +26,17 @@ const eduviewerHostnames = {
   PROD: 'eduviewer.it.helsinki.fi'
 };
 
+const eduviewerTrackingIds = {
+  QA: 'UA-55852460-20',
+  PROD: 'UA-55852460-21'
+};
+
 const getTrackingId = () => {
-  const host = window.location.hostname;
-  if (host === eduviewerHostnames.DEV || host === eduviewerHostnames.LOCAL) {
+  const { hostname } = window.location;
+  if (hostname === eduviewerHostnames.DEV || hostname === eduviewerHostnames.LOCAL) {
     return null;
   }
-  return host === eduviewerHostnames.QA ? 'UA-55852460-20' : 'UA-55852460-21';
+  return hostname === eduviewerHostnames.QA ? eduviewerTrackingIds.QA : eduviewerTrackingIds.PROD;
 };
 
 const getNonProdStyleUrl = () => {
