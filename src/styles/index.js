@@ -15,8 +15,6 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import 'uh-living-styleguide/css/styles.css';
 import 'react-toggle/style.css';
-import './styleguide-overrides.global.css';
-import './global.css';
 import './variables/colors';
+import 'uh-living-styleguide/css/styles.css';

@@ -321,7 +321,7 @@ class Main extends Component {
     return (
       <div>
         <main className={styles.mainContainer}>
-          {header && <h2>{header}</h2>}
+          {header && <h2 className={styles.mainHeader}>{header}</h2>}
           { this.renderSelections()}
           { this.renderContent()}
         </main>

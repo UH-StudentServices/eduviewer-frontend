@@ -15,44 +15,23 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.mainContainer {
-  margin: 1em;
-  padding: 0.5em 1em 1em;
-  border: 0.0125em solid var(--mediumSilver);
-}
+import { DEFAULT_STYLE_URL } from '../../config';
 
-.mainHeader {
-  letter-spacing: unset;
-  line-height: unset;
-}
+export const loadStyle = (source) => {
+  const headTag = document.getElementsByTagName('head')[0];
+  const styleTag = document.createElement('link');
+  styleTag.setAttribute('rel', 'stylesheet');
+  styleTag.href = source;
+  headTag.appendChild(styleTag);
 
-.selectContainer {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 0.05em;
-  margin-bottom: 1em;
-  border-bottom: 0.05em dashed var(--mediumSilver);
-}
+  return new Promise((resolve) => {
+    styleTag.onload = resolve;
+  });
+};
 
-.noContent {
-  margin-bottom: 0.5em;
-  margin-left: 0.25em;
-  font-size: 1.1em;
-  color: var(--black);
-  font-weight: 300;
-}
-
-.academicYearContainer {
-  margin-top: 0.5em;
-  font-size: 1.45em;
-}
-
-.academicYearLabel {
-  color: var(--lightGray);
-  font-weight: 400;
-}
-
-.academicYearText {
-  color: var(--black);
-  font-weight: 600;
-}
+export const loadLocalStyleGuide = () => new Promise((resolve) => {
+  document.addEventListener('DOMContentLoaded', () => {
+    loadStyle(`${DEFAULT_STYLE_URL}/styles.css`)
+      .then(resolve);
+  });
+});

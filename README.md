@@ -32,7 +32,7 @@ Webpack will ouput following different build files inside the `dist` folder:
 Eduviewer frontend can be embedded to any web page using the following `div` tag:
 
 ```html
-<div id="eduviewer-root" degree-program-id="DEGREE_PROGRAM_ID" academic-year="ACADEMIC_YEAR" lang="LANG" header="HEADER"></div>
+<div id="eduviewer-root" degree-program-id="DEGREE_PROGRAM_ID" academic-year="ACADEMIC_YEAR" lang="LANG" header="HEADER" disable-global-style></div>
 ```
 All attributes are optional.
 * `lang` defaults to `fi`, other valid values are: `sv` & `en`
@@ -42,6 +42,8 @@ All attributes are optional.
 * If `degree-program-id` and `academic-year` are set, embedded app won't show selects for Degree Program or Academic Year
 * `degree-program-id` is id set by Oodi. Valid examples: `KH10_001`, `MH30_004`  
 * If `header` isn't set, Eduviewer page won't have a h2 header on top of selects
+* `disable-global-style` disables usage of uh-living-styleguide in eduviewer. Use this only if embedding app already uses uh-living-styleguide.
+
 
 
 You'll also need to include the following `script` tag at the end of your page's `body` tag:

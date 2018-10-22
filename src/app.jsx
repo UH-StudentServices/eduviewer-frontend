@@ -23,12 +23,15 @@ import Main from './components/Main';
 
 import './styles';
 import { availableLanguages } from './constants';
+import { loadLocalStyleGuide } from './utils/dependencyLoader';
 
 const EDUVIEWER_ROOT_ID = 'eduviewer-root';
 const LANGUAGE_ATTR_NAME = 'lang';
 const DEGREE_PROGRAM_ATTR_NAME = 'degree-program-id';
 const ACADEMIC_YEAR_ATTR_NAME = 'academic-year';
 const HEADER_ATTR_NAME = 'header';
+const DISABLE_GLOBAL_STYLES_ATTR_NAME = 'disable-global-style';
+
 
 const getRoot = () => document.getElementById(EDUVIEWER_ROOT_ID);
 const getRootAttribute = (attributeName) => {
@@ -57,7 +60,15 @@ const render = () => {
 
 const initializeApp = () => {
   initializeTracker();
-  render(Main);
+
+  const useLocalStyleGuide = getRootAttribute(DISABLE_GLOBAL_STYLES_ATTR_NAME) === null;
+
+  if (useLocalStyleGuide) {
+    loadLocalStyleGuide()
+      .then(render);
+  } else {
+    render(Main);
+  }
 };
 
 

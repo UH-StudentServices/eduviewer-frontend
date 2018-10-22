@@ -76,12 +76,14 @@ export default class GroupingModule extends Component {
       const renderRequiredCourseAmount = !allMandatory && hasRequiredCoursesRange;
 
       return (
-        <div key={rule.localId} className={styles.compositeRule}>
+        <div key={rule.localId}>
           {renderRequiredCourseAmount
             && <InfoBox content={`Valitse ${requiredCoursesToString(require)}`} />
           }
           {getDescription(rule, true)}
-          <ul>{rule.rules.sort(compareSubRules).map(this.renderRule)}</ul>
+          <ul className={styles.groupingList}>
+            {rule.rules.sort(compareSubRules).map(this.renderRule)}
+          </ul>
         </div>
       );
     }
