@@ -23,6 +23,7 @@ const WebpackMd5Hash = require('webpack-md5-hash');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const { createVariants } = require('parallel-webpack');
+const HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin');
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -52,16 +53,18 @@ const getHtmlPlugin = target => new HtmlWebPackPlugin({
       name: 'viewport',
       content: 'width=device-width, initial-scale=1'
     }
-  ]
+  ],
+  excludeAssets: [/styles.css/]
 });
 
 const miniCssExtractPlugin = new MiniCssExtractPlugin({
-  filename: 'style.[hash].css'
+  filename: 'styles.css'
 });
 
 const webpackMd5Hash = new WebpackMd5Hash();
 const reactHotLoader = new webpack.HotModuleReplacementPlugin();
 const cleanWebPackPlugin = new CleanWebpackPlugin('dist', [{}]);
+
 
 
 const devServerConfig = {
@@ -92,30 +95,28 @@ const createConfig = options => ({
         use: ['babel-loader', 'eslint-loader']
       },
       {
-        test: /\.global\.css$/,
-        use: [
-          'style-loader',
-          'css-loader?sourceMap',
-          'postcss-loader'
-        ]
-      },
-
-      {
         test: /.*\/node_modules\/.+\.css$/,
+        exclude: /\/uh-living-styleguide\//,
         use: [
           'style-loader',
           'css-loader'
         ]
       },
-
       {
-        test: /^((?!\.global).)*\.css$/,
+        test: /.*\/node_modules\/.+\.css$/,
+        include: /\/uh-living-styleguide\//,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.css$/,
         exclude: /node_modules/,
         use: [
           {
             loader: 'style-loader'
           },
-
           {
             loader: 'css-loader',
             options: {
@@ -153,6 +154,7 @@ const createConfig = options => ({
   },
   plugins: [
     getHtmlPlugin(options.target),
+    htmlWebpackExcludeAssetsPlugin,
     miniCssExtractPlugin,
     reactHotLoader,
     webpackMd5Hash,

@@ -15,6 +15,23 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import 'react-toggle/style.css';
-import './variables/colors';
-import 'uh-living-styleguide/css/styles.css';
+import { DEFAULT_STYLE_URL } from '../../config';
+
+export const loadStyle = (source) => {
+  const headTag = document.getElementsByTagName('head')[0];
+  const styleTag = document.createElement('link');
+  styleTag.setAttribute('rel', 'stylesheet');
+  styleTag.href = source;
+  headTag.appendChild(styleTag);
+
+  return new Promise((resolve) => {
+    styleTag.onload = resolve;
+  });
+};
+
+export const loadLocalStyleGuide = () => new Promise((resolve) => {
+  document.addEventListener('DOMContentLoaded', () => {
+    loadStyle(`${DEFAULT_STYLE_URL}/styles.css`)
+      .then(resolve);
+  });
+});
