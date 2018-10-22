@@ -19,7 +19,7 @@
 // So we use the PROD tracking id, unless we know we are embedded on the QA or DEV server
 // or are running locally.
 
-const eduviewerHostNames = {
+const eduviewerHostnames = {
   LOCAL: 'localhost',
   DEV: 'eduviewer-dev.it.helsinki.fi',
   QA: 'eduviewer-qa.it.helsinki.fi',
@@ -28,10 +28,10 @@ const eduviewerHostNames = {
 
 const getTrackingId = () => {
   const host = window.location.hostname;
-  if (host === eduviewerHostNames.DEV || host === eduviewerHostNames.LOCAL) {
+  if (host === eduviewerHostnames.DEV || host === eduviewerHostnames.LOCAL) {
     return null;
   }
-  return host === eduviewerHostNames.QA ? 'UA-55852460-20' : 'UA-55852460-21';
+  return host === eduviewerHostnames.QA ? 'UA-55852460-20' : 'UA-55852460-21';
 };
 
 const getNonProdStyleUrl = () => {
@@ -45,13 +45,13 @@ const getNonProdStyleUrl = () => {
 
 const getStyleUrl = () => {
   const { hostname } = window.location;
-  const isNonProd = hostname === eduviewerHostNames.LOCAL
-    || hostname === eduviewerHostNames.DEV
-    || hostname === eduviewerHostNames.QA;
+  const isNonProd = hostname === eduviewerHostnames.LOCAL
+    || hostname === eduviewerHostnames.DEV
+    || hostname === eduviewerHostnames.QA;
 
   return isNonProd
     ? getNonProdStyleUrl()
-    : `https://${eduviewerHostNames.PROD}`;
+    : `https://${eduviewerHostnames.PROD}`;
 };
 
 module.exports = {
