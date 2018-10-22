@@ -64,8 +64,7 @@ const miniCssExtractPlugin = new MiniCssExtractPlugin({
 const webpackMd5Hash = new WebpackMd5Hash();
 const reactHotLoader = new webpack.HotModuleReplacementPlugin();
 const cleanWebPackPlugin = new CleanWebpackPlugin('dist', [{}]);
-
-
+const htmlWebpackExcludeAssetsPlugin = new HtmlWebpackExcludeAssetsPlugin();
 
 const devServerConfig = {
   port: 8080
