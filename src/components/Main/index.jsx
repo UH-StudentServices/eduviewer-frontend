@@ -29,11 +29,11 @@ import LoaderDropdown from '../LoaderDropdown';
 
 import styles from './main.css';
 import ToggleSelect from '../ToggleSelect';
-import { availableLanguages, CURRENT_ACADEMIC_YEAR_CODE } from '../../constants';
+import { availableLanguages, CURRENT_ACADEMIC_YEAR_CODE, NO_DEGREE_PROGRAM_CODE } from '../../constants';
 import ErrorMessage from '../ErrorMessage';
 import Loader from '../Loader';
 import { getDegreeProgramCode } from '../../utils';
-import { trackEvent, CATEGORIES, trackPageView } from '../../tracking';
+import { trackEvent, trackingCategories, trackPageView } from '../../tracking';
 
 class Main extends Component {
   static propTypes = {
@@ -69,7 +69,8 @@ class Main extends Component {
     this.setState({ isLoading: false });
 
     const { academicYearNames, academicYear } = this.state;
-    trackPageView(degreeProgramCode, academicYearNames[academicYear], lang);
+    const trackingDegreeProgramCode = degreeProgramCode || NO_DEGREE_PROGRAM_CODE;
+    trackPageView(trackingDegreeProgramCode, academicYearNames[academicYear], lang);
   }
 
    onDegreeProgramsChange = async (event) => {
@@ -80,7 +81,7 @@ class Main extends Component {
        const academicYear = this.getAcademicYear(academicYears);
        const degreeProgram = await getDegreeProgram(degreeProgramCode, academicYear);
 
-       trackEvent(CATEGORIES.SELECT_DEGREE_PROGRAMME, degreeProgramCode);
+       trackEvent(trackingCategories.SELECT_DEGREE_PROGRAMME, degreeProgramCode);
        this.setState({
          degreeProgram,
          academicYear,
@@ -100,7 +101,7 @@ class Main extends Component {
     try {
       const newDegreeProgram = await getDegreeProgram(degreeProgramCode, academicYear);
       const { academicYearNames } = this.state;
-      trackEvent(CATEGORIES.SELECT_ACADEMIC_YEAR, academicYearNames[academicYear]);
+      trackEvent(trackingCategories.SELECT_ACADEMIC_YEAR, academicYearNames[academicYear]);
       this.setState({
         degreeProgram: newDegreeProgram,
         academicYear,
@@ -114,7 +115,7 @@ class Main extends Component {
   onShowAll = () => {
     const { showAll } = this.state;
     const newShowAll = !showAll;
-    trackEvent(CATEGORIES.TOGGLE_SHOW_ALL, newShowAll);
+    trackEvent(trackingCategories.TOGGLE_SHOW_ALL, newShowAll);
     this.setState({ showAll: newShowAll });
   }
 
