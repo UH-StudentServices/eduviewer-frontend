@@ -50,32 +50,6 @@ export const rulesType = shape({
 
 export const oneOfRulesType = oneOfType([ruleType, rulesType]);
 
-export const elemType = shape({
-  code: string,
-  curriculumPeriodIds: arrayOf(string).isRequired,
-  documentState: string.isRequired,
-  groupId: string.isRequired,
-  id: string.isRequired,
-  metadata: shape({
-    createdBy: string.isRequired,
-    createdOn: string.isRequired,
-    lastModifiedBy: string.isRequired,
-    lastModifiedOn: string.isRequired,
-    modificationOrdinal: number.isRequired,
-    revision: number.isRequired
-  }).isRequired,
-  moduleContentApprovalRequired: bool.isRequired,
-  name: localizedTextType,
-  rule: shape({
-    credits: creditsType,
-    localId: string.isRequired,
-    rule: ruleType,
-    type: string.isRequired
-  }).isRequired,
-  type: string.isRequired,
-  universityOrgIds: arrayOf(string).isRequired
-});
-
 export const dataNodeType = shape({
   code: string,
   name: localizedTextType,

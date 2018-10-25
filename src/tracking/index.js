@@ -20,11 +20,10 @@ import { TRACKING_ID } from '../config';
 
 export const TRACKER_NAME = 'Eduviewer';
 
-export const CATEGORIES = {
+export const trackingCategories = {
   SELECT_DEGREE_PROGRAMME: 'SELECT_DEGREE_PROGRAMME',
   SELECT_ACADEMIC_YEAR: 'SELECT_ACADEMIC_YEAR',
   TOGGLE_SHOW_ALL: 'TOGGLE_SHOW_ALL'
-
 };
 
 export const TEST_TRACKING_ID = 'test';
