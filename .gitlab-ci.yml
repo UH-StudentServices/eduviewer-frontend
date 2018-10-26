@@ -71,3 +71,17 @@ deploy_prod:
   when: manual
   <<: *deploy_definition
 
+push_master_to_github:
+  stage: deploy
+  allow_failure: true
+  before_script:
+    - which ssh-agent || ( apk --update add openssh-client git )
+    - eval $(ssh-agent -s)
+    - echo "$GITHUB_SSH_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+  script:
+    - git checkout master
+    - git push git@github.com:UH-StudentServices/eduviewer-frontend.git master
+  only:
+    - master
