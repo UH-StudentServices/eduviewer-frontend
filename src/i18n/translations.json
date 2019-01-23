@@ -1,0 +1,52 @@
+{
+  "academicYears": [
+    "Lukuvuodet",
+    "Lukuvuodet",
+    "Academic years"
+  ],
+  "academicYear": [
+    "Lukuvuosi",
+    "Lukuvuosi",
+    "Academic year"
+  ],
+  "degreePrograms": [
+    "Tutkinto-ohjelmat",
+    "Tutkinto-ohjelmat",
+    "Degree programs"
+  ],
+  "showAll": [
+    "Näytä kaikki",
+    "Näytä kaikki",
+    "Show all"
+  ],
+  "noDegreeProgramToShow": [
+    "Ei näytettävää koulutusohjelmaa",
+    "Ei näytettävää koulutusohjelmaa",
+    "Ei näytettävää koulutusohjelmaa"
+  ],
+  "dataFetchError": [
+    "Virhe tietojen hakemisessa",
+    "Virhe tietojen hakemisessa",
+    "Virhe tietojen hakemisessa"
+  ],
+  "select": [
+    "Valitse",
+    "Valitse",
+    "Valitse"
+  ],
+  "anyCourseUnit": [
+    "Mikä tahansa opintojakso",
+    "Mikä tahansa opintojakso",
+    "Mikä tahansa opintojakso"
+  ],
+  "anyModule": [
+    "Mikä tahansa opintokokonaisuus",
+    "Mikä tahansa opintokokonaisuus",
+    "Mikä tahansa opintokokonaisuus"
+  ],
+  "noContent": [
+    "Ei sisältöä",
+    "Ei sisältöä",
+    "Ei sisältöä"
+  ]
+}

@@ -16,7 +16,8 @@
  */
 
 import React, { Component, Fragment } from 'react';
-import { bool, shape } from 'prop-types';
+import { func, bool, shape } from 'prop-types';
+import { Translate, withLocalize } from 'react-localize-redux';
 
 import { ruleTypes } from '../../constants';
 import {
@@ -66,9 +67,9 @@ const getSubRules = (rule) => {
   return subRules;
 };
 
-export default class GroupingModule extends Component {
+class GroupingModule extends Component {
   renderRule = (rule) => {
-    const { showAll } = this.props;
+    const { showAll, translate } = this.props;
 
     if (rule.type === COMPOSITE_RULE) {
       const { require, allMandatory } = rule;
@@ -78,7 +79,7 @@ export default class GroupingModule extends Component {
       return (
         <div key={rule.localId}>
           {renderRequiredCourseAmount
-            && <InfoBox content={`Valitse ${requiredCoursesToString(require)}`} />
+            && <InfoBox content={`${translate('select')} ${requiredCoursesToString(require)}`} />
           }
           {getDescription(rule, true)}
           <ul className={styles.groupingList}>
@@ -89,11 +90,11 @@ export default class GroupingModule extends Component {
     }
 
     if (rule.type === ANY_COURSE_UNIT_RULE) {
-      return <li key={rule.localId}>Mikä tahansa opintojakso</li>;
+      return <li key={rule.localId}><Translate id="anyCourseUnit" /></li>;
     }
 
     if (rule.type === ANY_MODULE_RULE) {
-      return <li key={rule.localId}>Mikä tahansa opintokokonaisuus</li>;
+      return <li key={rule.localId}><Translate id="anyModule" /></li>;
     }
 
     if (rule.type === COURSE_UNIT_RULE) {
@@ -112,14 +113,21 @@ export default class GroupingModule extends Component {
     if (rule.type === CREDITS_RULE) {
       return (
         <Fragment key={rule.localId}>
-          <InfoBox content={`Valitse ${creditsToString(rule.credits)}`} />
+          <InfoBox content={`${translate('select')} ${creditsToString(rule.credits)}`} />
           {this.renderRule(rule.rule)}
         </Fragment>
       );
     }
 
     if (rule.type === MODULE_RULE) {
-      return <GroupingModule key={rule.localId} rule={rule} showAll={showAll} />;
+      return (
+        <GroupingModule
+          key={rule.localId}
+          rule={rule}
+          showAll={showAll}
+          translate={translate}
+        />
+      );
     }
 
     return null;
@@ -160,5 +168,8 @@ export default class GroupingModule extends Component {
 
 GroupingModule.propTypes = {
   showAll: bool.isRequired,
-  rule: shape({}).isRequired
+  rule: shape({}).isRequired,
+  translate: func.isRequired
 };
+
+export default withLocalize(GroupingModule);

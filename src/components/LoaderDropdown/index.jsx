@@ -16,6 +16,7 @@
  */
 
 import React from 'react';
+import { Translate, withLocalize } from 'react-localize-redux';
 import {
   oneOfType, string, number, bool, func
 } from 'prop-types';
@@ -45,7 +46,7 @@ const LoadedDropdown = ({
   const hasOptions = options && options.length > 0;
   const optionElements = hasOptions
     ? options.map(o => <option key={o.id} value={o.value}>{o.text}</option>)
-    : <option>Ei sisältöä</option>;
+    : <option><Translate id="noContent" /></option>;
 
   return (
     <label htmlFor={id}>
@@ -100,4 +101,4 @@ LoaderDropdown.defaultProps = {
   value: ''
 };
 
-export default LoaderDropdown;
+export default withLocalize(LoaderDropdown);

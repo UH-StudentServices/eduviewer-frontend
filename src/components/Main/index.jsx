@@ -16,7 +16,9 @@
  */
 
 import React, { Component } from 'react';
-import { string, oneOf } from 'prop-types';
+import { func, string, oneOf } from 'prop-types';
+import { Translate, withLocalize } from 'react-localize-redux';
+import { renderToStaticMarkup } from 'react-dom/server';
 import {
   getDegreePrograms,
   getAcademicYearNames,
@@ -35,13 +37,17 @@ import Loader from '../Loader';
 import { getDegreeProgramCode } from '../../utils';
 import { trackEvent, trackingCategories, trackPageView } from '../../tracking';
 
+import translation from '../../i18n/translations.json';
+
 class Main extends Component {
   static propTypes = {
     academicYearCode: string.isRequired,
     degreeProgramCode: string.isRequired,
     // eslint-disable-next-line react/no-unused-prop-types
     lang: oneOf(Object.values(availableLanguages)).isRequired,
-    header: string.isRequired
+    header: string.isRequired,
+    initialize: func.isRequired,
+    translate: func.isRequired
   };
 
   state = {
@@ -52,6 +58,16 @@ class Main extends Component {
     degreeProgram: {},
     academicYear: '',
     showAll: false
+  }
+
+  constructor(props) {
+    super(props);
+
+    props.initialize({
+      languages: ['fi', 'sv', 'en'],
+      translation,
+      options: { renderToStaticMarkup, defaultLanguage: 'fi' }
+    });
   }
 
   async componentDidMount() {
@@ -223,7 +239,7 @@ class Main extends Component {
       isLoading
     } = this.state;
 
-    const { degreeProgramCode, academicYearCode } = this.props;
+    const { degreeProgramCode, academicYearCode, translate } = this.props;
 
     const getOption = (id, value, text) => ({ id, value, text });
 
@@ -234,9 +250,9 @@ class Main extends Component {
       .map((dp, i) => getOption(i, dp.degreeProgrammeCode, dp.name.fi));
     const academicYearOptions = academicYears.map(ay => getOption(ay, ay, academicYearNames[ay]));
 
-    const academicYearsLabel = 'Lukuvuodet';
-    const degreeProgramsLabel = 'Tutkinto-ohjelmat';
-    const showAllLabel = 'Näytä kaikki';
+    const academicYearsLabel = translate('academicYears');
+    const degreeProgramsLabel = translate('degreePrograms');
+    const showAllLabel = translate('showAll');
 
     return (
       <div className={styles.selectContainer}>
@@ -266,7 +282,7 @@ class Main extends Component {
           : (
             <div className={styles.academicYearContainer}>
               <div className={styles.academicYearLabel}>
-                {'Lukuvuosi '}
+                <Translate id="academicYear" />{' '}
                 <span className={styles.academicYearText}>
                   {academicYearNames[academicYear]}
                 </span>
@@ -311,7 +327,7 @@ class Main extends Component {
               showContent={!errorMessage}
             />
           )
-          : <div className={styles.noContent}>Ei näytettävää koulutusohjelmaa</div>
+          : <div className={styles.noContent}><Translate id="noDegreeProgramToShow" /></div>
         }
       </div>
     );
@@ -331,4 +347,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default withLocalize(Main);
