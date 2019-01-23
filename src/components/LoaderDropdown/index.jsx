@@ -31,7 +31,8 @@ const LoadingDropdown = ({ label, text }) => (
       <div className={styles.loadingText}>{text}</div>
       <Loader />
     </div>
-  </div>);
+  </div>
+);
 
 LoadingDropdown.propTypes = {
   label: string.isRequired,

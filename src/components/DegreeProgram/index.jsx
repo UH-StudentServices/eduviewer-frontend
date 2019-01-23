@@ -40,7 +40,8 @@ const DegreeProgram = ({ showAll, showContent, degreeProgram }) => {
           showAll={showAll}
         />
       </div>
-    </div>);
+    </div>
+  );
 };
 
 DegreeProgram.propTypes = {
