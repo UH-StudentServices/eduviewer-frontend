@@ -150,7 +150,7 @@ class GroupingModule extends Component {
     if (shouldRenderDropdown && !showAll) {
       return (
         <div key={rule.localId} className={styles.groupingModule}>
-          <strong className={styles.groupingTitle}>{getName(rule, lang)}</strong>
+          <div className={styles.groupingTitle}>{getName(rule, lang)}</div>
           <DropdownModule rule={rule} showAll={showAll} />
         </div>
       );
