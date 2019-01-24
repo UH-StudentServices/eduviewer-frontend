@@ -17,14 +17,17 @@
 
 import React from 'react';
 import { string } from 'prop-types';
-import { creditsType, localizedTextType } from '../../types';
-import { creditsToString } from '../../utils';
+import { withLocalize } from 'react-localize-redux';
+import { activeLanguageType, creditsType, localizedTextType } from '../../types';
+import { creditsToString, getLocalizedText } from '../../utils';
 
 import styles from './course.css';
 
-const Course = ({ code, name, credits }) => (
+const Course = ({
+  code, name, credits, activeLanguage
+}) => (
   <li>
-    {`${code} ${name.fi} `}
+    {`${code} ${getLocalizedText(name, activeLanguage.code)} `}
     <span className={styles.credits}>
       ({creditsToString(credits)})
     </span>
@@ -34,7 +37,8 @@ const Course = ({ code, name, credits }) => (
 Course.propTypes = {
   code: string.isRequired,
   name: localizedTextType.isRequired,
-  credits: creditsType.isRequired
+  credits: creditsType.isRequired,
+  activeLanguage: activeLanguageType.isRequired
 };
 
-export default Course;
+export default withLocalize(Course);

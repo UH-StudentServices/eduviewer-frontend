@@ -21,7 +21,7 @@ import { Translate, withLocalize } from 'react-localize-redux';
 
 import { ruleTypes } from '../../constants';
 import {
-  compareSubRules, creditsToString, getName, requiredCoursesToString
+  compareSubRules, creditsToString, getLocalizedText, getName, requiredCoursesToString
 } from '../../utils';
 
 import DropdownModule from '../DropdownModule'; // eslint-disable-line
@@ -29,6 +29,7 @@ import Course from '../Course';
 
 import styles from './groupingModule.css';
 import InfoBox from '../InfoBox';
+import { activeLanguageType } from '../../types';
 
 const {
   ANY_COURSE_UNIT_RULE,
@@ -41,7 +42,7 @@ const {
 
 const DROPDOWN_MODULES = ['opintosuunta', 'study track', 'vieras kieli', 'foreign language'];
 
-const getDescription = (rule, isCompositeRule = false) => {
+const getDescription = (rule, isCompositeRule = false, lang) => {
   const { description: ruleDesc, dataNode, allMandatory } = rule;
   const nodeDesc = dataNode && dataNode.description;
 
@@ -52,7 +53,7 @@ const getDescription = (rule, isCompositeRule = false) => {
     return null;
   }
 
-  return <InfoBox content={description.fi} setInnerHtml />;
+  return <InfoBox content={getLocalizedText(description, lang)} setInnerHtml />;
 };
 
 const getSubRules = (rule) => {
@@ -69,7 +70,7 @@ const getSubRules = (rule) => {
 
 class GroupingModule extends Component {
   renderRule = (rule) => {
-    const { showAll, translate } = this.props;
+    const { showAll, translate, activeLanguage } = this.props;
 
     if (rule.type === COMPOSITE_RULE) {
       const { require, allMandatory } = rule;
@@ -81,7 +82,7 @@ class GroupingModule extends Component {
           {renderRequiredCourseAmount
             && <InfoBox content={`${translate('select')} ${requiredCoursesToString(require)}`} />
           }
-          {getDescription(rule, true)}
+          {getDescription(rule, true, activeLanguage.code)}
           <ul className={styles.groupingList}>
             {rule.rules.sort(compareSubRules).map(this.renderRule)}
           </ul>
@@ -126,6 +127,7 @@ class GroupingModule extends Component {
           rule={rule}
           showAll={showAll}
           translate={translate}
+          activeLanguage={activeLanguage}
         />
       );
     }
@@ -134,11 +136,13 @@ class GroupingModule extends Component {
   };
 
   render() {
-    const { rule, showAll } = this.props;
+    const { rule, showAll, activeLanguage } = this.props;
+    const lang = activeLanguage.code;
+
     if (!rule) {
       return null;
     }
-    const shouldRenderDropdown = DROPDOWN_MODULES.includes(getName(rule).toLowerCase());
+    const shouldRenderDropdown = DROPDOWN_MODULES.includes(getName(rule, lang).toLowerCase());
     const moduleCredits = rule.type === MODULE_RULE
       && creditsToString(rule.dataNode.targetCredits, true);
     const moduleCode = rule.type === MODULE_RULE && rule.dataNode.code;
@@ -146,7 +150,7 @@ class GroupingModule extends Component {
     if (shouldRenderDropdown && !showAll) {
       return (
         <div key={rule.localId} className={styles.groupingModule}>
-          <strong className={styles.groupingTitle}>{getName(rule)}</strong>
+          <strong className={styles.groupingTitle}>{getName(rule, lang)}</strong>
           <DropdownModule rule={rule} showAll={showAll} />
         </div>
       );
@@ -156,10 +160,10 @@ class GroupingModule extends Component {
       <div id={rule.localId} key={rule.localId} className={styles.groupingModule}>
         <strong className={styles.groupingTitle}>
           {moduleCode ? `${moduleCode} ` : ''}
-          {getName(rule)}
+          {getName(rule, lang)}
           {moduleCredits ? ` (${moduleCredits})` : ''}
         </strong>
-        { getDescription(rule) }
+        { getDescription(rule, lang) }
         { getSubRules(rule).sort(compareSubRules).map(r => this.renderRule(r)) }
       </div>
     );
@@ -169,7 +173,8 @@ class GroupingModule extends Component {
 GroupingModule.propTypes = {
   showAll: bool.isRequired,
   rule: shape({}).isRequired,
-  translate: func.isRequired
+  translate: func.isRequired,
+  activeLanguage: activeLanguageType.isRequired
 };
 
 export default withLocalize(GroupingModule);

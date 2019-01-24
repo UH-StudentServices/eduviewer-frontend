@@ -31,8 +31,8 @@ export const moduleTypes = {
 
 export const availableLanguages = {
   FI: 'fi',
-  EN: 'en',
-  SV: 'sv'
+  SV: 'sv',
+  EN: 'en'
 };
 
 export const CURRENT_ACADEMIC_YEAR_CODE = 'current';

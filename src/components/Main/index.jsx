@@ -34,7 +34,7 @@ import ToggleSelect from '../ToggleSelect';
 import { availableLanguages, CURRENT_ACADEMIC_YEAR_CODE, NO_DEGREE_PROGRAM_CODE } from '../../constants';
 import ErrorMessage from '../ErrorMessage';
 import Loader from '../Loader';
-import { getDegreeProgramCode } from '../../utils';
+import { getDegreeProgramCode, getLocalizedText } from '../../utils';
 import { trackEvent, trackingCategories, trackPageView } from '../../tracking';
 
 import translation from '../../i18n/translations.json';
@@ -64,9 +64,12 @@ class Main extends Component {
     super(props);
 
     props.initialize({
-      languages: ['fi', 'sv', 'en'],
+      languages: Object.values(availableLanguages),
       translation,
-      options: { renderToStaticMarkup, defaultLanguage: 'fi' }
+      options: {
+        renderToStaticMarkup,
+        defaultLanguage: props.lang
+      }
     });
   }
 
@@ -239,7 +242,12 @@ class Main extends Component {
       isLoading
     } = this.state;
 
-    const { degreeProgramCode, academicYearCode, translate } = this.props;
+    const {
+      degreeProgramCode,
+      academicYearCode,
+      translate,
+      lang
+    } = this.props;
 
     const getOption = (id, value, text) => ({ id, value, text });
 
@@ -247,10 +255,10 @@ class Main extends Component {
     const DEGREE_PROGRAMS_ID = 'degreePrograms';
     const degreeProgramOptions = degreePrograms
       .filter(dp => dp.degreeProgrammeCode)
-      .map((dp, i) => getOption(i, dp.degreeProgrammeCode, dp.name.fi));
+      .map((dp, i) => getOption(i, dp.degreeProgrammeCode, getLocalizedText(dp.name, lang)));
     const academicYearOptions = academicYears.map(ay => getOption(ay, ay, academicYearNames[ay]));
 
-    const academicYearsLabel = translate('academicYears');
+    const academicYearsLabel = translate('academicYear');
     const degreeProgramsLabel = translate('degreePrograms');
     const showAllLabel = translate('showAll');
 

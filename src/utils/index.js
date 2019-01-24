@@ -52,7 +52,9 @@ export const requiredCoursesToString = (requiredCourses) => {
   return getMinMaxString(min, max);
 };
 
-export const getName = rule => (rule.dataNode ? rule.dataNode.name.fi : '');
+export const getLocalizedText = (field, lang) => (field[lang] ? field[lang] : field.fi);
+
+export const getName = (rule, lang) => (rule.dataNode ? getLocalizedText(rule.dataNode.name, lang) : '');
 
 const compareCodes = (rule1, rule2) => {
   const getCode = rule => rule.dataNode.code || '';
