@@ -1,52 +1,47 @@
 {
-  "academicYears": [
-    "Lukuvuodet",
-    "Lukuvuodet",
-    "Academic years"
-  ],
   "academicYear": [
     "Lukuvuosi",
-    "Lukuvuosi",
+    "Läsår",
     "Academic year"
   ],
   "degreePrograms": [
     "Tutkinto-ohjelmat",
-    "Tutkinto-ohjelmat",
-    "Degree programs"
+    "Utbildningsprogram",
+    "Degree programmes"
   ],
   "showAll": [
     "Näytä kaikki",
-    "Näytä kaikki",
+    "Visa allt ",
     "Show all"
   ],
   "noDegreeProgramToShow": [
     "Ei näytettävää koulutusohjelmaa",
-    "Ei näytettävää koulutusohjelmaa",
-    "Ei näytettävää koulutusohjelmaa"
+    "Inget utbildningsprogram att visa",
+    "No degree programme to show"
   ],
   "dataFetchError": [
     "Virhe tietojen hakemisessa",
-    "Virhe tietojen hakemisessa",
-    "Virhe tietojen hakemisessa"
+    "Fel att ladda data",
+    "Error loafing data"
   ],
   "select": [
     "Valitse",
-    "Valitse",
-    "Valitse"
+    "Välj",
+    "Select"
   ],
   "anyCourseUnit": [
     "Mikä tahansa opintojakso",
-    "Mikä tahansa opintojakso",
-    "Mikä tahansa opintojakso"
+    "Valfi kurs",
+    "Optional course"
   ],
   "anyModule": [
     "Mikä tahansa opintokokonaisuus",
-    "Mikä tahansa opintokokonaisuus",
-    "Mikä tahansa opintokokonaisuus"
+    "Valfri studiehelhet",
+    "Optional study module"
   ],
   "noContent": [
     "Ei sisältöä",
-    "Ei sisältöä",
-    "Ei sisältöä"
+    "Inget innehåll",
+    "No content"
   ]
 }
