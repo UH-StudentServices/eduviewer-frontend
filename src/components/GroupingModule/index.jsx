@@ -114,7 +114,7 @@ class GroupingModule extends Component {
     if (rule.type === CREDITS_RULE) {
       return (
         <Fragment key={rule.localId}>
-          <InfoBox content={`${translate('select')} ${creditsToString(rule.credits)}`} />
+          <InfoBox content={`${translate('select')} ${creditsToString(rule.credits, activeLanguage.code)}`} />
           {this.renderRule(rule.rule)}
         </Fragment>
       );
@@ -144,7 +144,7 @@ class GroupingModule extends Component {
     }
     const shouldRenderDropdown = DROPDOWN_MODULES.includes(getName(rule, lang).toLowerCase());
     const moduleCredits = rule.type === MODULE_RULE
-      && creditsToString(rule.dataNode.targetCredits, true);
+      && creditsToString(rule.dataNode.targetCredits, lang, true);
     const moduleCode = rule.type === MODULE_RULE && rule.dataNode.code;
 
     if (shouldRenderDropdown && !showAll) {

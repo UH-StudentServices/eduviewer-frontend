@@ -29,7 +29,7 @@ const Course = ({
   <li>
     {`${code} ${getLocalizedText(name, activeLanguage.code)} `}
     <span className={styles.credits}>
-      ({creditsToString(credits)})
+      ({creditsToString(credits, activeLanguage.code)})
     </span>
   </li>
 );

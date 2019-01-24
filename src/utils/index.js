@@ -34,14 +34,19 @@ const getMinMaxString = (min, max, showMinRequirement = false) => {
   return minMaxString;
 };
 
-export const creditsToString = (credits, showMinSPRequirement = false) => {
+const creditLabel = {
+  fi: 'op',
+  en: 'cr',
+  sv: 'sp'
+};
+
+export const creditsToString = (credits, lang, showMinSPRequirement = false) => {
   if (!credits) {
     return null;
   }
 
   const { max, min } = credits;
-  const spLabel = 'op';
-
+  const spLabel = creditLabel[lang];
   const creditsString = getMinMaxString(min, max, showMinSPRequirement);
 
   return `${creditsString} ${spLabel}`;
