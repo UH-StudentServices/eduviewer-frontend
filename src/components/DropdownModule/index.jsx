@@ -17,8 +17,9 @@
 
 import React, { Component, Fragment } from 'react';
 import { bool } from 'prop-types';
+import { withLocalize } from 'react-localize-redux';
 
-import { oneOfRulesType } from '../../types';
+import { activeLanguageType, oneOfRulesType } from '../../types';
 import GroupingModule from '../GroupingModule'; // eslint-disable-line
 import { getName } from '../../utils';
 
@@ -56,7 +57,7 @@ class DropdownModule extends Component {
 
   render() {
     const { selected } = this.state;
-    const { showAll, rule } = this.props;
+    const { showAll, rule, activeLanguage } = this.props;
 
     if (showAll) {
       return (
@@ -67,6 +68,7 @@ class DropdownModule extends Component {
                 key={r.localId}
                 rule={rule}
                 showAll={showAll}
+                activeLanguage={activeLanguage}
               />
             ))}
           </Fragment>
@@ -80,7 +82,7 @@ class DropdownModule extends Component {
             <option value="-">-</option>
             {rule.dataNode.rule.rules.map(subRule => (
               <option key={subRule.dataNode.id} value={subRule.dataNode.id}>
-                {getName(subRule)}
+                {getName(subRule, activeLanguage.code)}
               </option>
             ))}
           </select>
@@ -93,7 +95,8 @@ class DropdownModule extends Component {
 
 DropdownModule.propTypes = {
   rule: oneOfRulesType.isRequired,
-  showAll: bool.isRequired
+  showAll: bool.isRequired,
+  activeLanguage: activeLanguageType.isRequired
 };
 
-export default DropdownModule;
+export default withLocalize(DropdownModule);

@@ -16,11 +16,12 @@
  */
 
 import React, { Component, Fragment } from 'react';
-import { bool, shape } from 'prop-types';
+import { func, bool, shape } from 'prop-types';
+import { Translate, withLocalize } from 'react-localize-redux';
 
 import { ruleTypes } from '../../constants';
 import {
-  compareSubRules, creditsToString, getName, requiredCoursesToString
+  compareSubRules, creditsToString, getLocalizedText, getName, requiredCoursesToString
 } from '../../utils';
 
 import DropdownModule from '../DropdownModule'; // eslint-disable-line
@@ -28,6 +29,7 @@ import Course from '../Course';
 
 import styles from './groupingModule.css';
 import InfoBox from '../InfoBox';
+import { activeLanguageType } from '../../types';
 
 const {
   ANY_COURSE_UNIT_RULE,
@@ -40,7 +42,7 @@ const {
 
 const DROPDOWN_MODULES = ['opintosuunta', 'study track', 'vieras kieli', 'foreign language'];
 
-const getDescription = (rule, isCompositeRule = false) => {
+const getDescription = (rule, isCompositeRule = false, lang) => {
   const { description: ruleDesc, dataNode, allMandatory } = rule;
   const nodeDesc = dataNode && dataNode.description;
 
@@ -51,7 +53,7 @@ const getDescription = (rule, isCompositeRule = false) => {
     return null;
   }
 
-  return <InfoBox content={description.fi} setInnerHtml />;
+  return <InfoBox content={getLocalizedText(description, lang)} setInnerHtml />;
 };
 
 const getSubRules = (rule) => {
@@ -66,9 +68,9 @@ const getSubRules = (rule) => {
   return subRules;
 };
 
-export default class GroupingModule extends Component {
+class GroupingModule extends Component {
   renderRule = (rule) => {
-    const { showAll } = this.props;
+    const { showAll, translate, activeLanguage } = this.props;
 
     if (rule.type === COMPOSITE_RULE) {
       const { require, allMandatory } = rule;
@@ -78,9 +80,9 @@ export default class GroupingModule extends Component {
       return (
         <div key={rule.localId}>
           {renderRequiredCourseAmount
-            && <InfoBox content={`Valitse ${requiredCoursesToString(require)}`} />
+            && <InfoBox content={`${translate('select')} ${requiredCoursesToString(require)}`} />
           }
-          {getDescription(rule, true)}
+          {getDescription(rule, true, activeLanguage.code)}
           <ul className={styles.groupingList}>
             {rule.rules.sort(compareSubRules).map(this.renderRule)}
           </ul>
@@ -89,11 +91,11 @@ export default class GroupingModule extends Component {
     }
 
     if (rule.type === ANY_COURSE_UNIT_RULE) {
-      return <li key={rule.localId}>Mikä tahansa opintojakso</li>;
+      return <li key={rule.localId}><Translate id="anyCourseUnit" /></li>;
     }
 
     if (rule.type === ANY_MODULE_RULE) {
-      return <li key={rule.localId}>Mikä tahansa opintokokonaisuus</li>;
+      return <li key={rule.localId}><Translate id="anyModule" /></li>;
     }
 
     if (rule.type === COURSE_UNIT_RULE) {
@@ -112,33 +114,43 @@ export default class GroupingModule extends Component {
     if (rule.type === CREDITS_RULE) {
       return (
         <Fragment key={rule.localId}>
-          <InfoBox content={`Valitse ${creditsToString(rule.credits)}`} />
+          <InfoBox content={`${translate('select')} ${creditsToString(rule.credits, activeLanguage.code)}`} />
           {this.renderRule(rule.rule)}
         </Fragment>
       );
     }
 
     if (rule.type === MODULE_RULE) {
-      return <GroupingModule key={rule.localId} rule={rule} showAll={showAll} />;
+      return (
+        <GroupingModule
+          key={rule.localId}
+          rule={rule}
+          showAll={showAll}
+          translate={translate}
+          activeLanguage={activeLanguage}
+        />
+      );
     }
 
     return null;
   };
 
   render() {
-    const { rule, showAll } = this.props;
+    const { rule, showAll, activeLanguage } = this.props;
+    const lang = activeLanguage.code;
+
     if (!rule) {
       return null;
     }
-    const shouldRenderDropdown = DROPDOWN_MODULES.includes(getName(rule).toLowerCase());
+    const shouldRenderDropdown = DROPDOWN_MODULES.includes(getName(rule, lang).toLowerCase());
     const moduleCredits = rule.type === MODULE_RULE
-      && creditsToString(rule.dataNode.targetCredits, true);
+      && creditsToString(rule.dataNode.targetCredits, lang, true);
     const moduleCode = rule.type === MODULE_RULE && rule.dataNode.code;
 
     if (shouldRenderDropdown && !showAll) {
       return (
         <div key={rule.localId} className={styles.groupingModule}>
-          <strong className={styles.groupingTitle}>{getName(rule)}</strong>
+          <div className={styles.groupingTitle}>{getName(rule, lang)}</div>
           <DropdownModule rule={rule} showAll={showAll} />
         </div>
       );
@@ -148,10 +160,10 @@ export default class GroupingModule extends Component {
       <div id={rule.localId} key={rule.localId} className={styles.groupingModule}>
         <strong className={styles.groupingTitle}>
           {moduleCode ? `${moduleCode} ` : ''}
-          {getName(rule)}
+          {getName(rule, lang)}
           {moduleCredits ? ` (${moduleCredits})` : ''}
         </strong>
-        { getDescription(rule) }
+        { getDescription(rule, lang) }
         { getSubRules(rule).sort(compareSubRules).map(r => this.renderRule(r)) }
       </div>
     );
@@ -160,5 +172,9 @@ export default class GroupingModule extends Component {
 
 GroupingModule.propTypes = {
   showAll: bool.isRequired,
-  rule: shape({}).isRequired
+  rule: shape({}).isRequired,
+  translate: func.isRequired,
+  activeLanguage: activeLanguageType.isRequired
 };
+
+export default withLocalize(GroupingModule);

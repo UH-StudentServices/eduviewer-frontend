@@ -1,0 +1,47 @@
+{
+  "academicYear": [
+    "Lukuvuosi",
+    "Läsår",
+    "Academic year"
+  ],
+  "degreePrograms": [
+    "Tutkinto-ohjelmat",
+    "Utbildningsprogram",
+    "Degree programmes"
+  ],
+  "showAll": [
+    "Näytä kaikki",
+    "Visa allt ",
+    "Show all"
+  ],
+  "noDegreeProgramToShow": [
+    "Ei näytettävää koulutusohjelmaa",
+    "Inget utbildningsprogram att visa",
+    "No degree programme to show"
+  ],
+  "dataFetchError": [
+    "Virhe tietojen hakemisessa",
+    "Fel att ladda data",
+    "Error loafing data"
+  ],
+  "select": [
+    "Valitse",
+    "Välj",
+    "Select"
+  ],
+  "anyCourseUnit": [
+    "Mikä tahansa opintojakso",
+    "Valfi kurs",
+    "Optional course"
+  ],
+  "anyModule": [
+    "Mikä tahansa opintokokonaisuus",
+    "Valfri studiehelhet",
+    "Optional study module"
+  ],
+  "noContent": [
+    "Ei sisältöä",
+    "Inget innehåll",
+    "No content"
+  ]
+}

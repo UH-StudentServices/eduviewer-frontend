@@ -17,6 +17,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { LocalizeProvider } from 'react-localize-redux';
 import { AppContainer } from 'react-hot-loader';
 import { initializeTracker } from './tracking';
 import Main from './components/Main';
@@ -47,12 +48,14 @@ const render = () => {
 
   ReactDOM.render(
     <AppContainer>
-      <Main
-        degreeProgramCode={degreeProgramCode}
-        academicYearCode={academicYearCode}
-        lang={lang}
-        header={header}
-      />
+      <LocalizeProvider>
+        <Main
+          degreeProgramCode={degreeProgramCode}
+          academicYearCode={academicYearCode}
+          lang={lang}
+          header={header}
+        />
+      </LocalizeProvider>
     </AppContainer>,
     getRoot(),
   );

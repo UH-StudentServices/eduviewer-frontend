@@ -17,13 +17,20 @@
 
 import React from 'react';
 import { bool } from 'prop-types';
-import { degreeProgramType } from '../../types';
+import { withLocalize } from 'react-localize-redux';
+import { activeLanguageType, degreeProgramType } from '../../types';
 
 import GroupingModule from '../GroupingModule';
 
 import styles from './degreeProgram.css';
+import { getLocalizedText } from '../../utils';
 
-const DegreeProgram = ({ showAll, showContent, degreeProgram }) => {
+const DegreeProgram = ({
+  showAll,
+  showContent,
+  degreeProgram,
+  activeLanguage
+}) => {
   if (!showContent) {
     return null;
   }
@@ -32,21 +39,24 @@ const DegreeProgram = ({ showAll, showContent, degreeProgram }) => {
 
   return (
     <div className={styles.degreeProgram}>
-      <h3 className={styles.degreeProgramTitle}>{name.fi}</h3>
+      <h3 className={styles.degreeProgramTitle}>{getLocalizedText(name, activeLanguage.code)}</h3>
       <div className={styles.moduleGroups}>
         <GroupingModule
           key={rule.localId}
           rule={rule}
           showAll={showAll}
+          activeLanguage={activeLanguage}
         />
       </div>
-    </div>);
+    </div>
+  );
 };
 
 DegreeProgram.propTypes = {
   degreeProgram: degreeProgramType.isRequired,
   showAll: bool.isRequired,
-  showContent: bool.isRequired
+  showContent: bool.isRequired,
+  activeLanguage: activeLanguageType.isRequired
 };
 
-export default DegreeProgram;
+export default withLocalize(DegreeProgram);

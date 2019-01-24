@@ -66,4 +66,5 @@
 
 .groupingTitle {
   color: var(--black);
+  font-weight: bold;
 }
