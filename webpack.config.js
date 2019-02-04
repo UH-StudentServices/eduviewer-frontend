@@ -37,16 +37,15 @@ const variants = {
   target: isDevelopment ? [defaultTarget] : [defaultTarget, 'commonjs2', 'umd', 'amd']
 };
 
-const getHtmlFileName = (target) => {
+const getHtmlFileName = (target, lang) => {
   const isDefaultTarget = target === defaultTarget;
-  return isDefaultTarget ? 'index.html' : `index_${target}.html`;
+  const langId = lang ? `.${lang}` : '';
+  return isDefaultTarget ? `index${langId}.html` : `index${langId}_${target}.html`;
 };
-
-const getHtmlPlugin = target => new HtmlWebPackPlugin({
+const getHtmlPlugin = (target, lang) => new HtmlWebPackPlugin({
   inject: true,
-  filename: getHtmlFileName(target),
+  filename: getHtmlFileName(target, lang),
   template: '../index.html.template',
-  title: 'Eduviewer',
   baseHref: '/',
   meta: [
     {
@@ -54,7 +53,11 @@ const getHtmlPlugin = target => new HtmlWebPackPlugin({
       content: 'width=device-width, initial-scale=1'
     }
   ],
-  excludeAssets: [/styles.css/]
+  excludeAssets: [/styles.css/],
+  templateParameters: {
+    lang: lang || 'fi',
+    title: 'Eduviewer'
+  }
 });
 
 const miniCssExtractPlugin = new MiniCssExtractPlugin({
@@ -153,6 +156,8 @@ const createConfig = options => ({
   },
   plugins: [
     getHtmlPlugin(options.target),
+    getHtmlPlugin(options.target, 'en'),
+    getHtmlPlugin(options.target, 'sv'),
     htmlWebpackExcludeAssetsPlugin,
     miniCssExtractPlugin,
     reactHotLoader,
