@@ -40,12 +40,21 @@ const {
   MODULE_RULE
 } = ruleTypes;
 
-const DROPDOWN_MODULES = [
+const STUDY_TRACK_DROPDOWN_MODULES = [
   'opintosuunta',
   'study track',
-  'studieinriktningen',
+  'studieinriktningen'
+];
+
+const FOREIGN_LANGUAGE_DROPDOWN_MODULES = [
   'vieras kieli',
-  'foreign language'
+  'foreign language',
+  'främmande språk'
+];
+
+const DROPDOWN_MODULES = [
+  ...STUDY_TRACK_DROPDOWN_MODULES,
+  ...FOREIGN_LANGUAGE_DROPDOWN_MODULES
 ];
 
 const getDescription = (rule, isCompositeRule = false, lang) => {
