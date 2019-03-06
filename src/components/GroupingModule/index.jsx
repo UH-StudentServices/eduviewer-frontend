@@ -40,7 +40,13 @@ const {
   MODULE_RULE
 } = ruleTypes;
 
-const DROPDOWN_MODULES = ['opintosuunta', 'study track', 'vieras kieli', 'foreign language'];
+const DROPDOWN_MODULES = [
+  'opintosuunta',
+  'study track',
+  'studieinriktningen',
+  'vieras kieli',
+  'foreign language'
+];
 
 const getDescription = (rule, isCompositeRule = false, lang) => {
   const { description: ruleDesc, dataNode, allMandatory } = rule;
