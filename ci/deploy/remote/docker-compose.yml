@@ -9,7 +9,6 @@ services:
       - "443:443"
     volumes:
       - ./nginx.conf.template:/etc/nginx/conf.d/nginx.conf.template
-      - /var/log/nginx:/var/log/nginx
       - ${CERT_PATH}:${CERT_PATH}
       - ${KEY_PATH}:${KEY_PATH}
     networks:
