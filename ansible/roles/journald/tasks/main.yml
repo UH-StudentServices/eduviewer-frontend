@@ -1,0 +1,18 @@
+---
+
+- name: Ensure Systemd is installed
+  apt:
+    name: systemd
+
+- name: Write out Journald config file
+  template:
+    src: journald.conf.j2
+    dest: /etc/systemd/journald.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Restart Journald
+  systemd:
+    name: systemd-journal
+    state: restarted

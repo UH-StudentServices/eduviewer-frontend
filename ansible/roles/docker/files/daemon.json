@@ -5,5 +5,6 @@
     "max-concurrent-uploads": 30,
     "storage-driver": "overlay2",
     "userland-proxy": false,
-    "data-root": "/opt/docker"
+    "data-root": "/opt/docker",
+    "log-driver": "journald"
 }
