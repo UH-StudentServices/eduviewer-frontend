@@ -4,5 +4,6 @@
   roles:
     - dirs
     - certs
+    - journald
     - docker
     - networks
