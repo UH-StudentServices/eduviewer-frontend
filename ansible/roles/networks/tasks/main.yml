@@ -1,0 +1,5 @@
+---
+
+- name: Create application network
+  docker_network:
+    name: app

@@ -37,10 +37,10 @@ Eduviewer frontend can be embedded to any web page using the following `div` tag
 All attributes are optional.
 * `lang` defaults to `fi`, other valid values are: `sv` & `en`
 * `academic-year` defaults to the current academic year
-* Example `acedemic-year` exact values: `hy-lv-68`, `hy-lv-69`.  
+* Example `acedemic-year` exact values: `hy-lv-68`, `hy-lv-69`.
 * If `degree-program-id` is set, embedded app won't show select for Degree Program
 * If `degree-program-id` and `academic-year` are set, embedded app won't show selects for Degree Program or Academic Year
-* `degree-program-id` is id set by Oodi. Valid examples: `KH10_001`, `MH30_004`  
+* `degree-program-id` is id set by Oodi. Valid examples: `KH10_001`, `MH30_004`
 * If `header` isn't set, Eduviewer page won't have a h2 header on top of selects
 * `disable-global-style` disables usage of uh-living-styleguide in eduviewer. Use this only if embedding app already uses uh-living-styleguide.
 

@@ -1,0 +1,146 @@
+# As an initial step we make sure that we have our
+# dependencies ready. Here we're installing just
+# two:
+# - apt-transport-https makes us be able to use
+#   TLS in the transport of packages coming
+#   from APT repositories
+# - ca-certificates gives us a bundle of common
+#   certificate authorities' certificates
+- name: install docker dependencies
+  apt:
+    name: '{{ item }}'
+    state: 'present'
+  with_items:
+    - 'apt-transport-https'
+    - 'ca-certificates'
+
+- name: Add Docker's official GPG key with curl
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
+# Add the official docker apt repository so that `apt`
+# can list packages from it and then fetch them from
+# there.
+# With `update_cache` we force an `apt update` which
+# would essentially be the equivalent of updating the
+# list of packages from a list of source repositories.
+- name: add Docker repository
+  apt_repository:
+    repo: '{{ docker_apt_repository }}'
+    state: 'present'
+    update_cache: 'yes'
+
+- name: Update apt packages
+  become: true
+  apt:
+    update_cache: yes
+    cache_valid_time: 86400 #One day
+
+- name: check if docker is installed
+  command: 'docker -v'
+  register: docker_installed_result
+  failed_when: false
+  changed_when: false
+
+- name: store docker installed result
+  set_fact:
+    docker_installed: "{{ docker_installed_result.rc == 0 }}"
+
+- name: check installed docker version
+  shell: "{{ docker_bin }} -v | awk -F'[ ,]' '{ print $3; }'"
+  register: docker_version_installed_result
+  failed_when: false
+  changed_when: false
+  when: docker_installed == true
+
+- name: store installed docker version result
+  set_fact:
+    docker_desired_version_or_higher_installed: "{{ docker_version_installed_result.stdout is version(item, '>=') }}"
+  with_items:
+    - "{{ docker_version_number }}-ce"
+  when: docker_installed == true
+
+# With the list of packages updated we can install
+# a specific version of the `docker-ce` package. This
+# way we can declaratively tell the role which version
+# of docker we want: a stable (17.09, for instance) or an
+# edge (17.11-rc3)?
+- name: install docker
+  apt:
+    name: 'docker-ce={{ docker_version }}'
+    # name: "docker-{{ docker_edition }}={{ docker_apt_package_name }}"
+    state: 'present'
+  when: docker_installed == false or docker_desired_version_or_higher_installed == false
+
+- name: Create docker root dir
+  file:
+    path: /opt/docker
+    owner: root
+    group: root
+    state: directory
+    mode: 0711
+  become: true
+
+
+# As we can configure the docker daemon via the configuration
+# file `/etc/docker/daemon.json` here we take the opportunity
+# of placing one of our own at the relevant destination.
+- name: prepare default daemon configuration
+  copy:
+    src: 'daemon.json'
+    dest: '/etc/docker/daemon.json'
+
+
+# Once Docker has finished the installation (which involves
+# setting a systemd service) we have the option to either
+# enable that service or not. By enabling it, systemd hooks
+# the docker unit into specific places such that whenever the
+# machine boots we have this service started.
+- name: enable docker systemd service
+  service:
+    name: 'docker'
+    state: 'started'
+    enabled: 'yes'
+
+
+# If you use something like `docker swarm mode` it's
+# very common to have dangling containers around.
+# By setting a cron job to clean thing ups every N
+# hours we make sure that dangling containers don't
+# stay around for too long.
+- name: set periodic docker system prune
+  cron:
+    name: 'docker-prune'
+    minute: '0'
+    hour: '*/2'
+    job: 'date >> /root/cron-docker-prune.out && docker system prune --force -a >> /root/cron-docker-prune.out'
+
+- name: check installed docker compose version
+  shell: "{{ docker_compose_bin }} --version | awk -F'[ ,]' '{ print $3; }' | grep {{ docker_compose_version }}"
+  register: docker_compose_version_installed_result
+  failed_when: false
+  changed_when: false
+
+- name: store installed docker compose version result
+  set_fact:
+    docker_compose_desired_version_installed: "{{ docker_compose_version_installed_result.rc == 0 }}"
+
+- name: install docker-compose
+  become: '{{ docker_compose_as_root }}'
+  get_url:
+    url: 'https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}'
+    dest: '{{ docker_compose_bin }}'
+    force: true
+    mode: '555'
+  when: docker_compose_desired_version_installed == false
+
+- name: Install pip
+  apt: pkg=python-pip state=present
+
+- name: Install python-setuptools
+  apt: pkg=python-setuptools state=present
+
+- name: Upgrade pip
+  shell: pip install --upgrade pip
+
+- name: Install docker-py
+  shell: pip install docker-py

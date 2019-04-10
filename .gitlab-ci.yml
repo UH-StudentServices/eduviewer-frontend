@@ -4,6 +4,7 @@ stages:
   - build_node_git_image
   - test_and_build
   - build_image
+  - provision
   - deploy
 
 test_and_build:
@@ -33,6 +34,17 @@ test_and_build:
     - docker build -f ci/build/frontend/Dockerfile -t $REGISTRY_URL/tike/eduviewer-frontend:$CI_COMMIT_SHA .
     - docker push $REGISTRY_URL/tike/eduviewer-frontend:$CI_COMMIT_SHA
 
+.provision_template: &provision_definition
+  image: williamyeh/ansible:alpine3
+  stage: provision
+  script:
+    - eval `ssh-agent -s`
+    - echo "$DEPLOYER_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - export ANSIBLE_HOST_KEY_CHECKING=false
+    - ansible-playbook -u deployer --limit $ENVIRONMENT -i ansible/hosts/inventory ansible/provision.yml
+  when: manual
+
+
 build_image:
   <<: *build_image_definition
   only:
@@ -41,6 +53,21 @@ build_image:
 build_image_manual:
   <<: *build_image_definition
   when: manual
+
+provision_dev:
+  variables:
+    ENVIRONMENT: "dev"
+  <<: *provision_definition
+
+provision_qa:
+  variables:
+    ENVIRONMENT: "qa"
+  <<: *provision_definition
+
+provision_prod:
+  variables:
+    ENVIRONMENT: "prod"
+  <<: *provision_definition
 
 deploy_dev:
   variables:
