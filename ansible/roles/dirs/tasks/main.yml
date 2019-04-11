@@ -1,17 +1,34 @@
 ---
 
+- name: Add the neccessary eduviewer group
+  group:
+    name: eduviewer
+    state: present
+    gid: 2000
+  become: true
+
 - name: Create eduviewer user
   user:
     name: eduviewer
+    group: eduviewer
+    uid: 2000
     comment: User for Eduviewer application
     state: present
   become: true
 
 - name: Create frontend app dir
   file:
-    path: /opt/eduviewer-frontend
+    path: {{ eduviewer_base_dir }}
     owner: eduviewer
     group: eduviewer
     state: directory
     mode: 0775
   become: true
+
+- name: Create directories
+  file:
+    path: "{{ eduviewer_base_dir }}/certs"
+    owner: opintotarjonta
+    group: opintotarjonta
+    state: directory
+    mode: 0775

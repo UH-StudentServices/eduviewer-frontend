@@ -11,7 +11,7 @@ test_and_build:
   image: timbru31/node-alpine-git
   stage: test_and_build
   script:
-    - npm install
+    - npm ci
     - npm run test
     - npm run dist
   artifacts:

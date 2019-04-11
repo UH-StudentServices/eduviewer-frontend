@@ -3,3 +3,14 @@
 - name: Create ssl cert bundle
   shell: "cat {{ ssl_cert_path }} {{ ca_bundle_path }} > {{ ssl_cert_bundle_path }}"
   become: true
+
+- name: Copy keys and certs
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: eduviewer
+    group: eduviewer
+    remote_src: yes
+  loop:
+    - {{ src: "{{ ssl_key_path }}", dest: "{{ eduviewer }}/certs/ssl.key" }}
+    - {{ src: "{{ ssl_cert_path }}", dest: "{{ eduviewer }}/certs/ssl.crt" }}
