@@ -1,5 +1,6 @@
 ---
 
 ssl_cert_path: "/etc/ssl/certs/{{ ssl_cert_file }}"
+ssl_key_path: "/etc/ssl/certs/private/{{ ssl_key_file }}"
 ssl_cert_bundle_path: "/etc/ssl/certs/{{ ssl_cert_bundle_file }}"
 ca_bundle_path: "/etc/ssl/terena-bundle.pem"
