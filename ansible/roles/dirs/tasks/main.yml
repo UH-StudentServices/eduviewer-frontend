@@ -28,7 +28,7 @@
 - name: Create directories
   file:
     path: "{{ eduviewer_base_dir }}/certs"
-    owner: opintotarjonta
-    group: opintotarjonta
+    owner: eduviewer
+    group: eduviewer
     state: directory
     mode: 0775
