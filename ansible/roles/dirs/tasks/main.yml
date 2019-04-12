@@ -18,7 +18,7 @@
 
 - name: Create frontend app dir
   file:
-    path: {{ eduviewer_base_dir }}
+    path: "{{ eduviewer_base_dir }}"
     owner: eduviewer
     group: eduviewer
     state: directory
