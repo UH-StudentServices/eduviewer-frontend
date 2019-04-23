@@ -22,7 +22,7 @@
   "dataFetchError": [
     "Virhe tietojen hakemisessa",
     "Fel att ladda data",
-    "Error loafing data"
+    "Error loading data"
   ],
   "select": [
     "Valitse",
