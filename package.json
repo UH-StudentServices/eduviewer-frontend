@@ -60,7 +60,6 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
-    "fetch-intercept": "^2.3.1",
     "mini-css-extract-plugin": "^0.5.0",
     "prop-types": "^15.6.2",
     "react": "^16.8.3",

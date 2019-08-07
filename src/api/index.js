@@ -15,23 +15,17 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import fetchIntercept from 'fetch-intercept';
 import { DEFAULT_BASE_URL } from '../config';
-
-fetchIntercept.register({
-  response: (response) => {
-    if (!response.ok) {
-      return Promise.reject(new Error(`${response.url} ${response.status}`));
-    }
-
-    return response.json();
-  }
-});
 
 const getJson = path => fetch(`${DEFAULT_BASE_URL}${path}`, {
   headers: {
     Accept: 'application/json'
   }
+}).then((response) => {
+  if (!response.ok) {
+    return Promise.reject(new Error(`${response.url} ${response.status}`));
+  }
+  return response.json();
 });
 
 export const getDegreePrograms = () => getJson('/coded_educations');
