@@ -19,7 +19,6 @@ server {
     gzip on;
     gzip_types      text/plain text/css application/javascript application/x-javascript text/javascript;
 
-
     server_name ${SERVER_NAME};
     server_tokens off;
 
