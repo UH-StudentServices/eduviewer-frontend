@@ -44,7 +44,6 @@ test_and_build:
     - ansible-playbook -u deployer --limit $ENVIRONMENT -i ansible/hosts/inventory ansible/provision.yml
   when: manual
 
-
 build_image:
   <<: *build_image_definition
   only:
