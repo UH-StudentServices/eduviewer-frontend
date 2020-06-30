@@ -101,7 +101,8 @@ push_master_to_github:
   stage: deploy
   allow_failure: true
   before_script:
-    - which ssh-agent || ( apk --update add openssh-client git )
+    - apk --update add git
+    - which ssh-agent || ( apk add openssh-client )
     - eval $(ssh-agent -s)
     - echo "$GITHUB_SSH_KEY" | ssh-add -
     - mkdir -p ~/.ssh
