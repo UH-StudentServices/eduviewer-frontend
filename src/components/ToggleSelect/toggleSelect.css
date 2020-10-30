@@ -21,6 +21,10 @@
   min-height: 50px;
   min-width: 300px;
   display: flex;
+
+  & input[type="checkbox"] {
+    display: block;
+  }
 }
 
 .toggle {
