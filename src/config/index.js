@@ -32,12 +32,29 @@ const eduviewerTrackingIds = {
   PROD: 'UA-55852460-21'
 };
 
+const eduviewerBaseUrls = {
+  QA: 'https://od.helsinki.fi/eduviewer-qa/',
+  PROD: 'https://od.helsinki.fi/eduviewer'
+};
+
 const getTrackingId = () => {
   const { hostname } = window.location;
   if (hostname === eduviewerHostnames.DEV || hostname === eduviewerHostnames.LOCAL) {
     return null;
   }
   return hostname === eduviewerHostnames.QA ? eduviewerTrackingIds.QA : eduviewerTrackingIds.PROD;
+};
+
+const isNonProd = () => {
+  const { hostname } = window.location;
+  return hostname === eduviewerHostnames.LOCAL
+    || hostname === eduviewerHostnames.DEV
+    || hostname === eduviewerHostnames.QA;
+};
+
+const isQA = () => {
+  const { hostname } = window.location;
+  return hostname === eduviewerHostnames.QA;
 };
 
 const getNonProdStyleUrl = () => {
@@ -49,19 +66,20 @@ const getNonProdStyleUrl = () => {
   return url;
 };
 
-const getStyleUrl = () => {
-  const { hostname } = window.location;
-  const isNonProd = hostname === eduviewerHostnames.LOCAL
-    || hostname === eduviewerHostnames.DEV
-    || hostname === eduviewerHostnames.QA;
-
-  return isNonProd
+const getStyleUrl = () => (
+  isNonProd()
     ? getNonProdStyleUrl()
-    : `https://${eduviewerHostnames.PROD}`;
-};
+    : `https://${eduviewerHostnames.PROD}`
+);
+
+const getBaseUrl = () => (
+  isQA()
+    ? eduviewerBaseUrls.QA
+    : eduviewerBaseUrls.PROD
+);
 
 module.exports = {
-  DEFAULT_BASE_URL: 'https://od.helsinki.fi/eduviewer',
+  DEFAULT_BASE_URL: getBaseUrl(),
   DEFAULT_STYLE_URL: getStyleUrl(),
   TRACKING_ID: getTrackingId()
 };
