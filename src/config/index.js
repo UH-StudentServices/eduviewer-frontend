@@ -20,6 +20,10 @@
 // unless we know we are embedded on the QA or DEV server
 // or are running locally.
 
+// We use a different base url (and by extension eduviewer backend)
+// in QA and elsewhere. When in QA, we use the QA eduviewer backend
+// url, otherwise we use the production backend url.
+
 const eduviewerHostnames = {
   LOCAL: 'localhost',
   DEV: 'eduviewer-dev.it.helsinki.fi',
