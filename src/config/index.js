@@ -33,7 +33,7 @@ const eduviewerTrackingIds = {
 };
 
 const eduviewerBaseUrls = {
-  QA: 'https://od.helsinki.fi/eduviewer-qa/',
+  QA: 'https://od.helsinki.fi/eduviewer-qa',
   PROD: 'https://od.helsinki.fi/eduviewer'
 };
 
