@@ -44,7 +44,7 @@ class DropdownModule extends Component {
     const subRules = rule.dataNode.rule.rules;
 
     if (selected !== NOTHING_SELECTED) {
-      const selectedRule = subRules.find(subRule => subRule.dataNode.id === selected);
+      const selectedRule = subRules.find(subRule => subRule.localId === selected);
       return (
         <div className={styles.selectedContainer}>
           <GroupingModule rule={selectedRule} showAll={showAll} />
@@ -81,7 +81,7 @@ class DropdownModule extends Component {
           <select value={selected} onChange={this.onSelectChange}>
             <option value="-">-</option>
             {rule.dataNode.rule.rules.map(subRule => (
-              <option key={subRule.dataNode.id} value={subRule.dataNode.id}>
+              <option key={subRule.localId} value={subRule.localId}>
                 {getName(subRule, activeLanguage.code)}
               </option>
             ))}
