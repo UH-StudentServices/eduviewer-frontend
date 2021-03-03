@@ -142,7 +142,9 @@ class Main extends Component {
     const { academicYear: oldSelection, defaultAcademicYearCode } = this.state;
 
     const isOldSelectionValid = oldSelection && academicYears.includes(oldSelection);
-    return isOldSelectionValid ? oldSelection : defaultAcademicYearCode;
+    const latestAcademicYear = academicYears.length
+      ? academicYears[academicYears.length - 1] : defaultAcademicYearCode;
+    return isOldSelectionValid ? oldSelection : latestAcademicYear;
   }
 
   initAcademicYears = async (academicYearCode) => {
