@@ -28,14 +28,21 @@ import styles from './dropdownModule.css';
 const NOTHING_SELECTED = '-';
 
 class DropdownModule extends Component {
-  state = {
-    selected: NOTHING_SELECTED
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      selected: NOTHING_SELECTED
+    };
 
-  onSelectChange = (event) => {
+    this.onSelectChange = this.onSelectChange.bind(this);
+    this.renderSelectedModule = this.renderSelectedModule.bind(this);
+    this.render = this.render.bind(this);
+  }
+
+  onSelectChange(event) {
     const { value } = event.target;
     this.setState({ selected: value });
-  };
+  }
 
   renderSelectedModule() {
     const { showAll, rule } = this.props;
@@ -44,7 +51,7 @@ class DropdownModule extends Component {
     const subRules = rule.dataNode.rule.rules;
 
     if (selected !== NOTHING_SELECTED) {
-      const selectedRule = subRules.find(subRule => subRule.localId === selected);
+      const selectedRule = subRules.find((subRule) => subRule.localId === selected);
       return (
         <div className={styles.selectedContainer}>
           <GroupingModule rule={selectedRule} showAll={showAll} />
@@ -62,8 +69,8 @@ class DropdownModule extends Component {
     if (showAll) {
       return (
         <div className={styles.selectedContainer}>
-          <Fragment>
-            {rule.dataNode.rules.map(r => (
+          <>
+            {rule.dataNode.rules.map((r) => (
               <GroupingModule
                 key={r.localId}
                 rule={rule}
@@ -71,7 +78,7 @@ class DropdownModule extends Component {
                 activeLanguage={activeLanguage}
               />
             ))}
-          </Fragment>
+          </>
         </div>
       );
     }
@@ -80,9 +87,9 @@ class DropdownModule extends Component {
         <div className={styles.selectContainer}>
           <select value={selected} onChange={this.onSelectChange}>
             <option value="-">-</option>
-            {rule.dataNode.rule.rules.map(subRule => (
+            {rule.dataNode.rule.rules.map((subRule) => (
               <option key={subRule.localId} value={subRule.localId}>
-                {getName(subRule, activeLanguage.code)}
+                {getName(subRule, activeLanguage.code) || subRule.localId}
               </option>
             ))}
           </select>

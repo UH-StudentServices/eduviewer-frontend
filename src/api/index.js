@@ -17,7 +17,7 @@
 
 import { DEFAULT_BASE_URL } from '../config';
 
-const getJson = path => fetch(`${DEFAULT_BASE_URL}${path}`, {
+const getJson = (path) => fetch(`${DEFAULT_BASE_URL}${path}`, {
   headers: {
     Accept: 'application/json'
   }
@@ -30,7 +30,7 @@ const getJson = path => fetch(`${DEFAULT_BASE_URL}${path}`, {
 
 export const getDegreePrograms = () => getJson('/coded_educations');
 
-export const getAcademicYearsByDegreeProgramCode = degreeProgramCode => getJson(`/lvs/${degreeProgramCode}`);
+export const getAcademicYearsByDegreeProgramCode = (degreeProgramCode) => getJson(`/lvs/${degreeProgramCode}`);
 
 export const getAcademicYearNames = () => getJson('/lv_names');
 

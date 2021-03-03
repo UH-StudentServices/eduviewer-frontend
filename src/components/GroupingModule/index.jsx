@@ -46,8 +46,15 @@ const STUDY_TRACK_DROPDOWN_MODULES = [
   'studieinriktningen'
 ];
 
+const FOREIGN_LANGUAGE_DROPDOWN_MODULES = [
+  'vieras kieli',
+  'foreign language',
+  'främmande språk'
+];
+
 const DROPDOWN_MODULES = [
-  ...STUDY_TRACK_DROPDOWN_MODULES
+  ...STUDY_TRACK_DROPDOWN_MODULES,
+  ...FOREIGN_LANGUAGE_DROPDOWN_MODULES
 ];
 
 const getDescription = (rule, isCompositeRule = false, lang) => {
@@ -77,7 +84,14 @@ const getSubRules = (rule) => {
 };
 
 class GroupingModule extends Component {
-  renderRule = (rule) => {
+  constructor(props) {
+    super(props);
+
+    this.renderRule = this.renderRule.bind(this);
+    this.render = this.render.bind(this);
+  }
+
+  renderRule(rule) {
     const { showAll, translate, activeLanguage } = this.props;
 
     if (rule) {
@@ -88,8 +102,9 @@ class GroupingModule extends Component {
 
         return (
           <div key={rule.localId}>
-            {renderRequiredCourseAmount
-              && <InfoBox content={`${translate('select')} ${requiredCoursesToString(require)}`} />
+            {
+              renderRequiredCourseAmount
+                && <InfoBox content={`${translate('select')} ${requiredCoursesToString(require)}`} />
             }
             {getDescription(rule, true, activeLanguage.code)}
             <ul className={styles.groupingList}>
@@ -143,7 +158,7 @@ class GroupingModule extends Component {
     }
 
     return null;
-  };
+  }
 
   render() {
     const { rule, showAll, activeLanguage } = this.props;
@@ -174,7 +189,7 @@ class GroupingModule extends Component {
           {moduleCredits ? ` (${moduleCredits})` : ''}
         </strong>
         { getDescription(rule, lang) }
-        { getSubRules(rule).sort(compareSubRules).map(r => this.renderRule(r)) }
+        { getSubRules(rule).sort(compareSubRules).map((r) => this.renderRule(r)) }
       </div>
     );
   }

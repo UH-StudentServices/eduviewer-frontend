@@ -33,7 +33,6 @@ const ACADEMIC_YEAR_ATTR_NAME = 'academic-year';
 const HEADER_ATTR_NAME = 'header';
 const DISABLE_GLOBAL_STYLES_ATTR_NAME = 'disable-global-style';
 
-
 const getRoot = () => document.getElementById(EDUVIEWER_ROOT_ID);
 const getRootAttribute = (attributeName) => {
   const root = getRoot();
@@ -57,7 +56,7 @@ const render = () => {
         />
       </LocalizeProvider>
     </AppContainer>,
-    getRoot(),
+    getRoot()
   );
 };
 
@@ -73,7 +72,6 @@ const initializeApp = () => {
     render(Main);
   }
 };
-
 
 if (module.hot) {
   module.hot.accept('./components/Main', () => {

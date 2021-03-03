@@ -15,7 +15,6 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -24,6 +23,7 @@ const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const { createVariants } = require('parallel-webpack');
 const HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin');
+const ESLintWebpackPlugin = require('eslint-webpack-plugin');
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -73,7 +73,7 @@ const devServerConfig = {
   port: 8080
 };
 
-const createConfig = options => ({
+const createConfig = (options) => ({
   context: path.join(__dirname, 'src'),
   entry: [
     '@babel/polyfill',
@@ -94,7 +94,7 @@ const createConfig = options => ({
       {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules|dist)/,
-        use: ['babel-loader', 'eslint-loader']
+        use: ['babel-loader']
       },
       {
         test: /.*\/node_modules\/.+\.css$/,
@@ -162,7 +162,8 @@ const createConfig = options => ({
     miniCssExtractPlugin,
     reactHotLoader,
     webpackMd5Hash,
-    cleanWebPackPlugin
+    cleanWebPackPlugin,
+    new ESLintWebpackPlugin()
   ],
   devServer: devServerConfig,
   devtool: 'eval-source-map'

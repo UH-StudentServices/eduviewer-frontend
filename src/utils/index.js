@@ -62,8 +62,8 @@ export const getLocalizedText = (field, lang) => (field[lang] ? field[lang] : fi
 export const getName = (rule, lang) => (rule.dataNode?.name ? getLocalizedText(rule.dataNode.name, lang) : '');
 
 const compareCodes = (rule1, rule2) => {
-  const getCode = rule => rule.dataNode.code || '';
-  const codeLength = rule => getCode(rule).length;
+  const getCode = (rule) => rule.dataNode.code || '';
+  const codeLength = (rule) => getCode(rule).length;
 
   if (codeLength(rule1) === codeLength(rule2)) {
     return (getCode(rule1) < getCode(rule2)) ? -1 : 1;
@@ -82,7 +82,7 @@ const compareCodes = (rule1, rule2) => {
 
 // Courses first, order by course code, then everything else
 export const compareSubRules = (rule1, rule2) => {
-  const isCourseUnitRule = rule => rule.type === COURSE_UNIT_RULE;
+  const isCourseUnitRule = (rule) => rule.type === COURSE_UNIT_RULE;
 
   if (isCourseUnitRule(rule1) && !isCourseUnitRule(rule2)) {
     return -1;
@@ -99,4 +99,4 @@ export const compareSubRules = (rule1, rule2) => {
   return 0;
 };
 
-export const getDegreeProgramCode = degreeProgram => degreeProgram.dataNode?.code || null;
+export const getDegreeProgramCode = (degreeProgram) => degreeProgram.dataNode?.code || null;
