@@ -59,7 +59,7 @@ export const requiredCoursesToString = (requiredCourses) => {
 
 export const getLocalizedText = (field, lang) => (field[lang] ? field[lang] : field.fi);
 
-export const getName = (rule, lang) => (rule.dataNode ? getLocalizedText(rule.dataNode.name, lang) : '');
+export const getName = (rule, lang) => (rule.dataNode?.name ? getLocalizedText(rule.dataNode.name, lang) : '');
 
 const compareCodes = (rule1, rule2) => {
   const getCode = rule => rule.dataNode.code || '';
@@ -99,5 +99,4 @@ export const compareSubRules = (rule1, rule2) => {
   return 0;
 };
 
-export const getDegreeProgramCode = degreeProgram =>
-  (degreeProgram.dataNode ? degreeProgram.dataNode.code : null);
+export const getDegreeProgramCode = degreeProgram => degreeProgram.dataNode?.code || null;
