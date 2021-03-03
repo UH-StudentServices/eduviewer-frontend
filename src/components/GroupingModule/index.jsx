@@ -46,15 +46,8 @@ const STUDY_TRACK_DROPDOWN_MODULES = [
   'studieinriktningen'
 ];
 
-const FOREIGN_LANGUAGE_DROPDOWN_MODULES = [
-  'vieras kieli',
-  'foreign language',
-  'främmande språk'
-];
-
 const DROPDOWN_MODULES = [
-  ...STUDY_TRACK_DROPDOWN_MODULES,
-  ...FOREIGN_LANGUAGE_DROPDOWN_MODULES
+  ...STUDY_TRACK_DROPDOWN_MODULES
 ];
 
 const getDescription = (rule, isCompositeRule = false, lang) => {
@@ -87,64 +80,66 @@ class GroupingModule extends Component {
   renderRule = (rule) => {
     const { showAll, translate, activeLanguage } = this.props;
 
-    if (rule.type === COMPOSITE_RULE) {
-      const { require, allMandatory } = rule;
-      const hasRequiredCoursesRange = require && (require.max || require.min > 0);
-      const renderRequiredCourseAmount = !allMandatory && hasRequiredCoursesRange;
+    if (rule) {
+      if (rule.type === COMPOSITE_RULE) {
+        const { require, allMandatory } = rule;
+        const hasRequiredCoursesRange = require && (require.max || require.min > 0);
+        const renderRequiredCourseAmount = !allMandatory && hasRequiredCoursesRange;
 
-      return (
-        <div key={rule.localId}>
-          {renderRequiredCourseAmount
-            && <InfoBox content={`${translate('select')} ${requiredCoursesToString(require)}`} />
-          }
-          {getDescription(rule, true, activeLanguage.code)}
-          <ul className={styles.groupingList}>
-            {rule.rules.sort(compareSubRules).map(this.renderRule)}
-          </ul>
-        </div>
-      );
-    }
-
-    if (rule.type === ANY_COURSE_UNIT_RULE) {
-      return <li key={rule.localId}><Translate id="anyCourseUnit" /></li>;
-    }
-
-    if (rule.type === ANY_MODULE_RULE) {
-      return <li key={rule.localId}><Translate id="anyModule" /></li>;
-    }
-
-    if (rule.type === COURSE_UNIT_RULE) {
-      const { code, name, credits } = rule.dataNode;
-      const isValidCourse = code && name && credits;
-
-      if (!isValidCourse) {
-        return null;
+        return (
+          <div key={rule.localId}>
+            {renderRequiredCourseAmount
+              && <InfoBox content={`${translate('select')} ${requiredCoursesToString(require)}`} />
+            }
+            {getDescription(rule, true, activeLanguage.code)}
+            <ul className={styles.groupingList}>
+              {rule.rules.sort(compareSubRules).map(this.renderRule)}
+            </ul>
+          </div>
+        );
       }
 
-      return (
-        <Course key={rule.localId} code={code} name={name} credits={credits} />
-      );
-    }
+      if (rule.type === ANY_COURSE_UNIT_RULE) {
+        return <li key={rule.localId}><Translate id="anyCourseUnit" /></li>;
+      }
 
-    if (rule.type === CREDITS_RULE) {
-      return (
-        <Fragment key={rule.localId}>
-          <InfoBox content={`${translate('select')} ${creditsToString(rule.credits, activeLanguage.code)}`} />
-          {this.renderRule(rule.rule)}
-        </Fragment>
-      );
-    }
+      if (rule.type === ANY_MODULE_RULE) {
+        return <li key={rule.localId}><Translate id="anyModule" /></li>;
+      }
 
-    if (rule.type === MODULE_RULE) {
-      return (
-        <GroupingModule
-          key={rule.localId}
-          rule={rule}
-          showAll={showAll}
-          translate={translate}
-          activeLanguage={activeLanguage}
-        />
-      );
+      if (rule.type === COURSE_UNIT_RULE) {
+        const { code, name, credits } = rule.dataNode;
+        const isValidCourse = code && name && credits;
+
+        if (!isValidCourse) {
+          return null;
+        }
+
+        return (
+          <Course key={rule.localId} code={code} name={name} credits={credits} />
+        );
+      }
+
+      if (rule.type === CREDITS_RULE) {
+        return (
+          <Fragment key={rule.localId}>
+            <InfoBox content={`${translate('select')} ${creditsToString(rule.credits, activeLanguage.code)}`} />
+            {this.renderRule(rule.rule)}
+          </Fragment>
+        );
+      }
+
+      if (rule.type === MODULE_RULE) {
+        return (
+          <GroupingModule
+            key={rule.localId}
+            rule={rule}
+            showAll={showAll}
+            translate={translate}
+            activeLanguage={activeLanguage}
+          />
+        );
+      }
     }
 
     return null;
