@@ -31,7 +31,9 @@ import LoaderDropdown from '../LoaderDropdown';
 
 import styles from './main.css';
 import ToggleSelect from '../ToggleSelect';
-import { availableLanguages, CURRENT_ACADEMIC_YEAR_CODE, NO_DEGREE_PROGRAM_CODE } from '../../constants';
+import {
+  availableLanguages, CURRENT_ACADEMIC_YEAR_CODE, NO_DEGREE_PROGRAM_CODE, NO_DEGREE_PROGRAM
+} from '../../constants';
 import ErrorMessage from '../ErrorMessage';
 import Loader from '../Loader';
 import { getDegreeProgramCode, getLocalizedText } from '../../utils';
@@ -43,7 +45,7 @@ const fetchDegreeProgram = async (degreeProgramCode, academicYear) => {
   if (academicYear) {
     return getDegreeProgram(degreeProgramCode, academicYear);
   }
-  return {};
+  return NO_DEGREE_PROGRAM;
 };
 
 class Main extends Component {
@@ -64,7 +66,7 @@ class Main extends Component {
       academicYears: [],
       academicYearNames: {},
       isLoading: false,
-      degreeProgram: {},
+      degreeProgram: NO_DEGREE_PROGRAM,
       academicYear: '',
       showAll: false
     };
