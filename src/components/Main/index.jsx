@@ -39,6 +39,13 @@ import { trackEvent, trackingCategories, trackPageView } from '../../tracking';
 
 import translation from '../../i18n/translations.json';
 
+const fetchDegreeProgram = async (degreeProgramCode, academicYear) => {
+  if (academicYear) {
+    return getDegreeProgram(degreeProgramCode, academicYear);
+  }
+  return {};
+};
+
 class Main extends Component {
   constructor(props) {
     super(props);
@@ -106,7 +113,7 @@ class Main extends Component {
     try {
       const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgramCode);
       const academicYear = this.getAcademicYear(academicYears);
-      const degreeProgram = await getDegreeProgram(degreeProgramCode, academicYear);
+      const degreeProgram = await fetchDegreeProgram(degreeProgramCode, academicYear);
 
       trackEvent(trackingCategories.SELECT_DEGREE_PROGRAMME, degreeProgramCode);
       this.setState({
@@ -147,11 +154,11 @@ class Main extends Component {
   }
 
   getAcademicYear(academicYears) {
-    const { academicYear: oldSelection, defaultAcademicYearCode } = this.state;
+    const { academicYear: oldSelection } = this.state;
 
     const isOldSelectionValid = oldSelection && academicYears.includes(oldSelection);
     const latestAcademicYear = academicYears.length
-      ? academicYears[academicYears.length - 1] : defaultAcademicYearCode;
+      ? academicYears[academicYears.length - 1] : null;
     return isOldSelectionValid ? oldSelection : latestAcademicYear;
   }
 
@@ -189,8 +196,7 @@ class Main extends Component {
 
       const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgrammeCode);
       const academicYear = this.getAcademicYear(academicYears);
-
-      const degreeProgram = await getDegreeProgram(degreeProgrammeCode, academicYear);
+      const degreeProgram = await fetchDegreeProgram(degreeProgrammeCode, academicYear);
 
       this.setState({
         degreePrograms,
@@ -208,7 +214,7 @@ class Main extends Component {
       const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgramCode);
 
       const academicYear = this.getAcademicYear(academicYears);
-      const degreeProgram = await getDegreeProgram(degreeProgramCode, academicYear);
+      const degreeProgram = await fetchDegreeProgram(degreeProgramCode, academicYear);
 
       this.setState({
         academicYear,
