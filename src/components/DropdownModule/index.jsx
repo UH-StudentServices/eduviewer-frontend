@@ -89,7 +89,7 @@ class DropdownModule extends Component {
             <option value="-">-</option>
             {rule.dataNode.rule.rules.map((subRule) => (
               <option key={subRule.localId} value={subRule.localId}>
-                {getName(subRule, activeLanguage.code) || subRule.localId}
+                {getName(subRule, activeLanguage.code)}
               </option>
             ))}
           </select>
