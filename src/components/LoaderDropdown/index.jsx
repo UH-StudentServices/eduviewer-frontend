@@ -41,12 +41,12 @@ LoadingDropdown.propTypes = {
 };
 
 const LoadedDropdown = ({
-  id, value, onChange, options, label
+  id, value, onChange, options, label, translate
 }) => {
   const hasOptions = options && options.length > 0;
   const optionElements = hasOptions
-    ? options.map(o => <option key={o.id} value={o.value}>{o.text}</option>)
-    : <option><Translate id="noContent" /></option>;
+    ? options.map((o) => <option key={o.id} value={o.value}>{o.text}</option>)
+    : <option label={translate('noContent')}><Translate id="noContent" /></option>;
 
   return (
     <label htmlFor={id}>
@@ -70,7 +70,8 @@ LoadedDropdown.propTypes = {
   value: oneOfType([string, number]),
   onChange: func.isRequired,
   options: selectOptionsType.isRequired,
-  label: string.isRequired
+  label: string.isRequired,
+  translate: func.isRequired
 };
 
 LoadedDropdown.defaultProps = {
@@ -78,14 +79,27 @@ LoadedDropdown.defaultProps = {
 };
 
 const LoaderDropdown = (props) => {
-  const { isLoading, value, options } = props;
-  const selectedValue = options.find(o => o.value === value);
+  const {
+    isLoading, value, options, translate
+  } = props;
+  const selectedValue = options.find((o) => o.value === value);
   const selectedText = selectedValue ? selectedValue.text : '';
   return (
     <div>
-      { isLoading
-        ? <LoadingDropdown text={selectedText} {...props} />
-        : <LoadedDropdown {...props} />
+      {
+        isLoading
+          ? (
+            <>
+              {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+              <LoadingDropdown text={selectedText} translate={translate} {...props} />
+            </>
+          )
+          : (
+            <>
+              {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+              <LoadedDropdown translate={translate} {...props} />
+            </>
+          )
       }
     </div>
   );
@@ -94,7 +108,8 @@ const LoaderDropdown = (props) => {
 LoaderDropdown.propTypes = {
   isLoading: bool.isRequired,
   value: oneOfType([string, number]),
-  options: selectOptionsType.isRequired
+  options: selectOptionsType.isRequired,
+  translate: func.isRequired
 };
 
 LoaderDropdown.defaultProps = {

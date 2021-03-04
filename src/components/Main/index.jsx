@@ -31,7 +31,9 @@ import LoaderDropdown from '../LoaderDropdown';
 
 import styles from './main.css';
 import ToggleSelect from '../ToggleSelect';
-import { availableLanguages, CURRENT_ACADEMIC_YEAR_CODE, NO_DEGREE_PROGRAM_CODE } from '../../constants';
+import {
+  availableLanguages, CURRENT_ACADEMIC_YEAR_CODE, NO_DEGREE_PROGRAM_CODE, NO_DEGREE_PROGRAM
+} from '../../constants';
 import ErrorMessage from '../ErrorMessage';
 import Loader from '../Loader';
 import { getDegreeProgramCode, getLocalizedText } from '../../utils';
@@ -39,27 +41,14 @@ import { trackEvent, trackingCategories, trackPageView } from '../../tracking';
 
 import translation from '../../i18n/translations.json';
 
-class Main extends Component {
-  static propTypes = {
-    academicYearCode: string.isRequired,
-    degreeProgramCode: string.isRequired,
-    // eslint-disable-next-line react/no-unused-prop-types
-    lang: oneOf(Object.values(availableLanguages)).isRequired,
-    header: string.isRequired,
-    initialize: func.isRequired,
-    translate: func.isRequired
-  };
-
-  state = {
-    degreePrograms: [],
-    academicYears: [],
-    academicYearNames: {},
-    isLoading: false,
-    degreeProgram: {},
-    academicYear: '',
-    showAll: false
+const fetchDegreeProgram = async (degreeProgramCode, academicYear) => {
+  if (academicYear) {
+    return getDegreeProgram(degreeProgramCode, academicYear);
   }
+  return NO_DEGREE_PROGRAM;
+};
 
+class Main extends Component {
   constructor(props) {
     super(props);
 
@@ -71,6 +60,30 @@ class Main extends Component {
         defaultLanguage: props.lang
       }
     });
+
+    this.state = {
+      degreePrograms: [],
+      academicYears: [],
+      academicYearNames: {},
+      isLoading: false,
+      degreeProgram: NO_DEGREE_PROGRAM,
+      academicYear: '',
+      showAll: false
+    };
+
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.handleError = this.handleError.bind(this);
+    this.onDegreeProgramsChange = this.onDegreeProgramsChange.bind(this);
+    this.onAcademicYearsChange = this.onAcademicYearsChange.bind(this);
+    this.onShowAll = this.onShowAll.bind(this);
+    this.getAcademicYear = this.getAcademicYear.bind(this);
+    this.initAcademicYears = this.initAcademicYears.bind(this);
+    this.initAllSelects = this.initAllSelects.bind(this);
+    this.initAcademicYearsForDegreeProgram = this.initAcademicYearsForDegreeProgram.bind(this);
+    this.initSpecificView = this.initSpecificView.bind(this);
+    this.renderSelections = this.renderSelections.bind(this);
+    this.renderContent = this.renderContent.bind(this);
+    this.render = this.render.bind(this);
   }
 
   async componentDidMount() {
@@ -92,27 +105,31 @@ class Main extends Component {
     trackPageView(trackingDegreeProgramCode, academicYearNames[academicYear], lang);
   }
 
-   onDegreeProgramsChange = async (event) => {
-     this.setState({ isLoading: true, errorMessage: '' });
-     const degreeProgramCode = event.target.value;
-     try {
-       const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgramCode);
-       const academicYear = this.getAcademicYear(academicYears);
-       const degreeProgram = await getDegreeProgram(degreeProgramCode, academicYear);
+  handleError(error) {
+    this.setState({ errorMessage: error.message, isLoading: false });
+  }
 
-       trackEvent(trackingCategories.SELECT_DEGREE_PROGRAMME, degreeProgramCode);
-       this.setState({
-         degreeProgram,
-         academicYear,
-         academicYears,
-         isLoading: false
-       });
-     } catch (error) {
-       this.handleError(error);
-     }
-   }
+  async onDegreeProgramsChange(event) {
+    this.setState({ isLoading: true, errorMessage: '' });
+    const degreeProgramCode = event.target.value;
+    try {
+      const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgramCode);
+      const academicYear = this.getAcademicYear(academicYears);
+      const degreeProgram = await fetchDegreeProgram(degreeProgramCode, academicYear);
 
-  onAcademicYearsChange = async (event) => {
+      trackEvent(trackingCategories.SELECT_DEGREE_PROGRAMME, degreeProgramCode);
+      this.setState({
+        degreeProgram,
+        academicYear,
+        academicYears,
+        isLoading: false
+      });
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async onAcademicYearsChange(event) {
     const { degreeProgram } = this.state;
     this.setState({ isLoading: true, errorMessage: '' });
     const academicYear = event.target.value;
@@ -131,21 +148,23 @@ class Main extends Component {
     }
   }
 
-  onShowAll = () => {
+  onShowAll() {
     const { showAll } = this.state;
     const newShowAll = !showAll;
     trackEvent(trackingCategories.TOGGLE_SHOW_ALL, newShowAll);
     this.setState({ showAll: newShowAll });
   }
 
-  getAcademicYear = (academicYears) => {
-    const { academicYear: oldSelection, defaultAcademicYearCode } = this.state;
+  getAcademicYear(academicYears) {
+    const { academicYear: oldSelection } = this.state;
 
     const isOldSelectionValid = oldSelection && academicYears.includes(oldSelection);
-    return isOldSelectionValid ? oldSelection : defaultAcademicYearCode;
+    const latestAcademicYear = academicYears.length
+      ? academicYears[academicYears.length - 1] : null;
+    return isOldSelectionValid ? oldSelection : latestAcademicYear;
   }
 
-  initAcademicYears = async (academicYearCode) => {
+  async initAcademicYears(academicYearCode) {
     const academicYearNames = await getAcademicYearNames();
 
     const hasValidAcademicYear = academicYearCode
@@ -160,7 +179,7 @@ class Main extends Component {
         dateNow.setFullYear(dateNow.getFullYear() - 1);
       }
       const currentAcademicYear = dateNow.getFullYear();
-      const isCurrentAcademicYear = ay => academicYearNames[ay].startsWith(currentAcademicYear);
+      const isCurrentAcademicYear = (ay) => academicYearNames[ay].startsWith(currentAcademicYear);
       return Object.keys(academicYearNames).find(isCurrentAcademicYear);
     };
 
@@ -171,11 +190,7 @@ class Main extends Component {
     this.setState({ academicYearNames, defaultAcademicYearCode });
   }
 
-  handleError = (error) => {
-    this.setState({ errorMessage: error.message, isLoading: false });
-  }
-
-  initAllSelects = async () => {
+  async initAllSelects() {
     try {
       const degreePrograms = await getDegreePrograms();
 
@@ -183,8 +198,7 @@ class Main extends Component {
 
       const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgrammeCode);
       const academicYear = this.getAcademicYear(academicYears);
-
-      const degreeProgram = await getDegreeProgram(degreeProgrammeCode, academicYear);
+      const degreeProgram = await fetchDegreeProgram(degreeProgrammeCode, academicYear);
 
       this.setState({
         degreePrograms,
@@ -197,12 +211,12 @@ class Main extends Component {
     }
   }
 
-  initAcademicYearsForDegreeProgram = async (degreeProgramCode) => {
+  async initAcademicYearsForDegreeProgram(degreeProgramCode) {
     try {
       const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgramCode);
 
       const academicYear = this.getAcademicYear(academicYears);
-      const degreeProgram = await getDegreeProgram(degreeProgramCode, academicYear);
+      const degreeProgram = await fetchDegreeProgram(degreeProgramCode, academicYear);
 
       this.setState({
         academicYear,
@@ -214,7 +228,7 @@ class Main extends Component {
     }
   }
 
-  initSpecificView = async (degreeProgramCode) => {
+  async initSpecificView(degreeProgramCode) {
     const { defaultAcademicYearCode } = this.state;
     try {
       const degreeProgram = await getDegreeProgram(
@@ -231,7 +245,7 @@ class Main extends Component {
     }
   }
 
-  renderSelections = () => {
+  renderSelections() {
     const {
       degreeProgram,
       degreePrograms,
@@ -254,9 +268,9 @@ class Main extends Component {
     const ACADEMIC_YEARS_ID = 'academicYear';
     const DEGREE_PROGRAMS_ID = 'degreePrograms';
     const degreeProgramOptions = degreePrograms
-      .filter(dp => dp.degreeProgrammeCode)
+      .filter((dp) => dp.degreeProgrammeCode)
       .map((dp, i) => getOption(i, dp.degreeProgrammeCode, getLocalizedText(dp.name, lang)));
-    const academicYearOptions = academicYears.map(ay => getOption(ay, ay, academicYearNames[ay]));
+    const academicYearOptions = academicYears.map((ay) => getOption(ay, ay, academicYearNames[ay]));
 
     const academicYearsLabel = translate('academicYear');
     const degreeProgramsLabel = translate('degreePrograms');
@@ -264,39 +278,41 @@ class Main extends Component {
 
     return (
       <div className={styles.selectContainer}>
-        {!degreeProgramCode
-        && (
-          <LoaderDropdown
-            id={DEGREE_PROGRAMS_ID}
-            value={getDegreeProgramCode(degreeProgram)}
-            onChange={this.onDegreeProgramsChange}
-            options={degreeProgramOptions}
-            label={degreeProgramsLabel}
-            isLoading={isLoading}
-          />
-        )
+        {
+          !degreeProgramCode
+            && (
+              <LoaderDropdown
+                id={DEGREE_PROGRAMS_ID}
+                value={getDegreeProgramCode(degreeProgram)}
+                onChange={this.onDegreeProgramsChange}
+                options={degreeProgramOptions}
+                label={degreeProgramsLabel}
+                isLoading={isLoading}
+              />
+            )
         }
-        {(!degreeProgramCode || !academicYearCode)
-          ? (
-            <LoaderDropdown
-              id={ACADEMIC_YEARS_ID}
-              value={academicYear}
-              onChange={this.onAcademicYearsChange}
-              options={academicYearOptions}
-              label={academicYearsLabel}
-              isLoading={isLoading}
-            />
-          )
-          : (
-            <div className={styles.academicYearContainer}>
-              <div className={styles.academicYearLabel}>
-                <Translate id="academicYear" />{' '}
-                <span className={styles.academicYearText}>
-                  {academicYearNames[academicYear]}
-                </span>
+        {
+          (!degreeProgramCode || !academicYearCode)
+            ? (
+              <LoaderDropdown
+                id={ACADEMIC_YEARS_ID}
+                value={academicYear}
+                onChange={this.onAcademicYearsChange}
+                options={academicYearOptions}
+                label={academicYearsLabel}
+                isLoading={isLoading}
+              />
+            )
+            : (
+              <div className={styles.academicYearContainer}>
+                <div className={styles.academicYearLabel}>
+                  <Translate id="academicYear" />{' '}
+                  <span className={styles.academicYearText}>
+                    {academicYearNames[academicYear]}
+                  </span>
+                </div>
               </div>
-            </div>
-          )
+            )
         }
         <ToggleSelect
           onChange={this.onShowAll}
@@ -307,7 +323,7 @@ class Main extends Component {
     );
   }
 
-  renderContent = () => {
+  renderContent() {
     const {
       degreeProgram, academicYear, showAll, errorMessage, isLoading
     } = this.state;
@@ -326,16 +342,17 @@ class Main extends Component {
     return (
       <div>
         {errorMessage && <ErrorMessage errorMessage={errorMessage} /> }
-        {hasContent
-          ? (
-            <DegreeProgram
-              key={degreeProgramCode}
-              degreeProgram={degreeProgram}
-              showAll={showAll}
-              showContent={!errorMessage}
-            />
-          )
-          : <div className={styles.noContent}><Translate id="noDegreeProgramToShow" /></div>
+        {
+          hasContent
+            ? (
+              <DegreeProgram
+                key={degreeProgramCode}
+                degreeProgram={degreeProgram}
+                showAll={showAll}
+                showContent={!errorMessage}
+              />
+            )
+            : <div className={styles.noContent}><Translate id="noDegreeProgramToShow" /></div>
         }
       </div>
     );
@@ -354,5 +371,15 @@ class Main extends Component {
     );
   }
 }
+
+Main.propTypes = {
+  academicYearCode: string.isRequired,
+  degreeProgramCode: string.isRequired,
+  // eslint-disable-next-line react/no-unused-prop-types
+  lang: oneOf(Object.values(availableLanguages)).isRequired,
+  header: string.isRequired,
+  initialize: func.isRequired,
+  translate: func.isRequired
+};
 
 export default withLocalize(Main);

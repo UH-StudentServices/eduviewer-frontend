@@ -38,3 +38,5 @@ export const availableLanguages = {
 export const CURRENT_ACADEMIC_YEAR_CODE = 'current';
 
 export const NO_DEGREE_PROGRAM_CODE = 'no_degree_programme';
+
+export const NO_DEGREE_PROGRAM = {};

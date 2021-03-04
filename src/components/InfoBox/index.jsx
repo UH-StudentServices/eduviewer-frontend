@@ -23,10 +23,11 @@ import styles from './infoBox.css';
 const InfoBox = ({ content, setInnerHtml }) => (
   <div className={styles.infoContainer}>
     <span className={`${styles.iconContainer} icon--info`} />
-    {setInnerHtml
-      // eslint-disable-next-line react/no-danger
-      ? <div className={styles.content} dangerouslySetInnerHTML={{ __html: content }} />
-      : <div className={styles.content}>{content}</div>
+    {
+      setInnerHtml
+        // eslint-disable-next-line react/no-danger
+        ? <div className={styles.content} dangerouslySetInnerHTML={{ __html: content }} />
+        : <div className={styles.content}>{content}</div>
     }
   </div>
 );
