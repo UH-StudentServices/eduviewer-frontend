@@ -1,0 +1,19 @@
+
+
+.accordionButton {
+  color: var(--black) !important;
+  font-weight: bold !important;
+  font-size: 1.125em !important;
+
+  &::after {
+    color: var(--black) !important;
+  }
+
+  &:hover {
+    color: var(--darkBlue) !important;
+
+    &::after {
+      color: var(--darkBlue) !important;
+    }
+  }
+}
