@@ -27,24 +27,18 @@ import styles from './accordionModule.css';
 const AccordionModule = ({ showAll, rule, activeLanguage }) => {
   const [open, setOpen] = useState(false);
   if (showAll) {
-    return (
-      <div>
-        <>
-          {rule.dataNode.rules.map((r) => (
-            <GroupingModule
-              key={r.localId}
-              rule={rule}
-              showAll={showAll}
-              activeLanguage={activeLanguage}
-            />
-          ))}
-        </>
-      </div>
-    );
+    return rule.dataNode.rules.map((r) => (
+      <GroupingModule
+        key={r.localId}
+        rule={rule}
+        showAll={showAll}
+        activeLanguage={activeLanguage}
+      />
+    ));
   }
 
   return (
-    <div>
+    <>
       <button
         type="button"
         className={`button--action theme-transparent ${styles.accordionButton} ${open ? 'icon--caret-up' : 'icon--caret-down'}`}
@@ -60,7 +54,7 @@ const AccordionModule = ({ showAll, rule, activeLanguage }) => {
           activeLanguage={activeLanguage}
         />
       )}
-    </div>
+    </>
   );
 };
 
