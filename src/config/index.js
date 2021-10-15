@@ -41,6 +41,11 @@ const eduviewerBaseUrls = {
   PROD: 'https://od.helsinki.fi/eduviewer'
 };
 
+const studiesCourseUnitBaseUrls = {
+  QA: 'https://studies-qa.it.helsinki.fi//opintotarjonta/cu/',
+  PROD: 'https://studies.helsinki.fi/opintotarjonta/cu/'
+};
+
 const getTrackingId = () => {
   const { hostname } = window.location;
   if (hostname === eduviewerHostnames.DEV || hostname === eduviewerHostnames.LOCAL) {
@@ -76,14 +81,15 @@ const getStyleUrl = () => (
     : `https://${eduviewerHostnames.PROD}`
 );
 
-const getBaseUrl = () => (
+const getBaseUrl = (urls) => (
   isQA()
-    ? eduviewerBaseUrls.QA
-    : eduviewerBaseUrls.PROD
+    ? urls.QA
+    : urls.PROD
 );
 
 module.exports = {
-  DEFAULT_BASE_URL: getBaseUrl(),
+  DEFAULT_BASE_URL: getBaseUrl(eduviewerBaseUrls),
   DEFAULT_STYLE_URL: getStyleUrl(),
-  TRACKING_ID: getTrackingId()
+  TRACKING_ID: getTrackingId(),
+  STUDIES_CU_PAGE_BASE_URL: getBaseUrl(studiesCourseUnitBaseUrls)
 };
