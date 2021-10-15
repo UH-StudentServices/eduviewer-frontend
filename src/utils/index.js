@@ -15,6 +15,7 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { STUDIES_CU_PAGE_BASE_URL } from '../config';
 import { ruleTypes } from '../constants';
 
 const { COURSE_UNIT_RULE } = ruleTypes;
@@ -100,3 +101,5 @@ export const compareSubRules = (rule1, rule2) => {
 };
 
 export const getDegreeProgramCode = (degreeProgram) => degreeProgram.dataNode?.code || null;
+
+export const getStudiesCourseUnitPageUrl = (cuId) => `${STUDIES_CU_PAGE_BASE_URL}${cuId}`;
