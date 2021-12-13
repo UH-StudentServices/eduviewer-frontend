@@ -269,7 +269,7 @@ class Main extends Component {
     const DEGREE_PROGRAMS_ID = 'degreePrograms';
     const degreeProgramOptions = degreePrograms
       .filter((dp) => dp.degreeProgrammeCode)
-      .map((dp, i) => getOption(i, dp.degreeProgrammeCode, getLocalizedText(dp.name, lang)));
+      .map((dp, i) => getOption(i, dp.degreeProgrammeCode, `${getLocalizedText(dp.name, lang)} [${dp.degreeProgrammeCode}]`));
     const academicYearOptions = academicYears.map((ay) => getOption(ay, ay, academicYearNames[ay]));
 
     const academicYearsLabel = translate('academicYear');
