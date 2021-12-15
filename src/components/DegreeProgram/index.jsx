@@ -35,7 +35,7 @@ const DegreeProgram = ({
     return null;
   }
 
-  const { dataNode: { name, rule } } = degreeProgram;
+  const { name, rule } = degreeProgram;
   return (
     <div className={styles.degreeProgram}>
       <h3 className={styles.degreeProgramTitle}>{getLocalizedText(name, activeLanguage.code)}</h3>

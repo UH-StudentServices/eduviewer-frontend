@@ -57,7 +57,6 @@ export const dataNodeType = shape({
 });
 
 export const degreeProgramType = shape({
-  dataNode: dataNodeType.isRequired,
   name: localizedTextType.isRequired,
   rule: oneOfRulesType.isRequired
 });
