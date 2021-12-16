@@ -38,8 +38,7 @@ const eduviewerTrackingIds = {
 
 const eduviewerBaseUrls = {
   QA: 'https://od.helsinki.fi/eduviewer-qa',
-  // PROD: 'https://od.helsinki.fi/eduviewer'
-  PROD: 'http://localhost:8081/api'
+  PROD: 'https://od.helsinki.fi/eduviewer'
 };
 
 const studiesCourseUnitBaseUrls = {
