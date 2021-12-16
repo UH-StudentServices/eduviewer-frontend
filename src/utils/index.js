@@ -100,6 +100,6 @@ export const compareSubRules = (rule1, rule2) => {
   return 0;
 };
 
-export const getDegreeProgramCode = (degreeProgram) => degreeProgram.dataNode?.code || null;
+export const getDegreeProgramCode = (education) => education.dataNode?.code || null;
 
 export const getStudiesCourseUnitPageUrl = (cuId) => `${STUDIES_CU_PAGE_BASE_URL}${cuId}`;

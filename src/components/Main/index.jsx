@@ -20,10 +20,10 @@ import { func, string, oneOf } from 'prop-types';
 import { Translate, withLocalize } from 'react-localize-redux';
 import { renderToStaticMarkup } from 'react-dom/server';
 import {
-  getDegreePrograms,
+  getEducations,
   getAcademicYearNames,
   getAcademicYearsByDegreeProgramCode,
-  getDegreeProgram
+  getEducationHierarchy
 } from '../../api';
 
 import DegreeProgram from '../DegreeProgram';
@@ -32,7 +32,7 @@ import LoaderDropdown from '../LoaderDropdown';
 import styles from './main.css';
 import ToggleSelect from '../ToggleSelect';
 import {
-  availableLanguages, CURRENT_ACADEMIC_YEAR_CODE, NO_DEGREE_PROGRAM_CODE, NO_DEGREE_PROGRAM
+  availableLanguages, CURRENT_ACADEMIC_YEAR_CODE, NO_DEGREE_PROGRAM_CODE, NO_EDUCATION_HIERARCHY
 } from '../../constants';
 import ErrorMessage from '../ErrorMessage';
 import Loader from '../Loader';
@@ -41,11 +41,11 @@ import { trackEvent, trackingCategories, trackPageView } from '../../tracking';
 
 import translation from '../../i18n/translations.json';
 
-const fetchDegreeProgram = async (degreeProgramCode, academicYear) => {
+const fetchEducationHierarchy = async (degreeProgramCode, academicYear) => {
   if (academicYear) {
-    return getDegreeProgram(degreeProgramCode, academicYear);
+    return getEducationHierarchy(degreeProgramCode, academicYear);
   }
-  return NO_DEGREE_PROGRAM;
+  return NO_EDUCATION_HIERARCHY;
 };
 
 class Main extends Component {
@@ -62,18 +62,18 @@ class Main extends Component {
     });
 
     this.state = {
-      degreePrograms: [],
+      educations: [],
       academicYears: [],
       academicYearNames: {},
       isLoading: false,
-      degreeProgram: NO_DEGREE_PROGRAM,
+      educationHierarchy: NO_EDUCATION_HIERARCHY,
       academicYear: '',
       showAll: false
     };
 
     this.componentDidMount = this.componentDidMount.bind(this);
     this.handleError = this.handleError.bind(this);
-    this.onDegreeProgramsChange = this.onDegreeProgramsChange.bind(this);
+    this.onEducationChange = this.onEducationChange.bind(this);
     this.onAcademicYearsChange = this.onAcademicYearsChange.bind(this);
     this.onShowAll = this.onShowAll.bind(this);
     this.getAcademicYear = this.getAcademicYear.bind(this);
@@ -109,17 +109,17 @@ class Main extends Component {
     this.setState({ errorMessage: error.message, isLoading: false });
   }
 
-  async onDegreeProgramsChange(event) {
+  async onEducationChange(event) {
     this.setState({ isLoading: true, errorMessage: '' });
     const degreeProgramCode = event.target.value;
     try {
       const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgramCode);
       const academicYear = this.getAcademicYear(academicYears);
-      const degreeProgram = await fetchDegreeProgram(degreeProgramCode, academicYear);
+      const educationHierarchy = await fetchEducationHierarchy(degreeProgramCode, academicYear);
 
-      trackEvent(trackingCategories.SELECT_DEGREE_PROGRAMME, degreeProgramCode);
+      trackEvent(trackingCategories.SELECT_EDUCATION_HIERARCHY, degreeProgramCode);
       this.setState({
-        degreeProgram,
+        educationHierarchy,
         academicYear,
         academicYears,
         isLoading: false
@@ -130,16 +130,16 @@ class Main extends Component {
   }
 
   async onAcademicYearsChange(event) {
-    const { degreeProgram } = this.state;
+    const { educationHierarchy } = this.state;
     this.setState({ isLoading: true, errorMessage: '' });
     const academicYear = event.target.value;
-    const degreeProgramCode = getDegreeProgramCode(degreeProgram);
+    const degreeProgramCode = getDegreeProgramCode(educationHierarchy);
     try {
-      const newDegreeProgram = await getDegreeProgram(degreeProgramCode, academicYear);
+      const newEducationHierarchy = await getEducationHierarchy(degreeProgramCode, academicYear);
       const { academicYearNames } = this.state;
       trackEvent(trackingCategories.SELECT_ACADEMIC_YEAR, academicYearNames[academicYear]);
       this.setState({
-        degreeProgram: newDegreeProgram,
+        educationHierarchy: newEducationHierarchy,
         academicYear,
         isLoading: false
       });
@@ -192,17 +192,17 @@ class Main extends Component {
 
   async initAllSelects() {
     try {
-      const degreePrograms = await getDegreePrograms();
+      const educations = await getEducations();
 
-      const { degreeProgrammeCode } = degreePrograms[0];
+      const { degreeProgrammeCode } = educations[0];
 
       const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgrammeCode);
       const academicYear = this.getAcademicYear(academicYears);
-      const degreeProgram = await fetchDegreeProgram(degreeProgrammeCode, academicYear);
+      const educationHierarchy = await fetchEducationHierarchy(degreeProgrammeCode, academicYear);
 
       this.setState({
-        degreePrograms,
-        degreeProgram,
+        educations,
+        educationHierarchy,
         academicYear,
         academicYears
       });
@@ -216,12 +216,12 @@ class Main extends Component {
       const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgramCode);
 
       const academicYear = this.getAcademicYear(academicYears);
-      const degreeProgram = await fetchDegreeProgram(degreeProgramCode, academicYear);
+      const educationHierarchy = await fetchEducationHierarchy(degreeProgramCode, academicYear);
 
       this.setState({
         academicYear,
         academicYears,
-        degreeProgram
+        educationHierarchy
       });
     } catch (error) {
       this.handleError(error);
@@ -231,14 +231,14 @@ class Main extends Component {
   async initSpecificView(degreeProgramCode) {
     const { defaultAcademicYearCode } = this.state;
     try {
-      const degreeProgram = await getDegreeProgram(
+      const educationHierarchy = await getEducationHierarchy(
         degreeProgramCode,
         defaultAcademicYearCode
       );
 
       this.setState({
         academicYear: defaultAcademicYearCode,
-        degreeProgram
+        educationHierarchy
       });
     } catch (error) {
       this.handleError(error);
@@ -247,8 +247,8 @@ class Main extends Component {
 
   renderSelections() {
     const {
-      degreeProgram,
-      degreePrograms,
+      educationHierarchy,
+      educations,
       academicYears,
       academicYearNames,
       academicYear,
@@ -266,14 +266,14 @@ class Main extends Component {
     const getOption = (id, value, text) => ({ id, value, text });
 
     const ACADEMIC_YEARS_ID = 'academicYear';
-    const DEGREE_PROGRAMS_ID = 'degreePrograms';
-    const degreeProgramOptions = degreePrograms
-      .filter((dp) => dp.degreeProgrammeCode)
-      .map((dp, i) => getOption(i, dp.degreeProgrammeCode, getLocalizedText(dp.name, lang)));
+    const EDUCATIONS_ID = 'educations';
+    const educationOptions = educations
+      .filter((ed) => ed.degreeProgrammeCode)
+      .map((ed, i) => getOption(i, ed.degreeProgrammeCode, `${getLocalizedText(ed.name, lang)} [${ed.degreeProgrammeCode}]`));
     const academicYearOptions = academicYears.map((ay) => getOption(ay, ay, academicYearNames[ay]));
 
     const academicYearsLabel = translate('academicYear');
-    const degreeProgramsLabel = translate('degreePrograms');
+    const educationsLabel = translate('degreeProgrammes');
     const showAllLabel = translate('showAll');
 
     return (
@@ -282,11 +282,11 @@ class Main extends Component {
           !degreeProgramCode
             && (
               <LoaderDropdown
-                id={DEGREE_PROGRAMS_ID}
-                value={getDegreeProgramCode(degreeProgram)}
-                onChange={this.onDegreeProgramsChange}
-                options={degreeProgramOptions}
-                label={degreeProgramsLabel}
+                id={EDUCATIONS_ID}
+                value={getDegreeProgramCode(educationHierarchy)}
+                onChange={this.onEducationChange}
+                options={educationOptions}
+                label={educationsLabel}
                 isLoading={isLoading}
               />
             )
@@ -325,18 +325,18 @@ class Main extends Component {
 
   renderContent() {
     const {
-      degreeProgram, academicYear, showAll, errorMessage, isLoading
+      educationHierarchy, academicYear, showAll, errorMessage, isLoading
     } = this.state;
 
     if (isLoading) {
       return <Loader />;
     }
 
-    const degreeProgramCode = getDegreeProgramCode(degreeProgram);
+    const degreeProgramCode = getDegreeProgramCode(educationHierarchy);
 
     const hasContent = !isLoading
       && academicYear
-      && degreeProgram.name
+      && educationHierarchy.name
       && degreeProgramCode;
 
     return (
@@ -347,7 +347,7 @@ class Main extends Component {
             ? (
               <DegreeProgram
                 key={degreeProgramCode}
-                degreeProgram={degreeProgram}
+                degreeProgram={educationHierarchy.dataNode}
                 showAll={showAll}
                 showContent={!errorMessage}
               />

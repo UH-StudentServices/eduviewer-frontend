@@ -28,10 +28,10 @@ const getJson = (path) => fetch(`${DEFAULT_BASE_URL}${path}`, {
   return response.json();
 });
 
-export const getDegreePrograms = () => getJson('/coded_educations');
+export const getEducations = () => getJson('/coded_educations');
 
 export const getAcademicYearsByDegreeProgramCode = (degreeProgramCode) => getJson(`/lvs/${degreeProgramCode}`);
 
 export const getAcademicYearNames = () => getJson('/lv_names');
 
-export const getDegreeProgram = (code, academicYear = '') => getJson(`/tree_by_code/${code}?lv=${academicYear}`);
+export const getEducationHierarchy = (code, academicYear = '') => getJson(`/tree_by_code/${code}?lv=${academicYear}`);
