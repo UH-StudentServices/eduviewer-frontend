@@ -25,6 +25,7 @@ import Main from './components/Main';
 import './styles';
 import { availableLanguages } from './constants';
 import { loadLocalStyleGuide } from './utils/dependencyLoader';
+import { calculateCurrentLV } from './utils';
 
 const EDUVIEWER_ROOT_ID = 'eduviewer-root';
 const LANGUAGE_ATTR_NAME = 'lang';
@@ -41,7 +42,7 @@ const getRootAttribute = (attributeName) => {
 
 const render = () => {
   const degreeProgramCode = getRootAttribute(DEGREE_PROGRAM_ATTR_NAME) || '';
-  const academicYearCode = getRootAttribute(ACADEMIC_YEAR_ATTR_NAME) || '';
+  const academicYearCode = getRootAttribute(ACADEMIC_YEAR_ATTR_NAME) || calculateCurrentLV();
   const lang = getRootAttribute(LANGUAGE_ATTR_NAME) || availableLanguages.FI;
   const header = getRootAttribute(HEADER_ATTR_NAME) || '';
 

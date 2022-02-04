@@ -100,6 +100,18 @@ export const compareSubRules = (rule1, rule2) => {
   return 0;
 };
 
+export const calculateCurrentLV = () => {
+  const today = new Date();
+  // javascript months start from 0 and displayed year changes 1st of August.
+  let lvYearCode;
+  if (today.getMonth() < 7) {
+    lvYearCode = today.getFullYear() - 1950;
+  } else {
+    lvYearCode = today.getFullYear() + 1 - 1950;
+  }
+  return `hy-lv-${lvYearCode}`;
+};
+
 export const getDegreeProgramCode = (education) => education.dataNode?.code || null;
 
 export const getStudiesCourseUnitPageUrl = (cuId) => `${STUDIES_CU_PAGE_BASE_URL}${cuId}`;
