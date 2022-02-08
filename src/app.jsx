@@ -31,6 +31,7 @@ const EDUVIEWER_ROOT_ID = 'eduviewer-root';
 const LANGUAGE_ATTR_NAME = 'lang';
 const DEGREE_PROGRAM_ATTR_NAME = 'degree-program-id';
 const ACADEMIC_YEAR_ATTR_NAME = 'academic-year';
+const ONLY_SELECTED_YEAR_ATTR_NAME = 'only-selected-academic-year';
 const HEADER_ATTR_NAME = 'header';
 const DISABLE_GLOBAL_STYLES_ATTR_NAME = 'disable-global-style';
 
@@ -43,6 +44,8 @@ const getRootAttribute = (attributeName) => {
 const render = () => {
   const degreeProgramCode = getRootAttribute(DEGREE_PROGRAM_ATTR_NAME) || '';
   const academicYearCode = getRootAttribute(ACADEMIC_YEAR_ATTR_NAME) || calculateCurrentLV();
+  const onlySelectedAYValue = getRootAttribute(ONLY_SELECTED_YEAR_ATTR_NAME);
+  const showOnlySelectedAcademicYear = onlySelectedAYValue !== null && onlySelectedAYValue.toLowerCase() !== 'false';
   const lang = getRootAttribute(LANGUAGE_ATTR_NAME) || availableLanguages.FI;
   const header = getRootAttribute(HEADER_ATTR_NAME) || '';
 
@@ -52,6 +55,7 @@ const render = () => {
         <Main
           degreeProgramCode={degreeProgramCode}
           academicYearCode={academicYearCode}
+          onlySelectedAcademicYear={showOnlySelectedAcademicYear}
           lang={lang}
           header={header}
         />

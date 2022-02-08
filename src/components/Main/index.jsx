@@ -16,7 +16,12 @@
  */
 
 import React, { Component } from 'react';
-import { func, string, oneOf } from 'prop-types';
+import {
+  func,
+  string,
+  bool,
+  oneOf
+} from 'prop-types';
 import { Translate, withLocalize } from 'react-localize-redux';
 import { renderToStaticMarkup } from 'react-dom/server';
 import {
@@ -32,7 +37,7 @@ import LoaderDropdown from '../LoaderDropdown';
 import styles from './main.css';
 import ToggleSelect from '../ToggleSelect';
 import {
-  availableLanguages, CURRENT_ACADEMIC_YEAR_CODE, NO_DEGREE_PROGRAM_CODE, NO_EDUCATION_HIERARCHY
+  availableLanguages, NO_DEGREE_PROGRAM_CODE, NO_EDUCATION_HIERARCHY
 } from '../../constants';
 import ErrorMessage from '../ErrorMessage';
 import Loader from '../Loader';
@@ -87,11 +92,16 @@ class Main extends Component {
   }
 
   async componentDidMount() {
-    const { degreeProgramCode, academicYearCode, lang } = this.props;
+    const {
+      degreeProgramCode,
+      academicYearCode,
+      lang,
+      onlySelectedAcademicYear
+    } = this.props;
     this.setState({ isLoading: true });
     await this.initAcademicYears(academicYearCode);
 
-    if (degreeProgramCode && academicYearCode) {
+    if (degreeProgramCode && onlySelectedAcademicYear) {
       await this.initSpecificView(degreeProgramCode);
     } else if (degreeProgramCode) {
       await this.initAcademicYearsForDegreeProgram(degreeProgramCode);
@@ -156,7 +166,8 @@ class Main extends Component {
   }
 
   getAcademicYear(academicYears) {
-    const { academicYear: oldSelection } = this.state;
+    const { academicYear, defaultAcademicYearCode } = this.state;
+    const oldSelection = academicYear || defaultAcademicYearCode;
 
     const isOldSelectionValid = oldSelection && academicYears.includes(oldSelection);
     const latestAcademicYear = academicYears.length
@@ -164,29 +175,8 @@ class Main extends Component {
     return isOldSelectionValid ? oldSelection : latestAcademicYear;
   }
 
-  async initAcademicYears(academicYearCode) {
+  async initAcademicYears(defaultAcademicYearCode) {
     const academicYearNames = await getAcademicYearNames();
-
-    const hasValidAcademicYear = academicYearCode
-      && academicYearCode !== CURRENT_ACADEMIC_YEAR_CODE;
-
-    const getCurrentAcademicYear = () => {
-      const dateNow = new Date();
-      const currentMonth = dateNow.getMonth();
-      const zeroBasedAugust = 7;
-      const isMonthBeforeAugust = currentMonth < zeroBasedAugust;
-      if (isMonthBeforeAugust) {
-        dateNow.setFullYear(dateNow.getFullYear() - 1);
-      }
-      const currentAcademicYear = dateNow.getFullYear();
-      const isCurrentAcademicYear = (ay) => academicYearNames[ay].startsWith(currentAcademicYear);
-      return Object.keys(academicYearNames).find(isCurrentAcademicYear);
-    };
-
-    const defaultAcademicYearCode = hasValidAcademicYear
-      ? academicYearCode
-      : getCurrentAcademicYear();
-
     this.setState({ academicYearNames, defaultAcademicYearCode });
   }
 
@@ -258,9 +248,9 @@ class Main extends Component {
 
     const {
       degreeProgramCode,
-      academicYearCode,
       translate,
-      lang
+      lang,
+      onlySelectedAcademicYear
     } = this.props;
 
     const getOption = (id, value, text) => ({ id, value, text });
@@ -292,18 +282,8 @@ class Main extends Component {
             )
         }
         {
-          (!degreeProgramCode || !academicYearCode)
+          (degreeProgramCode && onlySelectedAcademicYear)
             ? (
-              <LoaderDropdown
-                id={ACADEMIC_YEARS_ID}
-                value={academicYear}
-                onChange={this.onAcademicYearsChange}
-                options={academicYearOptions}
-                label={academicYearsLabel}
-                isLoading={isLoading}
-              />
-            )
-            : (
               <div className={styles.academicYearContainer}>
                 <div className={styles.academicYearLabel}>
                   <Translate id="academicYear" />{' '}
@@ -312,6 +292,16 @@ class Main extends Component {
                   </span>
                 </div>
               </div>
+            )
+            : (
+              <LoaderDropdown
+                id={ACADEMIC_YEARS_ID}
+                value={academicYear}
+                onChange={this.onAcademicYearsChange}
+                options={academicYearOptions}
+                label={academicYearsLabel}
+                isLoading={isLoading}
+              />
             )
         }
         <ToggleSelect
@@ -375,6 +365,7 @@ class Main extends Component {
 Main.propTypes = {
   academicYearCode: string.isRequired,
   degreeProgramCode: string.isRequired,
+  onlySelectedAcademicYear: bool.isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
   lang: oneOf(Object.values(availableLanguages)).isRequired,
   header: string.isRequired,
