@@ -5,6 +5,6 @@
        <title><%= title %></title>
     </head>
     <body>
-        <div id="eduviewer-root" degree-program-id="" academic-year="" lang="<%= lang %>" header=""></div>
+        <div id="eduviewer-root" degree-program-id="" academic-year="" only-selected-academic-year="false" lang="<%= lang %>" header=""></div>
     </body>
 </html>
