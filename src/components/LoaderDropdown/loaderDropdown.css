@@ -52,8 +52,9 @@ If the options are long and the select box is wide, locally adjust caret x-posit
   }
 
   padding-right: 2.5em;
-  background: url(../../images/caret-down.png) no-repeat right 1em top 60%;
+  background: url("../../images/caret-down.png") no-repeat right 1em top 60%;
   font-weight: bold;
+  /* stylelint-disable-next-line property-no-vendor-prefix */
   -moz-appearance: none;
   font-size: 1em;
 }

@@ -22,7 +22,7 @@ import styles from './infoBox.css';
 
 const InfoBox = ({ content, setInnerHtml }) => (
   <div className={styles.infoContainer}>
-    <span className={`${styles.iconContainer} icon--info`} />
+    <span className={`${styles.iconContainer} icon--info-stroke`} />
     {
       setInnerHtml
         // eslint-disable-next-line react/no-danger

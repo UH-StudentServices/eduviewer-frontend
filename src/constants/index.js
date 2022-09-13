@@ -24,11 +24,6 @@ export const ruleTypes = {
   MODULE_RULE: 'ModuleRule'
 };
 
-export const moduleTypes = {
-  GROUPING_MODULE: 'GroupingModule',
-  STUDY_MODULE: 'StudyModule'
-};
-
 export const availableLanguages = {
   FI: 'fi',
   SV: 'sv',

@@ -16,17 +16,17 @@
  */
 
 .infoContainer {
-  margin-top: 0.3em;
-  padding: 0.45em 0.35em 0.15em;
-  border: 0.075em dashed var(--blue);
+  margin: 0.3em 0.8em 0.5em 0.8em;
+  padding: 0.5em 0.35em 0.75em 0;
+  border: 0.075em solid var(--orange);
   display: flex;
-  width: 100%;
+  background-color: var(--white);
 }
 
 .iconContainer {
   font-size: 1.25em;
-  margin-right: 0.2em;
-  color: var(--blue);
+  margin: 0 0.4em;
+  color: var(--orange);
 }
 
 .iconContainer::after {

@@ -15,8 +15,10 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component, Fragment } from 'react';
-import { func, bool, shape } from 'prop-types';
+import React, { Fragment } from 'react';
+import {
+  func, bool, shape, number
+} from 'prop-types';
 import { Translate, withLocalize } from 'react-localize-redux';
 
 import { ruleTypes } from '../../constants';
@@ -53,6 +55,12 @@ const FOREIGN_LANGUAGE_DROPDOWN_MODULES = [
   'främmande språk'
 ];
 
+const ONE_OF_FOLLOWING = [
+  'Jokin seuraavista',
+  'En av följande',
+  'One of the following'
+];
+
 const DROPDOWN_MODULES = [
   ...STUDY_TRACK_DROPDOWN_MODULES
 ];
@@ -61,7 +69,7 @@ const ACCORDION_MODULES = [
   ...FOREIGN_LANGUAGE_DROPDOWN_MODULES
 ];
 
-const getDescription = (rule, isCompositeRule = false, lang) => {
+const getDescription = (rule, lang, isCompositeRule = false) => {
   const { description: ruleDesc, dataNode, allMandatory } = rule;
   const nodeDesc = dataNode && dataNode.description;
 
@@ -87,45 +95,55 @@ const getSubRules = (rule) => {
   return subRules;
 };
 
-const renderRequiredCourseAmount = (rule, translate) => {
-  const { require, allMandatory } = rule;
-  const hasRequiredCoursesRange = require && (require.max || require.min > 0);
-  const shouldRender = !allMandatory && hasRequiredCoursesRange;
-  return shouldRender
-    ? <InfoBox content={`${translate('select')} ${requiredCoursesToString(require)}`} />
-    : null;
-};
-
-class GroupingModule extends Component {
-  constructor(props) {
-    super(props);
-
-    this.renderRule = this.renderRule.bind(this);
-    this.render = this.render.bind(this);
+const GroupingModule = ({
+  showAll,
+  translate,
+  activeLanguage,
+  rule: groupingModuleRule,
+  level
+}) => {
+  if (!groupingModuleRule) {
+    return null;
   }
+  const lang = activeLanguage.code;
 
-  renderRule(rule) {
-    const { showAll, translate, activeLanguage } = this.props;
+  const renderRequiredCourseAmount = (rule) => {
+    const { require, allMandatory } = rule;
+    const hasRequiredCoursesRange = require && (require.max || require.min > 0);
+    const shouldRender = !allMandatory && hasRequiredCoursesRange;
 
+    if (require?.min === 1 && require?.max === 1) {
+      return translate('oneOfFollowing');
+    }
+
+    if (shouldRender) {
+      return `${translate('select')} ${requiredCoursesToString(require)}`;
+    }
+    return null;
+  };
+
+  const renderRule = (rule) => {
     if (rule) {
       if (rule.type === COMPOSITE_RULE) {
+        const requiredCourseAmount = renderRequiredCourseAmount(rule);
         return (
-          <div key={rule.localId}>
-            {renderRequiredCourseAmount(rule, translate)}
-            {getDescription(rule, true, activeLanguage.code)}
+          <Fragment key={rule.localId}>
+            { requiredCourseAmount
+              && <span className={styles.compositeRuleCourseAmounts}>{requiredCourseAmount}</span>}
+            { getDescription(rule, true, activeLanguage.code) }
             <ul className={styles.groupingList}>
-              {rule.rules.sort(compareSubRules).map(this.renderRule)}
+              {rule.rules.sort(compareSubRules).map(renderRule)}
             </ul>
-          </div>
+          </Fragment>
         );
       }
 
       if (rule.type === ANY_COURSE_UNIT_RULE) {
-        return <li key={rule.localId}><Translate id="anyCourseUnit" /></li>;
+        return <li key={rule.localId}><span className={styles.paddingLeft05}><Translate id="anyCourseUnit" /></span></li>;
       }
 
       if (rule.type === ANY_MODULE_RULE) {
-        return <li key={rule.localId}><Translate id="anyModule" /></li>;
+        return <li key={rule.localId}><span className={styles.paddingLeft05}><Translate id="anyModule" /></span></li>;
       }
 
       if (rule.type === COURSE_UNIT_RULE) {
@@ -146,8 +164,8 @@ class GroupingModule extends Component {
       if (rule.type === CREDITS_RULE) {
         return (
           <Fragment key={rule.localId}>
-            <InfoBox content={`${translate('select')} ${creditsToString(rule.credits, activeLanguage.code)}`} />
-            {this.renderRule(rule.rule)}
+            <div className={level === 0 ? styles.paddingBottom1 : styles.paddingLeft1}>{translate('total')} {creditsToString(rule.credits, translate)}</div>
+            {renderRule(rule.rule)}
           </Fragment>
         );
       }
@@ -160,66 +178,107 @@ class GroupingModule extends Component {
             showAll={showAll}
             translate={translate}
             activeLanguage={activeLanguage}
+            level={level + 1}
           />
         );
       }
     }
-
     return null;
-  }
+  };
 
-  render() {
-    const {
-      rule, showAll, activeLanguage, translate
-    } = this.props;
-    const lang = activeLanguage.code;
+  const shouldRenderDropdown = DROPDOWN_MODULES.includes(
+    getName(groupingModuleRule, lang).toLowerCase()
+  );
+  const shouldRenderAccordion = ACCORDION_MODULES.includes(
+    getName(groupingModuleRule, lang).toLowerCase()
+  );
 
-    if (!rule) {
-      return null;
-    }
-    const shouldRenderDropdown = DROPDOWN_MODULES.includes(getName(rule, lang).toLowerCase());
-    const shouldRenderAccordion = ACCORDION_MODULES.includes(getName(rule, lang).toLowerCase());
-    const moduleCredits = rule.type === MODULE_RULE
-      && creditsToString(rule.dataNode.targetCredits, lang, true);
-    const moduleCode = rule.type === MODULE_RULE && rule.dataNode.code;
+  const moduleCredits = groupingModuleRule.type === MODULE_RULE
+    && creditsToString(groupingModuleRule.dataNode.targetCredits, translate, true);
+  const moduleCode = groupingModuleRule.type === MODULE_RULE && groupingModuleRule.dataNode.code;
 
-    if (shouldRenderDropdown && !showAll) {
-      return (
-        <div key={rule.localId} className={styles.groupingModule}>
-          <div className={styles.groupingTitle}>{getName(rule, lang)}</div>
-          <DropdownModule rule={rule} showAll={showAll} />
-        </div>
-      );
-    }
-
-    if (shouldRenderAccordion && !showAll) {
-      return (
-        <div key={rule.localId} className={styles.groupingModule}>
-          <AccordionModule rule={rule} showAll={showAll} />
-        </div>
-      );
-    }
-
+  if (shouldRenderDropdown && !showAll) {
     return (
-      <div id={rule.localId} key={rule.localId} className={styles.groupingModule}>
-        <strong className={styles.groupingTitle}>
-          {moduleCode ? `${moduleCode} ` : ''}
-          {getName(rule, lang)}
-          {moduleCredits ? ` (${moduleCredits})` : ''}
-        </strong>
-        { renderRequiredCourseAmount(rule, translate) }
-        { getDescription(rule, lang) }
-        { getSubRules(rule).sort(compareSubRules).map((r) => this.renderRule(r)) }
+      <div key={groupingModuleRule.localId} className={`${styles.groupingModule} ${styles.dropdown}`}>
+        <div className={styles.groupingTitle}>{getName(groupingModuleRule, lang)}</div>
+        <DropdownModule rule={groupingModuleRule} showAll={showAll} />
       </div>
     );
   }
-}
+
+  if (shouldRenderAccordion && !showAll) {
+    return (
+      <div key={groupingModuleRule.localId} className={styles.groupingModule}>
+        <AccordionModule
+          rule={groupingModuleRule}
+          showAll={showAll}
+          internalAccordion
+        />
+      </div>
+    );
+  }
+
+  const isEmptyDataNode = Object.keys(groupingModuleRule.dataNode || {}).length === 0;
+
+  if (
+    level === 1
+    && groupingModuleRule.type === MODULE_RULE
+    && !isEmptyDataNode
+    && !showAll
+  ) {
+    return (
+      <div key={groupingModuleRule.localId} className={styles.groupingModule}>
+        <AccordionModule
+          rule={groupingModuleRule}
+          showAll={showAll}
+          internalAccordion={false}
+        />
+      </div>
+    );
+  }
+
+  const name = getName(groupingModuleRule, lang);
+
+  return (
+    <div
+      id={groupingModuleRule.localId}
+      key={groupingModuleRule.localId}
+      className={styles.groupingModule}
+    >
+      {name && level !== 0
+        && (
+          <strong className={`${styles.groupingTitle} ${styles.paddingLeft1}`}>
+            {moduleCode && <span>{moduleCode} </span>}
+            <span>{name}</span>
+            {moduleCredits && <span className={styles.moduleCredits}>{moduleCredits}</span>}
+          </strong>
+        )}
+      <div>
+        {(level === 99
+          && ONE_OF_FOLLOWING.includes(renderRequiredCourseAmount(groupingModuleRule)))
+          ? (
+            <span className={styles.paddingLeft1}>
+              { renderRequiredCourseAmount(groupingModuleRule) }
+            </span>
+          )
+          : renderRequiredCourseAmount(groupingModuleRule)}
+        { getDescription(groupingModuleRule, lang) }
+        { getSubRules(groupingModuleRule).sort(compareSubRules).map((r) => renderRule(r)) }
+      </div>
+    </div>
+  );
+};
+
+GroupingModule.defaultProps = {
+  level: 0
+};
 
 GroupingModule.propTypes = {
   showAll: bool.isRequired,
   rule: shape({}).isRequired,
   translate: func.isRequired,
-  activeLanguage: activeLanguageType.isRequired
+  activeLanguage: activeLanguageType.isRequired,
+  level: number
 };
 
 export default withLocalize(GroupingModule);

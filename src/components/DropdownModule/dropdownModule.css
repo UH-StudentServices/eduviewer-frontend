@@ -24,6 +24,11 @@
   margin-bottom: 0.5em;
 }
 
+.selectContainer select {
+  color: var(--blue);
+  max-width: max-content;
+}
+
 .selectedContainer ul > div {
   margin-top: 0.5em;
 }

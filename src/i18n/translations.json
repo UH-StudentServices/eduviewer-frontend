@@ -29,6 +29,16 @@
     "Välj",
     "Select"
   ],
+  "oneOfFollowing": [
+    "Jokin seuraavista",
+    "En av följande",
+    "One of the following"
+  ],
+  "total": [
+    "Yhteensä",
+    "Sammanlagt",
+    "Total"
+  ],
   "anyCourseUnit": [
     "Mikä tahansa opintojakso",
     "Valfi kurs",
@@ -43,5 +53,15 @@
     "Ei sisältöä",
     "Inget innehåll",
     "No content"
+  ],
+  "atLeast": [
+    "Vähintään",
+    "Åtminstone",
+    "At least"
+  ],
+  "creditLabel": [
+    "op",
+    "sp",
+    "cr"
   ]
 }
