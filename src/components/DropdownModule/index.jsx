@@ -15,7 +15,7 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { bool } from 'prop-types';
 import { withLocalize } from 'react-localize-redux';
 
@@ -69,16 +69,14 @@ class DropdownModule extends Component {
     if (showAll) {
       return (
         <div className={styles.selectedContainer}>
-          <>
-            {rule.dataNode.rules.map((r) => (
-              <GroupingModule
-                key={r.localId}
-                rule={rule}
-                showAll={showAll}
-                activeLanguage={activeLanguage}
-              />
-            ))}
-          </>
+          {rule.dataNode.rules.map((r) => (
+            <GroupingModule
+              key={r.localId}
+              rule={rule}
+              showAll={showAll}
+              activeLanguage={activeLanguage}
+            />
+          ))}
         </div>
       );
     }

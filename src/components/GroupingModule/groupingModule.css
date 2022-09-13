@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 .groupingList {
   list-style-type: none;
   margin-bottom: 0.5em;
@@ -25,23 +26,46 @@
     }
 
     &:nth-child(even) {
-      background-color: var(--white);
+      background-color: var(--darkwhite);
     }
 
     &:first-child {
       border-top: 0.1em solid var(--silver);
     }
 
+    & > a {
+      margin-left: 0.5em;
+    }
+
     &:last-child {
       margin-bottom: 0.5em;
       border-bottom: 0.1em solid var(--silver);
+
+      & > a {
+        margin-left: 0.5em;
+      }
     }
 
     color: var(--black);
     border-right: 0.1em solid var(--silver);
     border-left: 0.1em solid var(--silver);
-    padding: 0.2em 0.5em;
+    padding: 0.5em 0;
+    margin: 0 0.25em;
   }
+}
+
+.groupingList + .groupingList {
+  margin-top: 2em;
+}
+
+.groupingModule .dropdown {
+  margin: 1.5em 0;
+  border-top: 1px dotted;
+  border-bottom: 1px dotted;
+}
+
+.groupingModule {
+  margin-top: 0.5em;
 }
 
 .groupingModule strong {
@@ -50,10 +74,6 @@
 
 .groupingModule .groupingModule strong {
   font-size: 1.5em;
-}
-
-.groupingModule .groupingModule .groupingModule {
-  padding-left: 1em;
 }
 
 .groupingModule .groupingModule .groupingModule strong {
@@ -67,4 +87,29 @@
 .groupingTitle {
   color: var(--black);
   font-weight: bold;
+  padding: 1em 0 1em 0.25em;
+  display: flex;
+  gap: 0.5em;
+}
+
+.groupingTitle > .moduleCredits {
+  margin-left: auto;
+  margin-right: 1.5em;
+}
+
+.paddingLeft1 {
+  padding-left: 1em;
+}
+
+.paddingLeft05 {
+  padding-left: 0.5em;
+}
+
+.paddingBottom1 {
+  padding-bottom: 1em;
+}
+
+.compositeRuleCourseAmounts {
+  display: flex;
+  padding: 1em 1em 0.5em 1em;
 }

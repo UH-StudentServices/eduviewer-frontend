@@ -16,7 +16,7 @@
  */
 
 import React, { useState } from 'react';
-import { bool } from 'prop-types';
+import { bool, func } from 'prop-types';
 import { withLocalize } from 'react-localize-redux';
 
 import { activeLanguageType, oneOfRulesType } from '../../types';
@@ -24,9 +24,14 @@ import GroupingModule from '../GroupingModule'; // eslint-disable-line
 import { getName } from '../../utils';
 import styles from './accordionModule.css';
 
-const AccordionModule = ({ showAll, rule, activeLanguage }) => {
+const AccordionModule = ({
+  showAll, rule, internalAccordion, activeLanguage, translate
+}) => {
   const [open, setOpen] = useState(false);
-  if (showAll) {
+
+  const lang = activeLanguage.code;
+
+  if (showAll && rule.dataNode.rules) {
     return rule.dataNode.rules.map((r) => (
       <GroupingModule
         key={r.localId}
@@ -37,31 +42,59 @@ const AccordionModule = ({ showAll, rule, activeLanguage }) => {
     ));
   }
 
+  const targetCreditText = () => {
+    const { targetCredits } = rule.dataNode;
+    if (!targetCredits) {
+      return '';
+    }
+
+    if (targetCredits.min === targetCredits.max
+      || targetCredits.max === null) {
+      return `${targetCredits.min} ${translate('creditLabel')}`;
+    }
+    if (!targetCredits.max) {
+      return `${translate('atLeast')} ${targetCredits.min} ${translate('creditLabel')}`;
+    }
+    return `${targetCredits.min}-${targetCredits.max} ${translate('creditLabel')}`;
+  };
+
   return (
-    <>
+    <div className={`${styles.accordionContainer} ${internalAccordion ? styles.internalAccordionContainer : ''}`}>
       <button
         type="button"
-        className={`button--action theme-transparent ${styles.accordionButton} ${open ? 'icon--caret-up' : 'icon--caret-down'}`}
+        className="button--action theme-transparent"
         onClick={() => setOpen(!open)}
       >
-        {getName(rule, activeLanguage.code)}
+        <div className={styles.accordionTitle}>
+          <span className={styles.normalFontWeight}>{rule.dataNode.code}</span>
+          <span className={styles.accordionName}> {getName(rule, lang)}</span>
+          <span className={`${styles.caretIcon} ${open ? 'icon--caret-up' : 'icon--caret-down'}`} />
+        </div>
+        <div className={styles.normalFontWeight}>{targetCreditText()}</div>
       </button>
-      {open && (
+      {open && rule.dataNode.rule && (
         <GroupingModule
-          key={rule.dataNode.rule.localId}
+          key={rule.dataNode.rule?.localId}
           rule={rule.dataNode.rule}
           showAll={showAll}
           activeLanguage={activeLanguage}
+          level={99}
         />
       )}
-    </>
+    </div>
   );
+};
+
+AccordionModule.defaultProps = {
+  internalAccordion: false
 };
 
 AccordionModule.propTypes = {
   rule: oneOfRulesType.isRequired,
   showAll: bool.isRequired,
-  activeLanguage: activeLanguageType.isRequired
+  internalAccordion: bool,
+  activeLanguage: activeLanguageType.isRequired,
+  translate: func.isRequired
 };
 
 export default withLocalize(AccordionModule);
