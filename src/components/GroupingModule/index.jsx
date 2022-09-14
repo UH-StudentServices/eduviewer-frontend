@@ -220,12 +220,7 @@ const GroupingModule = ({
 
   const isEmptyDataNode = Object.keys(groupingModuleRule.dataNode || {}).length === 0;
 
-  if (
-    level === 1
-    && groupingModuleRule.type === MODULE_RULE
-    && !isEmptyDataNode
-    && !showAll
-  ) {
+  if (!isEmptyDataNode && !showAll) {
     return (
       <div key={groupingModuleRule.localId} className={styles.groupingModule}>
         <AccordionModule
