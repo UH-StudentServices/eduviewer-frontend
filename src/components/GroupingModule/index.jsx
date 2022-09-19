@@ -130,7 +130,7 @@ const GroupingModule = ({
           <Fragment key={rule.localId}>
             { requiredCourseAmount
               && <span className={styles.compositeRuleCourseAmounts}>{requiredCourseAmount}</span>}
-            { getDescription(rule, true, activeLanguage.code) }
+            { getDescription(rule, lang, true) }
             <ul className={styles.groupingList}>
               {rule.rules.sort(compareSubRules).map(renderRule)}
             </ul>
