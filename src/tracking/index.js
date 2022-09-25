@@ -28,13 +28,27 @@ export const trackingCategories = {
 
 export const TEST_TRACKING_ID = 'test';
 
+const loadGoogleAnalyticsScript = () => {
+  /* eslint-disable */
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.dataset.cookieconsent='statistics';a.type='text/plain';m.parentNode.appendChild(a)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  /* eslint-enable */
+};
+
 export const initializeTracker = () => {
   const testMode = TRACKING_ID === undefined;
-
+  if (!window.ga) {
+    loadGoogleAnalyticsScript();
+  }
+  window.ga('create', TRACKING_ID, 'auto');
+  window.ga('send', 'pageview');
   ReactGA.initialize(testMode ? TEST_TRACKING_ID : TRACKING_ID, {
     gaOptions: {
       name: TRACKER_NAME
     },
+    standardImplementation: true,
     debug: testMode,
     testMode
   });

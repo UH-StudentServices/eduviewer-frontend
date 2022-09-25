@@ -76,6 +76,7 @@ class Main extends Component {
       showAll: false
     };
 
+    this.componentWillMount = this.componentWillMount.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.handleError = this.handleError.bind(this);
     this.onEducationChange = this.onEducationChange.bind(this);
@@ -89,6 +90,22 @@ class Main extends Component {
     this.renderSelections = this.renderSelections.bind(this);
     this.renderContent = this.renderContent.bind(this);
     this.render = this.render.bind(this);
+  }
+
+  async componentWillMount() {
+    // Insert Cookiebot to header if it is not there already (from embed context),
+    // so that it is present before Google Analytics
+    const { lang } = this.props;
+    if (!document.getElementById('Cookiebot')) {
+      const cbot = document.createElement('script');
+      cbot.setAttribute('id', 'Cookiebot');
+      cbot.setAttribute('src', 'https://consent.cookiebot.com/uc.js');
+      cbot.setAttribute('data-cbid', 'e422c4ee-0ebe-400c-b22b-9c74b6faeac3');
+      cbot.setAttribute('data-blockingmode', 'auto');
+      cbot.setAttribute('type', 'text/javascript');
+      cbot.setAttribute('data-culture', lang);
+      document.head.insertBefore(cbot, document.head.getElementsByTagName('meta')[0]);
+    }
   }
 
   async componentDidMount() {
