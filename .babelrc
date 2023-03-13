@@ -1,6 +1,6 @@
 
 {
-  "plugins": ["react-hot-loader/babel", "transform-class-properties"],
+  "plugins": ["transform-class-properties"],
   "presets": [
     ["@babel/preset-env", {
       "modules": false,

@@ -100,7 +100,8 @@ const GroupingModule = ({
   translate,
   activeLanguage,
   rule: groupingModuleRule,
-  level
+  level,
+  rootDataNode
 }) => {
   if (!groupingModuleRule) {
     return null;
@@ -220,6 +221,23 @@ const GroupingModule = ({
 
   const isEmptyDataNode = Object.keys(groupingModuleRule.dataNode || {}).length === 0;
 
+  if (rootDataNode && !showAll) {
+    const rule = groupingModuleRule;
+    rule.dataNode = rootDataNode;
+    return (
+      <div key={groupingModuleRule.localId} className={styles.groupingModule}>
+        <ul className={styles.groupingList}>
+          <AccordionModule
+            rule={rule}
+            showAll={showAll}
+            internalAccordion={false}
+            startOpen
+          />
+        </ul>
+      </div>
+    );
+  }
+
   if (
     level === 1
     && groupingModuleRule.type === MODULE_RULE
@@ -239,38 +257,49 @@ const GroupingModule = ({
 
   const name = getName(groupingModuleRule, lang);
 
+  let content = (
+    <>
+      {name && (level !== 0 || rootDataNode)
+      && (
+      <strong className={`${styles.groupingTitle} ${styles.paddingLeft1}`}>
+        {moduleCode && <span>{moduleCode} </span>}
+        <span>{name}</span>
+        {moduleCredits && <span className={styles.moduleCredits}>{moduleCredits}</span>}
+      </strong>
+      )}
+      <div>
+        {(level === 99
+          && ONE_OF_FOLLOWING.includes(renderRequiredCourseAmount(groupingModuleRule)))
+          ? (
+            <span className={styles.paddingLeft1}>
+              {renderRequiredCourseAmount(groupingModuleRule)}
+            </span>
+          )
+          : renderRequiredCourseAmount(groupingModuleRule)}
+        {getDescription(groupingModuleRule, lang)}
+        {getSubRules(groupingModuleRule).sort(compareSubRules).map((r) => renderRule(r))}
+      </div>
+    </>
+  );
+
+  // if we start in the middle of the tree the first ul level is missing
+  if (rootDataNode) {
+    content = <ul className={styles.groupingList}>{content}</ul>;
+  }
   return (
     <div
       id={groupingModuleRule.localId}
       key={groupingModuleRule.localId}
       className={styles.groupingModule}
     >
-      {name && level !== 0
-        && (
-          <strong className={`${styles.groupingTitle} ${styles.paddingLeft1}`}>
-            {moduleCode && <span>{moduleCode} </span>}
-            <span>{name}</span>
-            {moduleCredits && <span className={styles.moduleCredits}>{moduleCredits}</span>}
-          </strong>
-        )}
-      <div>
-        {(level === 99
-          && ONE_OF_FOLLOWING.includes(renderRequiredCourseAmount(groupingModuleRule)))
-          ? (
-            <span className={styles.paddingLeft1}>
-              { renderRequiredCourseAmount(groupingModuleRule) }
-            </span>
-          )
-          : renderRequiredCourseAmount(groupingModuleRule)}
-        { getDescription(groupingModuleRule, lang) }
-        { getSubRules(groupingModuleRule).sort(compareSubRules).map((r) => renderRule(r)) }
-      </div>
+      {content}
     </div>
   );
 };
 
 GroupingModule.defaultProps = {
-  level: 0
+  level: 0,
+  rootDataNode: undefined
 };
 
 GroupingModule.propTypes = {
@@ -278,6 +307,7 @@ GroupingModule.propTypes = {
   rule: shape({}).isRequired,
   translate: func.isRequired,
   activeLanguage: activeLanguageType.isRequired,
+  rootDataNode: shape({}),
   level: number
 };
 

@@ -32,4 +32,4 @@ export const availableLanguages = {
 
 export const NO_DEGREE_PROGRAM_CODE = 'no_degree_programme';
 
-export const NO_EDUCATION_HIERARCHY = {};
+export const NO_MODULE_HIERARCHY = {};

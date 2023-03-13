@@ -18,31 +18,39 @@
 import React from 'react';
 import { bool } from 'prop-types';
 import { withLocalize } from 'react-localize-redux';
-import { activeLanguageType, degreeProgramType } from '../../types';
+import { activeLanguageType, rootModuleType } from '../../types';
 
 import GroupingModule from '../GroupingModule';
 
-import styles from './degreeProgram.css';
+import styles from './rootModule.css';
 import { getLocalizedText } from '../../utils';
 
-const DegreeProgram = ({
+const RootModule = ({
   showAll,
   showContent,
-  degreeProgram,
+  module,
   activeLanguage
 }) => {
   if (!showContent) {
     return null;
   }
 
-  const { name, rule } = degreeProgram;
+  const { name, rule } = module;
+  const isDegreeProgramme = module.type === 'DegreeProgramme';
+
   return (
-    <div className={styles.degreeProgram}>
-      <h3 className={styles.degreeProgramTitle}>{getLocalizedText(name, activeLanguage.code)}</h3>
+    <div className={styles.roodModule}>
+      {isDegreeProgramme
+        && (
+          <h3 className={styles.rootModuleTitle}>
+            {getLocalizedText(name, activeLanguage.code)}
+          </h3>
+        )}
       <div className={styles.moduleGroups}>
         <GroupingModule
           key={rule.localId}
           rule={rule}
+          rootDataNode={!isDegreeProgramme && module}
           showAll={showAll}
           activeLanguage={activeLanguage}
         />
@@ -51,11 +59,11 @@ const DegreeProgram = ({
   );
 };
 
-DegreeProgram.propTypes = {
-  degreeProgram: degreeProgramType.isRequired,
+RootModule.propTypes = {
+  module: rootModuleType.isRequired,
   showAll: bool.isRequired,
   showContent: bool.isRequired,
   activeLanguage: activeLanguageType.isRequired
 };
 
-export default withLocalize(DegreeProgram);
+export default withLocalize(RootModule);
