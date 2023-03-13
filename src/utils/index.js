@@ -35,6 +35,8 @@ const getMinMaxString = (min, max, showMinRequirement = false) => {
   return minMaxString;
 };
 
+const isModuleEducation = (module) => module.type === 'Education';
+
 export const creditsToString = (credits, translate, showMinSPRequirement = false) => {
   if (!credits) {
     return null;
@@ -106,6 +108,7 @@ export const calculateCurrentLV = () => {
   return `hy-lv-${lvYearCode}`;
 };
 
-export const getDegreeProgramCode = (education) => education.dataNode?.code || null;
+export const getCode = (module) => (isModuleEducation(module)
+  && module.dataNode?.code) || module.code;
 
 export const getStudiesCourseUnitPageUrl = (cuId) => `${STUDIES_CU_PAGE_BASE_URL}${cuId}`;

@@ -50,13 +50,7 @@ export const rulesType = shape({
 
 export const oneOfRulesType = oneOfType([ruleType, rulesType]);
 
-export const dataNodeType = shape({
-  code: string,
-  name: localizedTextType,
-  rule: oneOfRulesType
-});
-
-export const degreeProgramType = shape({
+export const rootModuleType = shape({
   name: localizedTextType.isRequired,
   rule: oneOfRulesType.isRequired
 });
