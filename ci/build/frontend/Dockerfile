@@ -9,5 +9,3 @@ RUN touch /etc/nginx/conf.d/default.conf \
 WORKDIR /usr/src/app
 COPY ./dist .
 COPY ci/build/frontend/nginx.conf.template /etc/nginx/conf.d/nginx.conf.template
-
-USER 101
