@@ -25,9 +25,9 @@ import { getName } from '../../utils';
 import styles from './accordionModule.css';
 
 const AccordionModule = ({
-  showAll, rule, internalAccordion, activeLanguage, translate
+  showAll, rule, internalAccordion, activeLanguage, translate, startOpen
 }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(startOpen);
 
   const lang = activeLanguage.code;
 
@@ -86,7 +86,8 @@ const AccordionModule = ({
 };
 
 AccordionModule.defaultProps = {
-  internalAccordion: false
+  internalAccordion: false,
+  startOpen: false
 };
 
 AccordionModule.propTypes = {
@@ -94,7 +95,8 @@ AccordionModule.propTypes = {
   showAll: bool.isRequired,
   internalAccordion: bool,
   activeLanguage: activeLanguageType.isRequired,
-  translate: func.isRequired
+  translate: func.isRequired,
+  startOpen: bool
 };
 
 export default withLocalize(AccordionModule);

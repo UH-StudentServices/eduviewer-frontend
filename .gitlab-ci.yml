@@ -53,10 +53,10 @@ build_image_manual:
   <<: *build_image_definition
   when: manual
 
-provision_dev:
-  variables:
-    ENVIRONMENT: "dev"
-  <<: *provision_definition
+#provision_dev:
+#  variables:
+#    ENVIRONMENT: "dev"
+#  <<: *provision_definition
 
 provision_qa:
   variables:
@@ -68,20 +68,20 @@ provision_prod:
     ENVIRONMENT: "prod"
   <<: *provision_definition
 
-deploy_dev:
-  variables:
-    HOST: "eduviewer-dev.it.helsinki.fi"
-    ENVR: "dev"
-  only:
-    - master
-  <<: *deploy_definition
+#deploy_dev:
+#  variables:
+#    HOST: "eduviewer-dev.it.helsinki.fi"
+#    ENVR: "dev"
+#  only:
+#    - master
+#  <<: *deploy_definition
 
-deploy_dev_manual:
-  variables:
-    HOST: "eduviewer-dev.it.helsinki.fi"
-    ENVR: "dev"
-  when: manual
-  <<: *deploy_definition
+#deploy_dev_manual:
+#  variables:
+#    HOST: "eduviewer-dev.it.helsinki.fi"
+#    ENVR: "dev"
+#  when: manual
+#  <<: *deploy_definition
 
 deploy_qa:
   variables:

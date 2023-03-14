@@ -18,24 +18,10 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const WebpackMd5Hash = require('webpack-md5-hash');
-const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const { createVariants } = require('parallel-webpack');
-const HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin');
 const ESLintWebpackPlugin = require('eslint-webpack-plugin');
 
-const isDevelopment = process.env.NODE_ENV === 'development';
-
-const baseOptions = {
-  isDevelopment
-};
-
 const defaultTarget = 'var';
-
-const variants = {
-  target: isDevelopment ? [defaultTarget] : [defaultTarget, 'commonjs2', 'umd', 'amd']
-};
 
 const getHtmlFileName = (target, lang) => {
   const isDefaultTarget = target === defaultTarget;
@@ -64,10 +50,7 @@ const miniCssExtractPlugin = new MiniCssExtractPlugin({
   filename: 'styles.css'
 });
 
-const webpackMd5Hash = new WebpackMd5Hash();
-const reactHotLoader = new webpack.HotModuleReplacementPlugin();
 const cleanWebPackPlugin = new CleanWebpackPlugin('dist', [{}]);
-const htmlWebpackExcludeAssetsPlugin = new HtmlWebpackExcludeAssetsPlugin();
 
 const devServerConfig = {
   port: 8080
@@ -77,14 +60,14 @@ const createConfig = (options) => ({
   context: path.join(__dirname, 'src'),
   entry: [
     '@babel/polyfill',
-    'react-hot-loader/patch',
     './app'
   ],
   output: {
     path: path.resolve(__dirname, 'dist'),
-    publicPath: options.isDevelopment ? 'dist' : '',
+    publicPath: '',
     filename: `eduviewer.${options.target}.js`,
-    libraryTarget: options.target
+    libraryTarget: options.target,
+    library: `eduviewer_${options.target}`
   },
   resolve: {
     extensions: ['.js', '.jsx']
@@ -122,10 +105,11 @@ const createConfig = (options) => ({
           {
             loader: 'css-loader',
             options: {
-              modules: true,
+              modules: {
+                localIdentName: "[name]__[local]___[hash:base64:5]",
+              },
               sourceMap: true,
-              importLoaders: 1,
-              localIdentName: '[name]__[local]___[hash:base64:5]'
+              importLoaders: 1
             }
           },
 
@@ -158,10 +142,7 @@ const createConfig = (options) => ({
     getHtmlPlugin(options.target),
     getHtmlPlugin(options.target, 'en'),
     getHtmlPlugin(options.target, 'sv'),
-    htmlWebpackExcludeAssetsPlugin,
     miniCssExtractPlugin,
-    reactHotLoader,
-    webpackMd5Hash,
     cleanWebPackPlugin,
     new ESLintWebpackPlugin()
   ],
@@ -169,4 +150,15 @@ const createConfig = (options) => ({
   devtool: 'eval-source-map'
 });
 
-module.exports = createVariants(baseOptions, variants, createConfig);
+
+module.exports = (env, argv) => {
+  const isDevelopment = argv.mode === 'development';
+  const variants = isDevelopment ? [defaultTarget] : [defaultTarget, 'commonjs2', 'umd', 'amd'];
+  const variantConfigs = [];
+
+  for(const variant of variants) {
+    const options = { target: variant };
+    variantConfigs.push(createConfig(options));
+  }
+  return variantConfigs;
+}

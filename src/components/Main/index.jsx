@@ -27,30 +27,30 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import {
   getEducations,
   getAcademicYearNames,
-  getAcademicYearsByDegreeProgramCode,
-  getEducationHierarchy
+  getAcademicYearsByCode,
+  getModuleHierarchy
 } from '../../api';
 
-import DegreeProgram from '../DegreeProgram';
+import RootModule from '../RootModule';
 import LoaderDropdown from '../LoaderDropdown';
 
 import styles from './main.css';
 import ToggleSelect from '../ToggleSelect';
 import {
-  availableLanguages, NO_DEGREE_PROGRAM_CODE, NO_EDUCATION_HIERARCHY
+  availableLanguages, NO_DEGREE_PROGRAM_CODE, NO_MODULE_HIERARCHY
 } from '../../constants';
 import ErrorMessage from '../ErrorMessage';
 import Loader from '../Loader';
-import { getDegreeProgramCode, getLocalizedText } from '../../utils';
+import { getCode, getLocalizedText } from '../../utils';
 import { trackEvent, trackingCategories, trackPageView } from '../../tracking';
 
 import translation from '../../i18n/translations.json';
 
-const fetchEducationHierarchy = async (degreeProgramCode, academicYear) => {
+const fetchModuleHierarchy = async (code, academicYear) => {
   if (academicYear) {
-    return getEducationHierarchy(degreeProgramCode, academicYear);
+    return getModuleHierarchy(code, academicYear);
   }
-  return NO_EDUCATION_HIERARCHY;
+  return NO_MODULE_HIERARCHY;
 };
 
 class Main extends Component {
@@ -71,12 +71,13 @@ class Main extends Component {
       academicYears: [],
       academicYearNames: {},
       isLoading: false,
-      educationHierarchy: NO_EDUCATION_HIERARCHY,
+      moduleHierarchy: NO_MODULE_HIERARCHY,
       academicYear: '',
       showAll: false
     };
 
-    this.componentWillMount = this.componentWillMount.bind(this);
+    /* eslint-disable camelcase */
+    this.UNSAFE_componentWillMount = this.UNSAFE_componentWillMount.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.handleError = this.handleError.bind(this);
     this.onEducationChange = this.onEducationChange.bind(this);
@@ -85,14 +86,16 @@ class Main extends Component {
     this.getAcademicYear = this.getAcademicYear.bind(this);
     this.initAcademicYears = this.initAcademicYears.bind(this);
     this.initAllSelects = this.initAllSelects.bind(this);
-    this.initAcademicYearsForDegreeProgram = this.initAcademicYearsForDegreeProgram.bind(this);
+    this.initAcademicYearsForModule = this.initAcademicYearsForModule.bind(this);
     this.initSpecificView = this.initSpecificView.bind(this);
     this.renderSelections = this.renderSelections.bind(this);
     this.renderContent = this.renderContent.bind(this);
     this.render = this.render.bind(this);
   }
 
-  async componentWillMount() {
+  // TODO deprecated: "Move code with side effects to componentDidMount,
+  // and set initial state in the constructor."
+  async UNSAFE_componentWillMount() {
     // Insert Cookiebot to header if it is not there already (from embed context),
     // so that it is present before Google Analytics
     const { lang } = this.props;
@@ -110,7 +113,7 @@ class Main extends Component {
 
   async componentDidMount() {
     const {
-      degreeProgramCode,
+      code,
       academicYearCode,
       lang,
       onlySelectedAcademicYear
@@ -118,18 +121,18 @@ class Main extends Component {
     this.setState({ isLoading: true });
     await this.initAcademicYears(academicYearCode);
 
-    if (degreeProgramCode && onlySelectedAcademicYear) {
-      await this.initSpecificView(degreeProgramCode);
-    } else if (degreeProgramCode) {
-      await this.initAcademicYearsForDegreeProgram(degreeProgramCode);
+    if (code && onlySelectedAcademicYear) {
+      await this.initSpecificView(code);
+    } else if (code) {
+      await this.initAcademicYearsForModule(code);
     } else {
       await this.initAllSelects();
     }
     this.setState({ isLoading: false });
 
     const { academicYearNames, academicYear } = this.state;
-    const trackingDegreeProgramCode = degreeProgramCode || NO_DEGREE_PROGRAM_CODE;
-    trackPageView(trackingDegreeProgramCode, academicYearNames[academicYear], lang);
+    const trackingCode = code || NO_DEGREE_PROGRAM_CODE;
+    trackPageView(trackingCode, academicYearNames[academicYear], lang);
   }
 
   handleError(error) {
@@ -138,15 +141,15 @@ class Main extends Component {
 
   async onEducationChange(event) {
     this.setState({ isLoading: true, errorMessage: '' });
-    const degreeProgramCode = event.target.value;
+    const code = event.target.value;
     try {
-      const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgramCode);
+      const academicYears = await getAcademicYearsByCode(code);
       const academicYear = this.getAcademicYear(academicYears);
-      const educationHierarchy = await fetchEducationHierarchy(degreeProgramCode, academicYear);
+      const moduleHierarchy = await fetchModuleHierarchy(code, academicYear);
 
-      trackEvent(trackingCategories.SELECT_EDUCATION_HIERARCHY, degreeProgramCode);
+      trackEvent(trackingCategories.SELECT_EDUCATION_HIERARCHY, code);
       this.setState({
-        educationHierarchy,
+        moduleHierarchy,
         academicYear,
         academicYears,
         isLoading: false
@@ -157,16 +160,16 @@ class Main extends Component {
   }
 
   async onAcademicYearsChange(event) {
-    const { educationHierarchy } = this.state;
+    const { moduleHierarchy } = this.state;
     this.setState({ isLoading: true, errorMessage: '' });
     const academicYear = event.target.value;
-    const degreeProgramCode = getDegreeProgramCode(educationHierarchy);
+    const code = getCode(moduleHierarchy);
     try {
-      const newEducationHierarchy = await getEducationHierarchy(degreeProgramCode, academicYear);
+      const newModuleHierarchy = await getModuleHierarchy(code, academicYear);
       const { academicYearNames } = this.state;
       trackEvent(trackingCategories.SELECT_ACADEMIC_YEAR, academicYearNames[academicYear]);
       this.setState({
-        educationHierarchy: newEducationHierarchy,
+        moduleHierarchy: newModuleHierarchy,
         academicYear,
         isLoading: false
       });
@@ -201,15 +204,15 @@ class Main extends Component {
     try {
       const educations = await getEducations();
 
-      const { degreeProgrammeCode } = educations[0];
+      const { degreeProgrammeCode: code } = educations[0];
 
-      const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgrammeCode);
+      const academicYears = await getAcademicYearsByCode(code);
       const academicYear = this.getAcademicYear(academicYears);
-      const educationHierarchy = await fetchEducationHierarchy(degreeProgrammeCode, academicYear);
+      const moduleHierarchy = await fetchModuleHierarchy(code, academicYear);
 
       this.setState({
         educations,
-        educationHierarchy,
+        moduleHierarchy,
         academicYear,
         academicYears
       });
@@ -218,34 +221,34 @@ class Main extends Component {
     }
   }
 
-  async initAcademicYearsForDegreeProgram(degreeProgramCode) {
+  async initAcademicYearsForModule(code) {
     try {
-      const academicYears = await getAcademicYearsByDegreeProgramCode(degreeProgramCode);
+      const academicYears = await getAcademicYearsByCode(code);
 
       const academicYear = this.getAcademicYear(academicYears);
-      const educationHierarchy = await fetchEducationHierarchy(degreeProgramCode, academicYear);
+      const moduleHierarchy = await fetchModuleHierarchy(code, academicYear);
 
       this.setState({
         academicYear,
         academicYears,
-        educationHierarchy
+        moduleHierarchy
       });
     } catch (error) {
       this.handleError(error);
     }
   }
 
-  async initSpecificView(degreeProgramCode) {
+  async initSpecificView(code) {
     const { defaultAcademicYearCode } = this.state;
     try {
-      const educationHierarchy = await getEducationHierarchy(
-        degreeProgramCode,
+      const moduleHierarchy = await getModuleHierarchy(
+        code,
         defaultAcademicYearCode
       );
 
       this.setState({
         academicYear: defaultAcademicYearCode,
-        educationHierarchy
+        moduleHierarchy
       });
     } catch (error) {
       this.handleError(error);
@@ -254,7 +257,7 @@ class Main extends Component {
 
   renderSelections() {
     const {
-      educationHierarchy,
+      moduleHierarchy,
       educations,
       academicYears,
       academicYearNames,
@@ -264,7 +267,7 @@ class Main extends Component {
     } = this.state;
 
     const {
-      degreeProgramCode,
+      code,
       translate,
       lang,
       onlySelectedAcademicYear
@@ -286,11 +289,11 @@ class Main extends Component {
     return (
       <div className={styles.selectContainer}>
         {
-          !degreeProgramCode
+          !code
             && (
               <LoaderDropdown
                 id={EDUCATIONS_ID}
-                value={getDegreeProgramCode(educationHierarchy)}
+                value={getCode(moduleHierarchy)}
                 onChange={this.onEducationChange}
                 options={educationOptions}
                 label={educationsLabel}
@@ -299,7 +302,7 @@ class Main extends Component {
             )
         }
         {
-          (degreeProgramCode && onlySelectedAcademicYear)
+          (code && onlySelectedAcademicYear)
             ? (
               <div className={styles.academicYearContainer}>
                 <div className={styles.academicYearLabel}>
@@ -332,33 +335,40 @@ class Main extends Component {
 
   renderContent() {
     const {
-      educationHierarchy, academicYear, showAll, errorMessage, isLoading
+      moduleHierarchy, academicYear, showAll, errorMessage, isLoading
     } = this.state;
 
     if (isLoading) {
       return <Loader />;
     }
 
-    const degreeProgramCode = getDegreeProgramCode(educationHierarchy);
+    const moduleCode = getCode(moduleHierarchy);
 
     const hasContent = !isLoading
       && academicYear
-      && educationHierarchy.name
-      && degreeProgramCode;
+      && moduleHierarchy.name
+      && moduleCode;
+
+    const getModule = (code, hierarchy, show, errorMsg) => {
+      const module = hierarchy.type === 'Education' ? moduleHierarchy.dataNode : moduleHierarchy;
+      return (
+        <RootModule
+          key={code}
+          module={module}
+          showAll={show}
+          showContent={!errorMsg}
+        />
+      );
+    };
+
+    const module = getModule(moduleCode, moduleHierarchy, showAll, errorMessage);
 
     return (
       <div>
         {errorMessage && <ErrorMessage errorMessage={errorMessage} /> }
         {
           hasContent
-            ? (
-              <DegreeProgram
-                key={degreeProgramCode}
-                degreeProgram={educationHierarchy.dataNode}
-                showAll={showAll}
-                showContent={!errorMessage}
-              />
-            )
+            ? module
             : <div className={styles.noContent}><Translate id="noDegreeProgramToShow" /></div>
         }
       </div>
@@ -381,7 +391,7 @@ class Main extends Component {
 
 Main.propTypes = {
   academicYearCode: string.isRequired,
-  degreeProgramCode: string.isRequired,
+  code: string.isRequired,
   onlySelectedAcademicYear: bool.isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
   lang: oneOf(Object.values(availableLanguages)).isRequired,

@@ -18,7 +18,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { LocalizeProvider } from 'react-localize-redux';
-import { AppContainer } from 'react-hot-loader';
 import { initializeTracker } from './tracking';
 import Main from './components/Main';
 
@@ -29,7 +28,9 @@ import { calculateCurrentLV } from './utils';
 
 const EDUVIEWER_ROOT_ID = 'eduviewer-root';
 const LANGUAGE_ATTR_NAME = 'lang';
+// this is deprecated but supported for legacy reasons, same as module-code but meaning has changed
 const DEGREE_PROGRAM_ATTR_NAME = 'degree-program-id';
+const MODULE_ATTR_NAME = 'module-code';
 const ACADEMIC_YEAR_ATTR_NAME = 'academic-year';
 const ONLY_SELECTED_YEAR_ATTR_NAME = 'only-selected-academic-year';
 const HEADER_ATTR_NAME = 'header';
@@ -42,7 +43,7 @@ const getRootAttribute = (attributeName) => {
 };
 
 const render = () => {
-  const degreeProgramCode = getRootAttribute(DEGREE_PROGRAM_ATTR_NAME) || '';
+  const code = getRootAttribute(DEGREE_PROGRAM_ATTR_NAME) || getRootAttribute(MODULE_ATTR_NAME) || '';
   const academicYearCode = getRootAttribute(ACADEMIC_YEAR_ATTR_NAME) || calculateCurrentLV();
   const onlySelectedAYValue = getRootAttribute(ONLY_SELECTED_YEAR_ATTR_NAME);
   const showOnlySelectedAcademicYear = onlySelectedAYValue !== null && onlySelectedAYValue.toLowerCase() !== 'false';
@@ -50,17 +51,17 @@ const render = () => {
   const header = getRootAttribute(HEADER_ATTR_NAME) || '';
 
   ReactDOM.render(
-    <AppContainer>
+    <>
       <LocalizeProvider>
         <Main
-          degreeProgramCode={degreeProgramCode}
+          code={code}
           academicYearCode={academicYearCode}
           onlySelectedAcademicYear={showOnlySelectedAcademicYear}
           lang={lang}
           header={header}
         />
       </LocalizeProvider>
-    </AppContainer>,
+    </>,
     getRoot()
   );
 };
