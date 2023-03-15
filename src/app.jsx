@@ -33,6 +33,9 @@ const DEGREE_PROGRAM_ATTR_NAME = 'degree-program-id';
 const MODULE_ATTR_NAME = 'module-code';
 const ACADEMIC_YEAR_ATTR_NAME = 'academic-year';
 const ONLY_SELECTED_YEAR_ATTR_NAME = 'only-selected-academic-year';
+// Alternate value for ONLY_SELECTED_YEAR_ATTR_NAME for use with React
+// Unknown values starting with "on" are not allowed in React
+const SELECTED_YEAR__ONLY_ATTR_NAME = 'selected-academic-year-only';
 const HEADER_ATTR_NAME = 'header';
 const DISABLE_GLOBAL_STYLES_ATTR_NAME = 'disable-global-style';
 
@@ -45,7 +48,8 @@ const getRootAttribute = (attributeName) => {
 const render = () => {
   const code = getRootAttribute(DEGREE_PROGRAM_ATTR_NAME) || getRootAttribute(MODULE_ATTR_NAME) || '';
   const academicYearCode = getRootAttribute(ACADEMIC_YEAR_ATTR_NAME) || calculateCurrentLV();
-  const onlySelectedAYValue = getRootAttribute(ONLY_SELECTED_YEAR_ATTR_NAME);
+  const onlySelectedAYValue = getRootAttribute(ONLY_SELECTED_YEAR_ATTR_NAME)
+    || getRootAttribute(SELECTED_YEAR__ONLY_ATTR_NAME);
   const showOnlySelectedAcademicYear = onlySelectedAYValue !== null && onlySelectedAYValue.toLowerCase() !== 'false';
   const lang = getRootAttribute(LANGUAGE_ATTR_NAME) || availableLanguages.FI;
   const header = getRootAttribute(HEADER_ATTR_NAME) || '';
