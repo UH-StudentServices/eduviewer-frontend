@@ -36,7 +36,7 @@ test_and_build:
 
 .build_push: &build_push
   stage: build_image
-  steps:
+  script:
     - sed 's/${SERVER_NAME}/$SERVER_NAME/g' ci/build/frontend/nginx.conf.template > ./default.conf
     - docker login -u="$REGISTRY_USER" -p="$REGISTRY_TOKEN" $REGISTRY_URL
     - docker build -f ci/build/frontend/Dockerfile2 -t $REGISTRY_URL/tike/eduviewer-frontend:$CI_COMMIT_SHA .
