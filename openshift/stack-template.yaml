@@ -48,7 +48,6 @@ objects:
           containers:
             - name: ${STACK}-frontend
               image: " " # Image is read from ImageStreamTag, defined in metadata.annotations
-              command: /bin/sh -c "envsubst '$${SERVER_NAME}' < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
               env:
                 - name: SERVER_NAME
                   value: ${SERVER_NAME}

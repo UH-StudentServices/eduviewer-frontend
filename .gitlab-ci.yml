@@ -22,7 +22,7 @@ test_and_build:
   image: williamyeh/ansible:alpine3
   stage: deploy
   script:
-   - ci/deploy/deploy.sh $CI_COMMIT_SHA $HOST
+    - ci/deploy/deploy.sh $CI_COMMIT_SHA $HOST
   environment:
     name: $ENVR
     url: https://$HOST
@@ -32,6 +32,14 @@ test_and_build:
   script:
     - docker login -u="$REGISTRY_USER" -p="$REGISTRY_TOKEN" $REGISTRY_URL
     - docker build -f ci/build/frontend/Dockerfile -t $REGISTRY_URL/tike/eduviewer-frontend:$CI_COMMIT_SHA .
+    - docker push $REGISTRY_URL/tike/eduviewer-frontend:$CI_COMMIT_SHA
+
+.build_image_template2: &build_image_definition2
+  stage: build_image
+  script:
+    - docker login -u="$REGISTRY_USER" -p="$REGISTRY_TOKEN" $REGISTRY_URL
+    - envsubst '$${SERVER_NAME}' < ./ci/build/frontend/nginx.conf.template > ./default.conf
+    - docker build -f ci/build/frontend/Dockerfile2 -t $REGISTRY_URL/tike/eduviewer-frontend:$CI_COMMIT_SHA .
     - docker push $REGISTRY_URL/tike/eduviewer-frontend:$CI_COMMIT_SHA
 
 .provision_template: &provision_definition
@@ -48,6 +56,11 @@ build_image:
   <<: *build_image_definition
   only:
     - master
+
+build_openshift:
+  <<: *build_image_definition2
+  only:
+    - EDVWR-98-openshift
 
 build_image_manual:
   <<: *build_image_definition
