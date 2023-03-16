@@ -42,14 +42,14 @@ test_and_build:
     - docker build -f ci/build/frontend/Dockerfile2 -t $REGISTRY_URL/tike/eduviewer-frontend:$CI_COMMIT_SHA .
     - docker push $REGISTRY_URL/tike/eduviewer-frontend:$CI_COMMIT_SHA
 
-.build_image_openshift_qa:
+build_image_openshift_qa:
   only:
     - EDVWR-98-openshift
   variables:
     SERVER_NAME: eduviewer.it.helsinki.fi
   <<: *build_push
 
-.build_image_openshift_prod:
+build_image_openshift_prod:
   only:
     - never
   variables:
