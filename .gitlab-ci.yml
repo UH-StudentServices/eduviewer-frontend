@@ -46,7 +46,7 @@ build_image_openshift_qa:
   only:
     - EDVWR-98-openshift
   variables:
-    SERVER_NAME: eduviewer.it.helsinki.fi
+    SERVER_NAME: eduviewer-qa.it.helsinki.fi
   <<: *build_push
 
 build_image_openshift_prod:
