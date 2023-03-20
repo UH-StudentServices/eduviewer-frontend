@@ -48,20 +48,9 @@ objects:
           containers:
             - name: ${STACK}-frontend
               image: " " # Image is read from ImageStreamTag, defined in metadata.annotations
-              env:
-                - name: SERVER_NAME
-                  value: ${SERVER_NAME}
               ports:
                 - containerPort: 8080
                   name: http
-              volumeMounts:
-                - name: ssl-volume
-                  readOnly: true
-                  mountPath: "/etc/ssl"
-          volumes:
-            - name: ssl-volume
-              secret:
-                secretName: ssl-secret-${STAGE}
 
   - kind: ImageStream
     apiVersion: image.openshift.io/v1
@@ -76,8 +65,7 @@ objects:
     metadata:
       <<: *frontend_resource_metadata
     spec:
-      host: ${HOST}
-      path: /
+      host: qa-frontend.apps.ocp-test-0.k8s.it.helsinki.fi
       to:
         kind: Service
         name: ${STACK}-frontend
@@ -109,6 +97,4 @@ parameters:
   - name: STACK
     value: qa
   - name: HOST
-    value: eduviewer.apps.ocp-test-0.k8s.it.helsinki.fi
-  - name: SERVER_NAME
-    value: eduviewer.apps.ocp-test-0.k8s.it.helsinki.fi
+    value: eduviewer-qa.it.helsinki.fi
