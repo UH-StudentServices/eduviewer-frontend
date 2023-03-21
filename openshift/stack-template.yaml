@@ -72,6 +72,9 @@ objects:
       tls:
         termination: edge
         insecureEdgeTerminationPolicy: Redirect
+        key: ${TLS_KEY}
+        certificate: ${TLS_CERTIFICATE}
+        caCertificate: ${TLS_CA_CERTIFICATE}
 
   - kind: Service
     apiVersion: v1
@@ -98,3 +101,9 @@ parameters:
     value: qa
   - name: HOST
     value: eduviewer-qa.it.helsinki.fi
+  - name: TLS_KEY
+    value: ""
+  - name: TLS_CERTIFICATE
+    value: ""
+  - name: TLS_CA_CERTIFICATE
+    value: ""
