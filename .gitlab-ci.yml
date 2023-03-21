@@ -128,9 +128,10 @@ push_master_to_github:
   <<: *openshift_image_definition
   stage: provision
   script:
-    - export TLS_KEY=$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_KEY}')
-    - export TLS_CERTIFICATE=$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CERTIFICATE}')
-    - export TLS_CA_CERTIFICATE=$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CA_CERTIFICATE}')
+    - oc login --server=$OC_SERVER --token=$OC_SA_TOKEN
+    - export TLS_KEY=$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_KEY}' | base64 --decode)
+    - export TLS_CERTIFICATE=$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CERTIFICATE}' | base64 --decode)
+    - export TLS_CA_CERTIFICATE=$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CA_CERTIFICATE}' | base64 --decode)
     - >-
       oc process -f ./openshift
       -p NAMESPACE=$OC_NAMESPACE
@@ -191,8 +192,8 @@ build_image_openshift_prod:
 .deploy_image_openshift: &deploy_image_openshift_scripts
   - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
   - oc login --server=$OC_SERVER --token=$OC_SA_TOKEN
-  - oc tag ${IMAGE_REPOSITORY}:${CI_COMMIT_SHA} ${OC_STACK}-${OC_SERVICE_NAME}:${CI_COMMIT_SHA}
-  - oc tag ${IMAGE_REPOSITORY}:${CI_COMMIT_SHA} ${OC_STACK}-${OC_SERVICE_NAME}:latest
+  - oc tag ${IMAGE_REPOSITORY}:${CI_COMMIT_SHA} ${OC_IMAGE_STREAM}:${CI_COMMIT_SHA}
+  - oc tag ${IMAGE_REPOSITORY}:${CI_COMMIT_SHA} ${OC_IMAGE_STREAM}:latest
 
 deploy_image_openshift_qa:
   <<: *openshift_image_definition
@@ -200,7 +201,7 @@ deploy_image_openshift_qa:
   only:
     - EDVWR-98-openshift
   variables:
-    SERVER_NAME: eduviewer-qa.it.helsinki.fi
+    OC_IMAGE_STREAM: qa-frontend
   script:
     - *deploy_image_openshift_scripts
 
@@ -210,6 +211,6 @@ deploy_image_openshift_prod:
   only:
     - never
   variables:
-    SERVER_NAME: eduviewer.it.helsinki.fi
+    OC_IMAGE_STREAM: prod-frontend
   script:
     - *deploy_image_openshift_scripts
