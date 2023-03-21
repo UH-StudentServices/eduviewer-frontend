@@ -141,11 +141,12 @@ push_master_to_github:
       -p TLS_KEY=$TLS_KEY
       -p TLS_CERTIFICATE=$TLS_CERTIFICATE
       -p TLS_CA_CERTIFICATE=$TLS_CA_CERTIFICATE
-      \| oc apply -f -
+      | oc apply -f -
   when: manual
 
 provision_openshift_stack_qa:
   variables:
+    OC_SERVER: $OC_SERVER_TEST
     OC_NAMESPACE: eduviewer
     OC_STAGE: qa
     OC_STACK: qa
@@ -155,6 +156,7 @@ provision_openshift_stack_qa:
 
 provision_openshift_stack_prod:
   variables:
+    OC_SERVER: OC_SERVER_PROD
     OC_NAMESPACE: eduviewer
     OC_STAGE: prod
     OC_STACK: prod
@@ -201,6 +203,7 @@ deploy_image_openshift_qa:
   only:
     - EDVWR-98-openshift
   variables:
+    OC_SERVER: $OC_SERVER_TEST
     OC_IMAGE_STREAM: qa-frontend
   script:
     - *deploy_image_openshift_scripts
@@ -211,6 +214,7 @@ deploy_image_openshift_prod:
   only:
     - never
   variables:
+    OC_SERVER: $OC_SERVER_PROD
     OC_IMAGE_STREAM: prod-frontend
   script:
     - *deploy_image_openshift_scripts
