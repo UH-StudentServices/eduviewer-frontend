@@ -69,18 +69,12 @@ const ACCORDION_MODULES = [
   ...FOREIGN_LANGUAGE_DROPDOWN_MODULES
 ];
 
-const getDescription = (rule, lang, isCompositeRule = false) => {
-  const { description: ruleDesc, dataNode, allMandatory } = rule;
-  const nodeDesc = dataNode && dataNode.description;
-
-  const description = ruleDesc || nodeDesc;
-  const renderDescription = !(isCompositeRule && allMandatory);
-
-  if (!description || !renderDescription) {
-    return null;
+const getDescription = (rule, lang) => {
+  const { description: ruleDesc } = rule;
+  if (ruleDesc) {
+    return <InfoBox content={getLocalizedText(ruleDesc, lang)} setInnerHtml />;
   }
-
-  return <InfoBox content={getLocalizedText(description, lang)} setInnerHtml />;
+  return null;
 };
 
 const getSubRules = (rule) => {
@@ -131,7 +125,7 @@ const GroupingModule = ({
           <Fragment key={rule.localId}>
             { requiredCourseAmount
               && <span className={styles.compositeRuleCourseAmounts}>{requiredCourseAmount}</span>}
-            { getDescription(rule, lang, true) }
+            { getDescription(rule, lang) }
             <ul className={styles.groupingList}>
               {rule.rules.sort(compareSubRules).map(renderRule)}
             </ul>
