@@ -142,6 +142,7 @@ push_master_to_github:
       -p TLS_CERTIFICATE=$TLS_CERTIFICATE
       -p TLS_CA_CERTIFICATE=$TLS_CA_CERTIFICATE
       | oc apply -f -
+    - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
     - oc tag ${IMAGE_REPOSITORY}:${CI_COMMIT_SHA} ${OC_IMAGE_STREAM}:${CI_COMMIT_SHA}
     - oc tag ${IMAGE_REPOSITORY}:${CI_COMMIT_SHA} ${OC_IMAGE_STREAM}:latest
   when: manual
@@ -155,6 +156,7 @@ provision_openshift_stack_qa:
     OC_STACK: qa
     OC_HOST: eduviewer-qa.it.helsinki.fi
     OC_TLS_SECRET: eduviewer-tls-secret-qa
+    OC_IMAGE_STREAM: qa-frontend
   <<: *provision_openshift_stack_definition
 
 provision_openshift_stack_prod:
@@ -166,6 +168,7 @@ provision_openshift_stack_prod:
     OC_STACK: prod
     OC_HOST: eduviewer.it.helsinki.fi
     OC_TLS_SECRET: eduviewer-tls-secret-prod
+    OC_IMAGE_STREAM: prod-frontend
   <<: *provision_openshift_stack_definition
 
 .build_push_image_openshift: &build_push_image_openshift_scripts
