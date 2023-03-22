@@ -161,7 +161,7 @@ provision_openshift_stack_qa:
 
 provision_openshift_stack_prod:
   variables:
-    OC_SERVER: OC_SERVER_PROD
+    OC_SERVER: $OC_SERVER_PROD
     OC_SA_TOKEN: $OC_SA_TOKEN_PROD
     OC_NAMESPACE: eduviewer
     OC_STAGE: prod
