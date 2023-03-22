@@ -65,7 +65,7 @@ objects:
     metadata:
       <<: *frontend_resource_metadata
     spec:
-      host: qa-frontend.apps.ocp-test-0.k8s.it.helsinki.fi
+      host: ${HOST}
       to:
         kind: Service
         name: ${STACK}-frontend
@@ -94,16 +94,9 @@ objects:
 
 parameters:
   - name: NAMESPACE
-    value: eduviewer
   - name: STAGE
-    value: qa
   - name: STACK
-    value: qa
   - name: HOST
-    value: eduviewer-qa.it.helsinki.fi
   - name: TLS_KEY
-    value: ""
   - name: TLS_CERTIFICATE
-    value: ""
   - name: TLS_CA_CERTIFICATE
-    value: ""
