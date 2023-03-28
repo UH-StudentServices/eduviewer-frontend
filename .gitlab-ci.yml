@@ -130,7 +130,7 @@ push_master_to_github:
   script:
     - oc login --server=$OC_SERVER --token=$OC_SA_TOKEN
     - echo "getting tls cert"
-    - oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CERTIFICATE}' | base64 --decode
+    - oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CERTIFICATE}' | base64 -d
     - >-
       oc process -f ./openshift
       -p NAMESPACE=$OC_NAMESPACE
@@ -138,9 +138,9 @@ push_master_to_github:
       -p STACK=$OC_STACK
       -p HOST=$OC_HOST
       -p ROUTE_TYPE=$ROUTE_TYPE
-      -p TLS_KEY="$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_KEY}' | base64 --decode)"
-      -p TLS_CERTIFICATE="$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CERTIFICATE}' | base64 --decode)"
-      -p TLS_CA_CERTIFICATE="$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CA_CERTIFICATE}' | base64 --decode)"
+      -p TLS_KEY="$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_KEY}' | base64 -d)"
+      -p TLS_CERTIFICATE="$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CERTIFICATE}' | base64 -d)"
+      -p TLS_CA_CERTIFICATE="$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CA_CERTIFICATE}' | base64 -d)"
       | oc apply -f -
     - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
     - oc tag ${IMAGE_REPOSITORY}:${CI_COMMIT_SHA} ${OC_IMAGE_STREAM}:${CI_COMMIT_SHA}
