@@ -53,11 +53,6 @@ build_image_manual:
   <<: *build_image_definition
   when: manual
 
-#provision_dev:
-#  variables:
-#    ENVIRONMENT: "dev"
-#  <<: *provision_definition
-
 provision_qa:
   variables:
     ENVIRONMENT: "qa"
@@ -67,21 +62,6 @@ provision_prod:
   variables:
     ENVIRONMENT: "prod"
   <<: *provision_definition
-
-#deploy_dev:
-#  variables:
-#    HOST: "eduviewer-dev.it.helsinki.fi"
-#    ENVR: "dev"
-#  only:
-#    - master
-#  <<: *deploy_definition
-
-#deploy_dev_manual:
-#  variables:
-#    HOST: "eduviewer-dev.it.helsinki.fi"
-#    ENVR: "dev"
-#  when: manual
-#  <<: *deploy_definition
 
 deploy_qa:
   variables:
@@ -128,6 +108,7 @@ push_master_to_github:
   <<: *openshift_image_definition
   stage: provision
   script:
+    - export IMAGE_TAG=${IMAGE_TAG_PREFX}-${CI_COMMIT_SHA}
     - oc login --server=$OC_SERVER --token=$OC_SA_TOKEN
     - echo "getting tls cert"
     - oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CERTIFICATE}' | base64 -d
@@ -143,8 +124,8 @@ push_master_to_github:
       -p TLS_CA_CERTIFICATE="$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CA_CERTIFICATE}' | base64 -d)"
       | oc apply -f -
     - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
-    - oc tag ${IMAGE_REPOSITORY}:${CI_COMMIT_SHA} ${OC_IMAGE_STREAM}:${CI_COMMIT_SHA}
-    - oc tag ${IMAGE_REPOSITORY}:${CI_COMMIT_SHA} ${OC_IMAGE_STREAM}:latest
+    - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:${CI_COMMIT_SHA}
+    - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:latest
   when: manual
 
 provision_openshift_stack_qa:
@@ -158,6 +139,7 @@ provision_openshift_stack_qa:
     OC_TLS_SECRET: ssl-secret-qa
     OC_IMAGE_STREAM: qa-frontend
     ROUTE_TYPE: default
+    IMAGE_TAG_PREFIX: qa
   <<: *provision_openshift_stack_definition
 
 provision_openshift_stack_prod:
@@ -171,6 +153,7 @@ provision_openshift_stack_prod:
     OC_TLS_SECRET: ssl-secret-prod
     OC_IMAGE_STREAM: prod-frontend
     ROUTE_TYPE: external
+    IMAGE_TAG_PREFIX: prod
   <<: *provision_openshift_stack_definition
 
 .build_push_image_openshift: &build_push_image_openshift_scripts
@@ -205,9 +188,10 @@ build_image_openshift_prod:
 
 .deploy_image_openshift: &deploy_image_openshift_scripts
   - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
+  - export IMAGE_TAG=${IMAGE_TAG_PREFX}-${CI_COMMIT_SHA}
   - oc login --server=$OC_SERVER --token=$OC_SA_TOKEN
-  - oc tag ${IMAGE_REPOSITORY}:${CI_COMMIT_SHA} ${OC_IMAGE_STREAM}:${CI_COMMIT_SHA}
-  - oc tag ${IMAGE_REPOSITORY}:${CI_COMMIT_SHA} ${OC_IMAGE_STREAM}:latest
+  - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:${CI_COMMIT_SHA}
+  - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:latest
 
 deploy_image_openshift_qa:
   <<: *openshift_image_definition
@@ -217,6 +201,7 @@ deploy_image_openshift_qa:
     OC_SERVER: $OC_SERVER_TEST
     OC_SA_TOKEN: $OC_SA_TOKEN_TEST
     OC_IMAGE_STREAM: qa-frontend
+    IMAGE_TAG_PREFX: qa
   script:
     - *deploy_image_openshift_scripts
 
@@ -228,5 +213,6 @@ deploy_image_openshift_prod:
     OC_SERVER: $OC_SERVER_PROD
     OC_SA_TOKEN: $OC_SA_TOKEN_PROD
     OC_IMAGE_STREAM: prod-frontend
+    IMAGE_TAG_PREFX: prod
   script:
     - *deploy_image_openshift_scripts
