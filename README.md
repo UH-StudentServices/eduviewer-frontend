@@ -78,8 +78,9 @@ Also the path in nginx.conf.template must match the path specified in the deploy
 ```
 # or delete + create if it already exists or apply if you make a secret manifest.
 oc create secret generic ssl-secret-$STAGE \
---from-file=ssl.crt=./ssl.crt \
---from-file=ssl.key=./ssl.key
+--from-file=TLS_KEY=./ssl.key \
+--from-file=TLS_CERTIFICATE=./ssl.crt \
+--from-file=TLS_CA_CERTIFICATE=./ssl_ca.crt
 ```
 
 ## License

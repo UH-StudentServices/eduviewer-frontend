@@ -138,6 +138,7 @@ push_master_to_github:
       -p STAGE=$OC_STAGE
       -p STACK=$OC_STACK
       -p HOST=$OC_HOST
+      -p ROUTE_TYPE=$ROUTE_TYPE
       -p TLS_KEY=$TLS_KEY
       -p TLS_CERTIFICATE=$TLS_CERTIFICATE
       -p TLS_CA_CERTIFICATE=$TLS_CA_CERTIFICATE
@@ -157,6 +158,7 @@ provision_openshift_stack_qa:
     OC_HOST: eduviewer-qa.it.helsinki.fi
     OC_TLS_SECRET: eduviewer-tls-secret-qa
     OC_IMAGE_STREAM: qa-frontend
+    ROUTE_TYPE: default
   <<: *provision_openshift_stack_definition
 
 provision_openshift_stack_prod:
@@ -169,6 +171,7 @@ provision_openshift_stack_prod:
     OC_HOST: eduviewer.it.helsinki.fi
     OC_TLS_SECRET: eduviewer-tls-secret-prod
     OC_IMAGE_STREAM: prod-frontend
+    ROUTE_TYPE: external
   <<: *provision_openshift_stack_definition
 
 .build_push_image_openshift: &build_push_image_openshift_scripts

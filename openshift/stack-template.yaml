@@ -64,6 +64,9 @@ objects:
     apiVersion: route.openshift.io/v1
     metadata:
       <<: *frontend_resource_metadata
+      labels:
+        app: ${STACK}
+        type: ${ROUTE_TYPE}
     spec:
       host: ${HOST}
       to:
@@ -100,3 +103,5 @@ parameters:
   - name: TLS_KEY
   - name: TLS_CERTIFICATE
   - name: TLS_CA_CERTIFICATE
+  - name: ROUTE_TYPE
+    description: "default for inner/perimeter networks and external for public"
