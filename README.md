@@ -47,7 +47,6 @@ All attributes are optional.
 * If `module-code` or `degree-program-id` is set, embedded app won't show select for Degree Program
 * If `module-code` or `degree-program-id` is set `only-selected-academic-year` determines visibility of academic year dropdown
   * `only-selected-academic-year` hides academic year dropdown if exists and is not explicitly set to false
-  * `selected-academic-year-only` is a fallback value for React-components
 * `module-code` or `degree-program-id` is the code of degree program set in Sisu. Valid examples: `KH10_001`, `MH30_004`
 * If `header` isn't set, Eduviewer page won't have a h2 header on top of selects
 * `disable-global-style` disables usage of uh-living-styleguide in eduviewer. Use this only if embedding app already uses uh-living-styleguide.
