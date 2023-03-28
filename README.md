@@ -58,6 +58,7 @@ All attributes are optional.
 - If `module-code` or `degree-program-id` is set, embedded app won't show select for Degree Program
 - If `module-code` or `degree-program-id` is set `only-selected-academic-year` determines visibility of academic year dropdown
   - `only-selected-academic-year` hides academic year dropdown if exists and is not explicitly set to false
+  - `selected-academic-year-only` is a fallback value for React-components
 - `module-code` or `degree-program-id` is the code of degree program set in Sisu. Valid examples: `KH10_001`, `MH30_004`
 - If `header` isn't set, Eduviewer page won't have a h2 header on top of selects
 - `disable-global-style` disables usage of uh-living-styleguide in eduviewer. Use this only if embedding app already uses uh-living-styleguide.
@@ -68,7 +69,7 @@ You'll also need to include the following `script` tag at the end of your page's
 <script src="address/to/eduviewer.var.js"></script>
 ```
 
-## Create secrets from ssl
+# Create secrets from ssl
 
 The stage is QA or PROD. This makes it possible to have different ssl files for different stages.
 The "keys" ssl.crt and ssl.key become file names since these are mounted as files.
