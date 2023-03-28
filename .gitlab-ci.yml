@@ -175,18 +175,20 @@ provision_openshift_stack_prod:
 
 .build_push_image_openshift: &build_push_image_openshift_scripts
   - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
+  - export IMAGE_TAG=${IMAGE_TAG_PREFX}-${CI_COMMIT_SHA}
   - docker login -u="$REGISTRY_USER" -p="$REGISTRY_TOKEN" $REGISTRY_URL
   - sed "s/\${SERVER_NAME}/$SERVER_NAME/g" ci/build/frontend/nginx2.conf.template > ./default.conf
-  - docker build -f ci/build/frontend/Dockerfile2 -t $IMAGE_REPOSITORY:$CI_COMMIT_SHA .
-  - docker push $IMAGE_REPOSITORY:$CI_COMMIT_SHA
+  - docker build -f ci/build/frontend/Dockerfile2 -t $IMAGE_REPOSITORY:$IMAGE_TAG .
+  - docker push $IMAGE_REPOSITORY:$IMAGE_TAG
 
 build_image_openshift_qa:
   <<: *openshift_image_definition
   stage: build_image
   only:
-    - EDVWR-98-openshift
+    - master
   variables:
     SERVER_NAME: eduviewer-qa.it.helsinki.fi
+    IMAGE_TAG_PREFIX: qa
   script:
     - *build_push_image_openshift_scripts
 
@@ -194,9 +196,10 @@ build_image_openshift_prod:
   <<: *openshift_image_definition
   stage: build_image
   only:
-    - never
+    - master
   variables:
     SERVER_NAME: eduviewer.it.helsinki.fi
+    IMAGE_TAG_PREFIX: prod
   script:
     - *build_push_image_openshift_scripts
 
@@ -209,8 +212,7 @@ build_image_openshift_prod:
 deploy_image_openshift_qa:
   <<: *openshift_image_definition
   stage: deploy
-  only:
-    - EDVWR-98-openshift
+  when: manual
   variables:
     OC_SERVER: $OC_SERVER_TEST
     OC_SA_TOKEN: $OC_SA_TOKEN_TEST
@@ -221,8 +223,7 @@ deploy_image_openshift_qa:
 deploy_image_openshift_prod:
   <<: *openshift_image_definition
   stage: deploy
-  only:
-    - never
+  when: manual
   variables:
     OC_SERVER: $OC_SERVER_PROD
     OC_SA_TOKEN: $OC_SA_TOKEN_PROD
