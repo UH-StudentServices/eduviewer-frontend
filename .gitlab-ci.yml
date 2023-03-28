@@ -156,7 +156,7 @@ provision_openshift_stack_qa:
     OC_STAGE: qa
     OC_STACK: qa
     OC_HOST: eduviewer-qa.it.helsinki.fi
-    OC_TLS_SECRET: eduviewer-tls-secret-qa
+    OC_TLS_SECRET: ssl-secret-qa
     OC_IMAGE_STREAM: qa-frontend
     ROUTE_TYPE: default
   <<: *provision_openshift_stack_definition
@@ -169,7 +169,7 @@ provision_openshift_stack_prod:
     OC_STAGE: prod
     OC_STACK: prod
     OC_HOST: eduviewer.it.helsinki.fi
-    OC_TLS_SECRET: eduviewer-tls-secret-prod
+    OC_TLS_SECRET: ssl-secret-prod
     OC_IMAGE_STREAM: prod-frontend
     ROUTE_TYPE: external
   <<: *provision_openshift_stack_definition
