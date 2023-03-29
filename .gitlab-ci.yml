@@ -108,7 +108,7 @@ push_master_to_github:
   <<: *openshift_image_definition
   stage: provision
   script:
-    - export IMAGE_TAG=${IMAGE_TAG_PREFX}-${CI_COMMIT_SHA}
+    - export IMAGE_TAG=${IMAGE_TAG_PREFIX}-${CI_COMMIT_SHA}
     - oc login --server=$OC_SERVER --token=$OC_SA_TOKEN
     - echo "getting tls cert"
     - oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CERTIFICATE}' | base64 -d
@@ -158,7 +158,7 @@ provision_openshift_stack_prod:
 
 .build_push_image_openshift: &build_push_image_openshift_scripts
   - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
-  - export IMAGE_TAG=${IMAGE_TAG_PREFX}-${CI_COMMIT_SHA}
+  - export IMAGE_TAG=${IMAGE_TAG_PREFIX}-${CI_COMMIT_SHA}
   - docker login -u="$REGISTRY_USER" -p="$REGISTRY_TOKEN" $REGISTRY_URL
   - sed "s/\${SERVER_NAME}/$SERVER_NAME/g" ci/build/frontend/nginx2.conf.template > ./default.conf
   - docker build -f ci/build/frontend/Dockerfile2 -t $IMAGE_REPOSITORY:$IMAGE_TAG .
@@ -188,7 +188,7 @@ build_image_openshift_prod:
 
 .deploy_image_openshift: &deploy_image_openshift_scripts
   - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
-  - export IMAGE_TAG=${IMAGE_TAG_PREFX}-${CI_COMMIT_SHA}
+  - export IMAGE_TAG=${IMAGE_TAG_PREFIX}-${CI_COMMIT_SHA}
   - oc login --server=$OC_SERVER --token=$OC_SA_TOKEN
   - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:${CI_COMMIT_SHA}
   - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:latest
@@ -201,7 +201,7 @@ deploy_image_openshift_qa:
     OC_SERVER: $OC_SERVER_TEST
     OC_SA_TOKEN: $OC_SA_TOKEN_TEST
     OC_IMAGE_STREAM: qa-frontend
-    IMAGE_TAG_PREFX: qa
+    IMAGE_TAG_PREFIX: qa
   script:
     - *deploy_image_openshift_scripts
 
@@ -213,6 +213,6 @@ deploy_image_openshift_prod:
     OC_SERVER: $OC_SERVER_PROD
     OC_SA_TOKEN: $OC_SA_TOKEN_PROD
     OC_IMAGE_STREAM: prod-frontend
-    IMAGE_TAG_PREFX: prod
+    IMAGE_TAG_PREFIX: prod
   script:
     - *deploy_image_openshift_scripts
