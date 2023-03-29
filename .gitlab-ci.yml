@@ -85,7 +85,7 @@ provision_prod:
 
 deploy_qa:
   variables:
-    HOST: "eduviewer-qa-18.it.helsinki.fi"
+    HOST: "eduviewer-qa.it.helsinki.fi"
     ENVR: "qa"
   when: manual
   <<: *deploy_definition
