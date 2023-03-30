@@ -17,14 +17,6 @@ metadata:
   namespace: ${NAMESPACE}
   name: stack-template
 objects:
-  - kind: ConfigMap
-    apiVersion: v1
-    metadata:
-      <<: *resource_metadata
-      name: ${STACK}
-    data:
-      APIGW_URL: ${APIGW_URL}
-
   - kind: Deployment
     apiVersion: apps/v1
     metadata:
