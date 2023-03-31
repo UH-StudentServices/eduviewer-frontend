@@ -60,5 +60,20 @@ You'll also need to include the following `script` tag at the end of your page's
   <script src="address/to/eduviewer.var.js"></script>
 ```
 
+# Create secrets from ssl
+
+The stage is QA or PROD. This makes it possible to have different ssl files for different stages.
+The "keys" ssl.crt and ssl.key become file names since these are mounted as files.
+They must match what is specified in nginx.conf.template.
+Also the path in nginx.conf.template must match the path specified in the deployments pod specs volume mount.
+
+```
+# or delete + create if it already exists or apply if you make a secret manifest.
+oc create secret generic ssl-secret-$STAGE \
+--from-file=TLS_KEY=./ssl.key \
+--from-file=TLS_CERTIFICATE=./ssl.crt \
+--from-file=TLS_CA_CERTIFICATE=./ssl_ca.crt
+```
+
 ## License
 GPL-3.0

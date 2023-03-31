@@ -1,0 +1,99 @@
+# ⚓ - Anchors
+
+x-resource-metadata: &resource_metadata
+  namespace: ${NAMESPACE}
+  labels:
+    app: ${STACK} # label to manage all the objects in the stack, for instance, to filter the objects based on this label
+
+x-frontend-resource-metadata: &frontend_resource_metadata
+  <<: *resource_metadata
+  name: ${STACK}-frontend # Each stack will have its own ConfigMap, ex. `joel`, `qa` and `prod`
+
+# 🧱 - Template
+
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  namespace: ${NAMESPACE}
+  name: stack-template
+objects:
+  - kind: Deployment
+    apiVersion: apps/v1
+    metadata:
+      <<: *frontend_resource_metadata
+      annotations:
+        image.openshift.io/triggers: >-
+          [{"from":{"kind":"ImageStreamTag","name":"${STACK}-frontend:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"${STACK}-frontend\")].image"}]
+    spec:
+      replicas: 2
+      selector:
+        matchLabels:
+          app: ${STACK}-frontend # defines how the Deployment finds which Pods to manage
+      template:
+        metadata:
+          labels:
+            app: ${STACK}-frontend # label of the pod, this must be same as `selector.matchLabels.app`
+            service: ${STACK}-frontend
+        spec:
+          imagePullSecrets:
+            - name: quay-pull-secret
+          containers:
+            - name: ${STACK}-frontend
+              image: " " # Image is read from ImageStreamTag, defined in metadata.annotations
+              ports:
+                - containerPort: 8080
+                  name: http
+
+  - kind: ImageStream
+    apiVersion: image.openshift.io/v1
+    metadata:
+      <<: *frontend_resource_metadata
+    spec:
+      lookupPolicy:
+        local: false
+
+  - kind: Route
+    apiVersion: route.openshift.io/v1
+    metadata:
+      <<: *frontend_resource_metadata
+      labels:
+        app: ${STACK}
+        type: ${ROUTE_TYPE}
+    spec:
+      host: ${HOST}
+      to:
+        kind: Service
+        name: ${STACK}-frontend
+      tls:
+        termination: edge
+        insecureEdgeTerminationPolicy: Redirect
+        key: ${TLS_KEY}
+        certificate: ${TLS_CERTIFICATE}
+        caCertificate: ${TLS_CA_CERTIFICATE}
+
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      <<: *frontend_resource_metadata
+      labels: # ? NOTE: Need to override the entire labels object defined in &frontend_resource_metadata (see: https://stackoverflow.com/questions/53965417/merging-yaml-arrarys-nested)
+        app: ${STACK} # label to manage all the objects in the stack, for instance, to filter the objects based on this label
+        service: ${STACK}-frontend
+    spec:
+      ports:
+        - port: 80
+          targetPort: 8080
+          name: http
+          protocol: TCP
+      selector:
+        service: ${STACK}-frontend
+
+parameters:
+  - name: NAMESPACE
+  - name: STAGE
+  - name: STACK
+  - name: HOST
+  - name: TLS_KEY
+  - name: TLS_CERTIFICATE
+  - name: TLS_CA_CERTIFICATE
+  - name: ROUTE_TYPE
+    description: "default for inner/perimeter networks and external for public"

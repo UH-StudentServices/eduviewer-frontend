@@ -22,7 +22,7 @@ test_and_build:
   image: williamyeh/ansible:alpine3
   stage: deploy
   script:
-   - ci/deploy/deploy.sh $CI_COMMIT_SHA $HOST
+    - ci/deploy/deploy.sh $CI_COMMIT_SHA $HOST
   environment:
     name: $ENVR
     url: https://$HOST
@@ -53,11 +53,6 @@ build_image_manual:
   <<: *build_image_definition
   when: manual
 
-#provision_dev:
-#  variables:
-#    ENVIRONMENT: "dev"
-#  <<: *provision_definition
-
 provision_qa:
   variables:
     ENVIRONMENT: "qa"
@@ -67,21 +62,6 @@ provision_prod:
   variables:
     ENVIRONMENT: "prod"
   <<: *provision_definition
-
-#deploy_dev:
-#  variables:
-#    HOST: "eduviewer-dev.it.helsinki.fi"
-#    ENVR: "dev"
-#  only:
-#    - master
-#  <<: *deploy_definition
-
-#deploy_dev_manual:
-#  variables:
-#    HOST: "eduviewer-dev.it.helsinki.fi"
-#    ENVR: "dev"
-#  when: manual
-#  <<: *deploy_definition
 
 deploy_qa:
   variables:
@@ -112,3 +92,127 @@ push_master_to_github:
     - git push git@github.com:UH-StudentServices/eduviewer-frontend.git master
   only:
     - master
+
+.openshift_image: &openshift_image_definition
+  image: docker:20.10.16
+  services:
+    - docker:20.10.16-dind
+  before_script:
+    # Install openshift client
+    - apk add --update tar gzip curl ca-certificates gettext && rm -rf /var/cache/apk/*
+    - curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.10/openshift-client-linux.tar.gz
+    - tar xzvf /tmp/oc.tar.gz -C /usr/local/bin
+    - rm -rf /tmp/oc.tar.gz
+
+.provision_openshift_stack: &provision_openshift_stack_definition
+  <<: *openshift_image_definition
+  stage: provision
+  script:
+    - export IMAGE_TAG=${IMAGE_TAG_PREFIX}-${CI_COMMIT_SHA}
+    - oc login --server=$OC_SERVER --token=$OC_SA_TOKEN
+    - echo "getting tls cert"
+    - oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CERTIFICATE}' | base64 -d
+    - >-
+      oc process -f ./openshift
+      -p NAMESPACE=$OC_NAMESPACE
+      -p STAGE=$OC_STAGE
+      -p STACK=$OC_STACK
+      -p HOST=$OC_HOST
+      -p ROUTE_TYPE=$ROUTE_TYPE
+      -p TLS_KEY="$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_KEY}' | base64 -d)"
+      -p TLS_CERTIFICATE="$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CERTIFICATE}' | base64 -d)"
+      -p TLS_CA_CERTIFICATE="$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CA_CERTIFICATE}' | base64 -d)"
+      | oc apply -f -
+    - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
+    - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:${CI_COMMIT_SHA}
+    - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:latest
+  when: manual
+
+provision_openshift_stack_qa:
+  variables:
+    OC_SERVER: $OC_SERVER_TEST
+    OC_SA_TOKEN: $OC_SA_TOKEN_TEST
+    OC_NAMESPACE: eduviewer
+    OC_STAGE: qa
+    OC_STACK: qa
+    OC_HOST: eduviewer-qa.it.helsinki.fi
+    OC_TLS_SECRET: ssl-secret-qa
+    OC_IMAGE_STREAM: qa-frontend
+    ROUTE_TYPE: default
+    IMAGE_TAG_PREFIX: qa
+  <<: *provision_openshift_stack_definition
+
+provision_openshift_stack_prod:
+  variables:
+    OC_SERVER: $OC_SERVER_PROD
+    OC_SA_TOKEN: $OC_SA_TOKEN_PROD
+    OC_NAMESPACE: eduviewer
+    OC_STAGE: prod
+    OC_STACK: prod
+    OC_HOST: eduviewer.it.helsinki.fi
+    OC_TLS_SECRET: ssl-secret-prod
+    OC_IMAGE_STREAM: prod-frontend
+    ROUTE_TYPE: external
+    IMAGE_TAG_PREFIX: prod
+  <<: *provision_openshift_stack_definition
+
+.build_push_image_openshift: &build_push_image_openshift_scripts
+  - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
+  - export IMAGE_TAG=${IMAGE_TAG_PREFIX}-${CI_COMMIT_SHA}
+  - docker login -u="$REGISTRY_USER" -p="$REGISTRY_TOKEN" $REGISTRY_URL
+  - sed "s/\${SERVER_NAME}/$SERVER_NAME/g" ci/build/frontend/nginx2.conf.template > ./default.conf
+  - docker build -f ci/build/frontend/Dockerfile2 -t $IMAGE_REPOSITORY:$IMAGE_TAG .
+  - docker push $IMAGE_REPOSITORY:$IMAGE_TAG
+
+build_image_openshift_qa:
+  <<: *openshift_image_definition
+  stage: build_image
+  only:
+    - master
+  variables:
+    SERVER_NAME: eduviewer-qa.it.helsinki.fi
+    IMAGE_TAG_PREFIX: qa
+  script:
+    - *build_push_image_openshift_scripts
+
+build_image_openshift_prod:
+  <<: *openshift_image_definition
+  stage: build_image
+  only:
+    - master
+  variables:
+    SERVER_NAME: eduviewer.it.helsinki.fi
+    IMAGE_TAG_PREFIX: prod
+  script:
+    - *build_push_image_openshift_scripts
+
+.deploy_image_openshift: &deploy_image_openshift_scripts
+  - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
+  - export IMAGE_TAG=${IMAGE_TAG_PREFIX}-${CI_COMMIT_SHA}
+  - oc login --server=$OC_SERVER --token=$OC_SA_TOKEN
+  - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:${CI_COMMIT_SHA}
+  - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:latest
+
+deploy_image_openshift_qa:
+  <<: *openshift_image_definition
+  stage: deploy
+  when: manual
+  variables:
+    OC_SERVER: $OC_SERVER_TEST
+    OC_SA_TOKEN: $OC_SA_TOKEN_TEST
+    OC_IMAGE_STREAM: qa-frontend
+    IMAGE_TAG_PREFIX: qa
+  script:
+    - *deploy_image_openshift_scripts
+
+deploy_image_openshift_prod:
+  <<: *openshift_image_definition
+  stage: deploy
+  when: manual
+  variables:
+    OC_SERVER: $OC_SERVER_PROD
+    OC_SA_TOKEN: $OC_SA_TOKEN_PROD
+    OC_IMAGE_STREAM: prod-frontend
+    IMAGE_TAG_PREFIX: prod
+  script:
+    - *deploy_image_openshift_scripts
