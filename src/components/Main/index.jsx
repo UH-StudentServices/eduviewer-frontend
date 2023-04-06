@@ -270,9 +270,13 @@ class Main extends Component {
       code,
       translate,
       lang,
+      hideSelections,
       onlySelectedAcademicYear
     } = this.props;
 
+    if (hideSelections) {
+      return null;
+    }
     const getOption = (id, value, text) => ({ id, value, text });
 
     const ACADEMIC_YEARS_ID = 'academicYear';
@@ -392,6 +396,7 @@ class Main extends Component {
 Main.propTypes = {
   academicYearCode: string.isRequired,
   code: string.isRequired,
+  hideSelections: bool.isRequired,
   onlySelectedAcademicYear: bool.isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
   lang: oneOf(Object.values(availableLanguages)).isRequired,

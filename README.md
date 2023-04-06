@@ -46,6 +46,7 @@ All attributes are optional.
   * Example `acedemic-year` exact values: `hy-lv-68`, `hy-lv-69`.
 * If `module-code` or `degree-program-id` is set, embedded app won't show select for Degree Program
 * If `module-code` or `degree-program-id` is set `only-selected-academic-year` determines visibility of academic year dropdown
+  * `hide-selections` hides the whole selection section, including academic year dropdown and select all switch
   * `only-selected-academic-year` hides academic year dropdown if exists and is not explicitly set to false
   * `selected-academic-year-only` is a fallback value for React-components
 * `module-code` or `degree-program-id` is the code of degree program set in Sisu. Valid examples: `KH10_001`, `MH30_004`
