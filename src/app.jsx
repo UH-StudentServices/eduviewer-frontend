@@ -32,6 +32,7 @@ const LANGUAGE_ATTR_NAME = 'lang';
 const DEGREE_PROGRAM_ATTR_NAME = 'degree-program-id';
 const MODULE_ATTR_NAME = 'module-code';
 const ACADEMIC_YEAR_ATTR_NAME = 'academic-year';
+const HIDE_SELECTIONS = 'hide-selections';
 const ONLY_SELECTED_YEAR_ATTR_NAME = 'only-selected-academic-year';
 // Alternate value for ONLY_SELECTED_YEAR_ATTR_NAME for use with React
 // Unknown values starting with "on" are not allowed in React
@@ -48,6 +49,8 @@ const getRootAttribute = (attributeName) => {
 const render = () => {
   const code = getRootAttribute(DEGREE_PROGRAM_ATTR_NAME) || getRootAttribute(MODULE_ATTR_NAME) || '';
   const academicYearCode = getRootAttribute(ACADEMIC_YEAR_ATTR_NAME) || calculateCurrentLV();
+  const hideSelectionsString = getRootAttribute(HIDE_SELECTIONS);
+  const hideSelections = hideSelectionsString !== null && hideSelectionsString.toLocaleLowerCase() !== 'false';
   const onlySelectedAYValue = getRootAttribute(ONLY_SELECTED_YEAR_ATTR_NAME)
     || getRootAttribute(SELECTED_YEAR__ONLY_ATTR_NAME);
   const showOnlySelectedAcademicYear = onlySelectedAYValue !== null && onlySelectedAYValue.toLowerCase() !== 'false';
@@ -60,6 +63,7 @@ const render = () => {
         <Main
           code={code}
           academicYearCode={academicYearCode}
+          hideSelections={hideSelections}
           onlySelectedAcademicYear={showOnlySelectedAcademicYear}
           lang={lang}
           header={header}
