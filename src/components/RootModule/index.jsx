@@ -29,7 +29,9 @@ const RootModule = ({
   showAll,
   showContent,
   module,
-  activeLanguage
+  activeLanguage,
+  hideAccordion,
+  internalCourseLink
 }) => {
   if (!showContent) {
     return null;
@@ -53,6 +55,8 @@ const RootModule = ({
           rootDataNode={!isDegreeProgramme && module}
           showAll={showAll}
           activeLanguage={activeLanguage}
+          hideAccordion={hideAccordion}
+          internalCourseLink={internalCourseLink}
         />
       </div>
     </div>
@@ -63,7 +67,9 @@ RootModule.propTypes = {
   module: rootModuleType.isRequired,
   showAll: bool.isRequired,
   showContent: bool.isRequired,
-  activeLanguage: activeLanguageType.isRequired
+  activeLanguage: activeLanguageType.isRequired,
+  hideAccordion: bool.isRequired,
+  internalCourseLink: bool.isRequired
 };
 
 export default withLocalize(RootModule);
