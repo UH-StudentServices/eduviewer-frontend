@@ -25,9 +25,16 @@ import { getName } from '../../utils';
 import styles from './accordionModule.css';
 
 const AccordionModule = ({
-  showAll, rule, internalAccordion, activeLanguage, translate, startOpen
+  showAll,
+  rule,
+  internalAccordion,
+  activeLanguage,
+  translate,
+  startOpen,
+  hideAccordion,
+  internalCourseLink
 }) => {
-  const [open, setOpen] = useState(startOpen);
+  const [open, setOpen] = useState(startOpen || hideAccordion);
 
   const lang = activeLanguage.code;
 
@@ -38,6 +45,7 @@ const AccordionModule = ({
         rule={rule}
         showAll={showAll}
         activeLanguage={activeLanguage}
+        internalCourseLink={internalCourseLink}
       />
     ));
   }
@@ -60,6 +68,7 @@ const AccordionModule = ({
 
   return (
     <div className={`${styles.accordionContainer} ${internalAccordion ? styles.internalAccordionContainer : ''}`}>
+      {!hideAccordion && (
       <button
         type="button"
         className="button--action theme-transparent"
@@ -72,6 +81,7 @@ const AccordionModule = ({
         </div>
         <div className={styles.normalFontWeight}>{targetCreditText()}</div>
       </button>
+      )}
       {open && rule.dataNode.rule && (
         <GroupingModule
           key={rule.dataNode.rule?.localId}
@@ -79,6 +89,7 @@ const AccordionModule = ({
           showAll={showAll}
           activeLanguage={activeLanguage}
           level={99}
+          internalCourseLink={internalCourseLink}
         />
       )}
     </div>
@@ -87,7 +98,9 @@ const AccordionModule = ({
 
 AccordionModule.defaultProps = {
   internalAccordion: false,
-  startOpen: false
+  startOpen: false,
+  hideAccordion: false,
+  internalCourseLink: false
 };
 
 AccordionModule.propTypes = {
@@ -96,7 +109,9 @@ AccordionModule.propTypes = {
   internalAccordion: bool,
   activeLanguage: activeLanguageType.isRequired,
   translate: func.isRequired,
-  startOpen: bool
+  startOpen: bool,
+  hideAccordion: bool,
+  internalCourseLink: bool
 };
 
 export default withLocalize(AccordionModule);

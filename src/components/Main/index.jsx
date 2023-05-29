@@ -342,6 +342,11 @@ class Main extends Component {
       moduleHierarchy, academicYear, showAll, errorMessage, isLoading
     } = this.state;
 
+    const {
+      hideAccordion,
+      internalCourseLink
+    } = this.props;
+
     if (isLoading) {
       return <Loader />;
     }
@@ -361,6 +366,8 @@ class Main extends Component {
           module={module}
           showAll={show}
           showContent={!errorMsg}
+          hideAccordion={hideAccordion}
+          internalCourseLink={internalCourseLink}
         />
       );
     };
@@ -397,6 +404,8 @@ Main.propTypes = {
   academicYearCode: string.isRequired,
   code: string.isRequired,
   hideSelections: bool.isRequired,
+  hideAccordion: bool.isRequired,
+  internalCourseLink: bool.isRequired,
   onlySelectedAcademicYear: bool.isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
   lang: oneOf(Object.values(availableLanguages)).isRequired,

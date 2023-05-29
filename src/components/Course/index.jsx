@@ -16,7 +16,7 @@
  */
 
 import React from 'react';
-import { func, string } from 'prop-types';
+import { func, string, bool } from 'prop-types';
 import { withLocalize } from 'react-localize-redux';
 import { activeLanguageType, creditsType, localizedTextType } from '../../types';
 import { creditsToString, getLocalizedText, getStudiesCourseUnitPageUrl } from '../../utils';
@@ -25,15 +25,19 @@ import Link from './Link';
 import styles from './course.css';
 
 const Course = ({
-  id, code, name, credits, activeLanguage, translate
+  id, code, name, credits, activeLanguage, internalLink, translate
 }) => (
   <li className={styles.courseItem}>
-    <Link external href={getStudiesCourseUnitPageUrl(id)}>{`${code} ${getLocalizedText(name, activeLanguage.code)} `}</Link>
+    <Link external={!internalLink} href={getStudiesCourseUnitPageUrl(id)}>{`${code} ${getLocalizedText(name, activeLanguage.code)} `}</Link>
     <span className={styles.credits}>
       {creditsToString(credits, translate)}
     </span>
   </li>
 );
+
+Course.defaultProps = {
+  internalLink: false
+};
 
 Course.propTypes = {
   id: string.isRequired,
@@ -41,6 +45,7 @@ Course.propTypes = {
   name: localizedTextType.isRequired,
   credits: creditsType.isRequired,
   activeLanguage: activeLanguageType.isRequired,
+  internalLink: bool,
   translate: func.isRequired
 };
 

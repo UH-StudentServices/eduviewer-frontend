@@ -93,6 +93,8 @@ const GroupingModule = ({
   showAll,
   translate,
   activeLanguage,
+  hideAccordion,
+  internalCourseLink,
   rule: groupingModuleRule,
   level,
   rootDataNode
@@ -117,7 +119,7 @@ const GroupingModule = ({
     return null;
   };
 
-  const renderRule = (rule) => {
+  const renderRule = (rule, internalLink) => {
     if (rule) {
       if (rule.type === COMPOSITE_RULE) {
         const requiredCourseAmount = renderRequiredCourseAmount(rule);
@@ -127,7 +129,7 @@ const GroupingModule = ({
               && <span className={styles.compositeRuleCourseAmounts}>{requiredCourseAmount}</span>}
             { getDescription(rule, lang) }
             <ul className={styles.groupingList}>
-              {rule.rules.sort(compareSubRules).map(renderRule)}
+              {rule.rules.sort(compareSubRules).map((r) => renderRule(r, internalLink))}
             </ul>
           </Fragment>
         );
@@ -152,7 +154,14 @@ const GroupingModule = ({
         }
 
         return (
-          <Course key={rule.localId} id={id} code={code} name={name} credits={credits} />
+          <Course
+            key={rule.localId}
+            id={id}
+            code={code}
+            name={name}
+            credits={credits}
+            internalLink={internalLink}
+          />
         );
       }
 
@@ -160,7 +169,7 @@ const GroupingModule = ({
         return (
           <Fragment key={rule.localId}>
             <div className={level === 0 ? styles.paddingBottom1 : styles.paddingLeft1}>{translate('total')} {creditsToString(rule.credits, translate)}</div>
-            {renderRule(rule.rule)}
+            {renderRule(rule.rule, internalLink)}
           </Fragment>
         );
       }
@@ -174,6 +183,7 @@ const GroupingModule = ({
             translate={translate}
             activeLanguage={activeLanguage}
             level={level + 1}
+            internalCourseLink={internalLink}
           />
         );
       }
@@ -208,6 +218,7 @@ const GroupingModule = ({
           rule={groupingModuleRule}
           showAll={showAll}
           internalAccordion
+          internalCourseLink={internalCourseLink}
         />
       </div>
     );
@@ -226,6 +237,8 @@ const GroupingModule = ({
             showAll={showAll}
             internalAccordion={false}
             startOpen
+            hideAccordion={hideAccordion}
+            internalCourseLink={internalCourseLink}
           />
         </ul>
       </div>
@@ -244,6 +257,7 @@ const GroupingModule = ({
           rule={groupingModuleRule}
           showAll={showAll}
           internalAccordion={false}
+          internalCourseLink={internalCourseLink}
         />
       </div>
     );
@@ -271,7 +285,8 @@ const GroupingModule = ({
           )
           : renderRequiredCourseAmount(groupingModuleRule)}
         {getDescription(groupingModuleRule, lang)}
-        {getSubRules(groupingModuleRule).sort(compareSubRules).map((r) => renderRule(r))}
+        {getSubRules(groupingModuleRule).sort(compareSubRules).map((r) =>
+          renderRule(r, internalCourseLink))}
       </div>
     </>
   );
@@ -293,7 +308,8 @@ const GroupingModule = ({
 
 GroupingModule.defaultProps = {
   level: 0,
-  rootDataNode: undefined
+  rootDataNode: undefined,
+  internalCourseLink: false
 };
 
 GroupingModule.propTypes = {
@@ -301,6 +317,8 @@ GroupingModule.propTypes = {
   rule: shape({}).isRequired,
   translate: func.isRequired,
   activeLanguage: activeLanguageType.isRequired,
+  hideAccordion: bool.isRequired,
+  internalCourseLink: bool,
   rootDataNode: shape({}),
   level: number
 };

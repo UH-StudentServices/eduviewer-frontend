@@ -49,6 +49,8 @@ All attributes are optional.
   * `hide-selections` hides the whole selection section, including academic year dropdown and select all switch
   * `only-selected-academic-year` hides academic year dropdown if exists and is not explicitly set to false
   * `selected-academic-year-only` is a fallback value for React-components
+  * `hide-accordion` hides the root module accordion, showing only the accordion content
+  * `internal-course-links` sets course links as internal, removing the arrow marking an external link
 * `module-code` or `degree-program-id` is the code of degree program set in Sisu. Valid examples: `KH10_001`, `MH30_004`
 * If `header` isn't set, Eduviewer page won't have a h2 header on top of selects
 * `disable-global-style` disables usage of uh-living-styleguide in eduviewer. Use this only if embedding app already uses uh-living-styleguide.
