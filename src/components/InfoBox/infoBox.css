@@ -55,3 +55,9 @@
 .content > p > a {
   word-break: break-all;
 }
+
+.content li:nth-child(odd),
+.content li:nth-child(even) {
+  background-color: var(--white) !important;
+  border: none !important;
+}

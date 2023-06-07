@@ -15,8 +15,11 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import React from 'react';
 import { STUDIES_CU_PAGE_BASE_URL } from '../config';
-import { ruleTypes } from '../constants';
+import { LIST_ITEM_RULES, ruleTypes } from '../constants';
+import InfoBox from '../components/InfoBox';
+import styles from '../components/RootModule/rootModule.css';
 
 const { COURSE_UNIT_RULE } = ruleTypes;
 
@@ -54,7 +57,7 @@ export const requiredCoursesToString = (requiredCourses) => {
   return getMinMaxString(min, max);
 };
 
-export const getLocalizedText = (field, lang) => (field[lang] ? field[lang] : field.fi);
+export const getLocalizedText = (field, lang) => field[lang] || field.fi || field.en || field.sv;
 
 export const getName = (rule, lang) => (rule.dataNode?.name ? getLocalizedText(rule.dataNode.name, lang) : '');
 
@@ -112,3 +115,36 @@ export const getCode = (module) => (isModuleEducation(module)
   && module.dataNode?.code) || module.code;
 
 export const getStudiesCourseUnitPageUrl = (cuId) => `${STUDIES_CU_PAGE_BASE_URL}${cuId}`;
+
+export const renderRequiredCourseAmount = (rule, t) => {
+  const { require, allMandatory } = rule;
+
+  if (require?.min === 1 && require?.max === 1) {
+    return (<div className={styles.creditRequirement}>{t('oneOfFollowing')}</div>);
+  }
+
+  const hasRequiredCoursesRange = require && (require.max || require.min > 0);
+  if (!allMandatory && hasRequiredCoursesRange) {
+    return (<div className={styles.creditRequirement}>{t('select')} {requiredCoursesToString(require)}</div>);
+  }
+  return null;
+};
+
+export const getDescription = (rule, lang) => {
+  const { description: ruleDesc, localId } = rule;
+  if (ruleDesc) {
+    return (
+      <InfoBox content={getLocalizedText(ruleDesc, lang)} id={`desc-${localId}`} setInnerHtml />
+    );
+  }
+  return null;
+};
+
+export const sortAndRenderRules = (rules, renderRule) => {
+  const sortedSubrules = rules?.sort(compareSubRules) || [];
+  const listContent = sortedSubrules
+    .filter((r) => LIST_ITEM_RULES.includes(r.type)).map(renderRule);
+  const otherContent = sortedSubrules
+    .filter((r) => !LIST_ITEM_RULES.includes(r.type)).map(renderRule);
+  return [listContent, otherContent];
+};

@@ -16,14 +16,15 @@
  */
 
 import React, { Component } from 'react';
-import { bool } from 'prop-types';
+import { bool, number } from 'prop-types';
 import { withLocalize } from 'react-localize-redux';
 
 import { activeLanguageType, oneOfRulesType } from '../../types';
-import GroupingModule from '../GroupingModule'; // eslint-disable-line
 import { getName } from '../../utils';
 
 import styles from './dropdownModule.css';
+// eslint-disable-next-line import/no-cycle
+import Rule from '../Rule';
 
 const NOTHING_SELECTED = '-';
 
@@ -35,7 +36,6 @@ class DropdownModule extends Component {
     };
 
     this.onSelectChange = this.onSelectChange.bind(this);
-    this.renderSelectedModule = this.renderSelectedModule.bind(this);
     this.render = this.render.bind(this);
   }
 
@@ -44,55 +44,48 @@ class DropdownModule extends Component {
     this.setState({ selected: value });
   }
 
-  renderSelectedModule() {
-    const { showAll, rule } = this.props;
-    const { selected } = this.state;
-
-    const subRules = rule.dataNode.rule.rules;
-
-    if (selected !== NOTHING_SELECTED) {
-      const selectedRule = subRules.find((subRule) => subRule.localId === selected);
-      return (
-        <div className={styles.selectedContainer}>
-          <GroupingModule rule={selectedRule} showAll={showAll} />
-        </div>
-      );
-    }
-
-    return null;
-  }
-
   render() {
     const { selected } = this.state;
-    const { showAll, rule, activeLanguage } = this.props;
+    const {
+      showAll, rule, activeLanguage: lang, hlevel, insideAccordion
+    } = this.props;
+    const subRules = rule.dataNode.rule.rules;
+    const selectedRule = selected !== NOTHING_SELECTED
+      && subRules.find((subRule) => subRule.localId === selected);
 
     if (showAll) {
-      return (
-        <div className={styles.selectedContainer}>
-          {rule.dataNode.rules.map((r) => (
-            <GroupingModule
-              key={r.localId}
-              rule={rule}
-              showAll={showAll}
-              activeLanguage={activeLanguage}
-            />
-          ))}
-        </div>
-      );
+      return rule.dataNode.rules.map((r) => (
+        <Rule
+          key={r.localId}
+          rule={rule}
+          showAll={showAll}
+          activeLanguage={lang}
+          hlevel={hlevel}
+        />
+      ));
     }
     return (
-      <div className={styles.dropdownContainer}>
+      <div className={styles.dropdownContainer} key={rule.localId}>
+        <label className={styles.label} htmlFor={`select-${rule.localId}`}>{getName(rule, lang)}</label>
         <div className={styles.selectContainer}>
-          <select value={selected} onChange={this.onSelectChange}>
+          <select value={selected} id={`select-${rule.localId}`} onChange={this.onSelectChange}>
             <option value="-">-</option>
-            {rule.dataNode.rule.rules.map((subRule) => (
+            {subRules.map((subRule) => (
               <option key={subRule.localId} value={subRule.localId}>
-                {getName(subRule, activeLanguage.code)}
+                {getName(subRule, lang.code)}
               </option>
             ))}
           </select>
         </div>
-        {this.renderSelectedModule()}
+        {selectedRule ? (
+          <Rule
+            rule={selectedRule}
+            showAll={showAll}
+            hlevel={hlevel}
+            insideAccordion={insideAccordion}
+            isDegreeProgramme
+          />
+        ) : null}
       </div>
     );
   }
@@ -101,7 +94,9 @@ class DropdownModule extends Component {
 DropdownModule.propTypes = {
   rule: oneOfRulesType.isRequired,
   showAll: bool.isRequired,
-  activeLanguage: activeLanguageType.isRequired
+  activeLanguage: activeLanguageType.isRequired,
+  hlevel: number.isRequired,
+  insideAccordion: bool.isRequired
 };
 
 export default withLocalize(DropdownModule);

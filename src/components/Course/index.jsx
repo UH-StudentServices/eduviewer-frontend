@@ -22,18 +22,27 @@ import { activeLanguageType, creditsType, localizedTextType } from '../../types'
 import { creditsToString, getLocalizedText, getStudiesCourseUnitPageUrl } from '../../utils';
 
 import Link from './Link';
-import styles from './course.css';
+import styles from '../RootModule/rootModule.css';
 
 const Course = ({
   id, code, name, credits, activeLanguage, internalLink, translate
-}) => (
-  <li className={styles.courseItem}>
-    <Link external={!internalLink} href={getStudiesCourseUnitPageUrl(id)}>{`${code} ${getLocalizedText(name, activeLanguage.code)} `}</Link>
-    <span className={styles.credits}>
-      {creditsToString(credits, translate)}
-    </span>
-  </li>
-);
+}) => {
+  const title = getLocalizedText(name, activeLanguage.code);
+  const myCredits = creditsToString(credits, translate);
+  return (
+    <li className={styles.courseItem}>
+      <Link
+        external={!internalLink}
+        href={getStudiesCourseUnitPageUrl(id)}
+        ariaLabel={`${code}: ${title}, ${myCredits}.`}
+      >
+        {code} {title}
+      </Link>
+      {' '}
+      <span className={styles.credits} aria-hidden>{myCredits}</span>
+    </li>
+  );
+};
 
 Course.defaultProps = {
   internalLink: false

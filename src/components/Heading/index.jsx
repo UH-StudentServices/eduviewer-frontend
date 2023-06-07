@@ -15,12 +15,37 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.courseItem {
-  display: flex;
-  justify-content: space-between;
-}
+import React from 'react';
+import {
+  arrayOf, node, number, oneOfType, string
+} from 'prop-types';
+import styles from '../RootModule/rootModule.css';
 
-.credits {
-  font-weight: 500;
-  margin-right: 1.25em;
-}
+const Heading = ({
+  id,
+  level,
+  className,
+  children
+}) => {
+  const hLevel = `h${level}`;
+  const limitedHLevel = `h${Math.min(level, 6)}`;
+  return React.createElement(
+    limitedHLevel,
+    { id, className: `${styles[hLevel]} ${className}` },
+    children
+  );
+};
+
+Heading.defaultProps = {
+  id: undefined,
+  className: ''
+};
+
+Heading.propTypes = {
+  id: string,
+  className: string,
+  level: number.isRequired,
+  children: oneOfType([node, arrayOf(node), string]).isRequired
+};
+
+export default Heading;
