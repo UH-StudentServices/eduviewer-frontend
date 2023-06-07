@@ -16,14 +16,13 @@
  */
 
 import React from 'react';
-import { bool } from 'prop-types';
+import { bool, func, number } from 'prop-types';
 import { withLocalize } from 'react-localize-redux';
 import { activeLanguageType, rootModuleType } from '../../types';
 
-import GroupingModule from '../GroupingModule';
-
 import styles from './rootModule.css';
-import { getLocalizedText } from '../../utils';
+import { ruleTypes } from '../../constants';
+import ModuleRule from '../ModuleRule';
 
 const RootModule = ({
   showAll,
@@ -31,45 +30,48 @@ const RootModule = ({
   module,
   activeLanguage,
   hideAccordion,
-  internalCourseLink
+  internalCourseLink,
+  rootLevel,
+  translate
 }) => {
   if (!showContent) {
     return null;
   }
-
-  const { name, rule } = module;
-  const isDegreeProgramme = module.type === 'DegreeProgramme';
-
+  const rootRule = {
+    type: ruleTypes.MODULE_RULE,
+    localId: 'rootRule',
+    dataNode: module
+  };
   return (
-    <div className={styles.roodModule}>
-      {isDegreeProgramme
-        && (
-          <h3 className={styles.rootModuleTitle}>
-            {getLocalizedText(name, activeLanguage.code)}
-          </h3>
-        )}
-      <div className={styles.moduleGroups}>
-        <GroupingModule
-          key={rule.localId}
-          rule={rule}
-          rootDataNode={!isDegreeProgramme && module}
-          showAll={showAll}
-          activeLanguage={activeLanguage}
-          hideAccordion={hideAccordion}
-          internalCourseLink={internalCourseLink}
-        />
-      </div>
+    <div className={styles.rootModule}>
+      <ModuleRule
+        key={rootRule.localId}
+        rule={rootRule}
+        showAll={showAll}
+        translate={translate}
+        activeLanguage={activeLanguage}
+        internalLinks={internalCourseLink}
+        hlevel={rootLevel}
+        skipTitle={hideAccordion}
+        isDegreeProgramme={module?.type === 'DegreeProgramme'}
+      />
     </div>
   );
+};
+
+RootModule.defaultProps = {
+  rootLevel: 3
 };
 
 RootModule.propTypes = {
   module: rootModuleType.isRequired,
   showAll: bool.isRequired,
   showContent: bool.isRequired,
+  translate: func.isRequired,
   activeLanguage: activeLanguageType.isRequired,
   hideAccordion: bool.isRequired,
-  internalCourseLink: bool.isRequired
+  internalCourseLink: bool.isRequired,
+  rootLevel: number
 };
 
 export default withLocalize(RootModule);

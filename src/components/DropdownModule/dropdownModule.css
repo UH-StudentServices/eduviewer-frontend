@@ -18,6 +18,8 @@
 .dropdownContainer {
   margin-bottom: 1em;
   margin-top: 0.125em;
+  border-top: 1px dotted;
+  border-bottom: 1px dotted;
 }
 
 .selectContainer {
@@ -29,6 +31,6 @@
   max-width: max-content;
 }
 
-.selectedContainer ul > div {
-  margin-top: 0.5em;
+.label {
+  font-weight: bold;
 }

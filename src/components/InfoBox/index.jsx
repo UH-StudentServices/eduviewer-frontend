@@ -20,25 +20,32 @@ import { string, bool } from 'prop-types';
 
 import styles from './infoBox.css';
 
-const InfoBox = ({ content, setInnerHtml }) => (
-  <div className={styles.infoContainer}>
+const InfoBox = ({ content, setInnerHtml, id }) => (
+  <div className={styles.infoContainer} id={id}>
     <span className={`${styles.iconContainer} icon--info-stroke`} />
     {
       setInnerHtml
-        // eslint-disable-next-line react/no-danger
-        ? <div className={styles.content} dangerouslySetInnerHTML={{ __html: content }} />
-        : <div className={styles.content}>{content}</div>
+        ? (
+          <div
+            className={styles.content}
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: content && content.trim() }}
+          />
+        )
+        : <div className={styles.content}>{content && content.trim()}</div>
     }
   </div>
 );
 
 InfoBox.propTypes = {
   content: string.isRequired,
+  id: string,
   setInnerHtml: bool
 };
 
 InfoBox.defaultProps = {
-  setInnerHtml: false
+  setInnerHtml: false,
+  id: undefined
 };
 
 export default InfoBox;

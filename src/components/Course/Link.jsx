@@ -19,10 +19,12 @@ import {
 } from 'prop-types';
 import React from 'react';
 
-import styles from './link.css';
+import styles from '../RootModule/rootModule.css';
 
-const Link = ({ href, external, children }) => (
-  <a className={styles.link} href={href}>
+const Link = ({
+  href, external, children, ariaLabel
+}) => (
+  <a className={styles.link} href={href} aria-label={ariaLabel}>
     {children}
     {external && (
       <div className={styles.iconContainer}>
@@ -46,11 +48,13 @@ const Link = ({ href, external, children }) => (
 Link.propTypes = {
   href: string.isRequired,
   external: bool,
-  children: oneOfType([node, arrayOf(node)]).isRequired
+  children: oneOfType([node, arrayOf(node)]).isRequired,
+  ariaLabel: string
 };
 
 Link.defaultProps = {
-  external: false
+  external: false,
+  ariaLabel: undefined
 };
 
 export default Link;

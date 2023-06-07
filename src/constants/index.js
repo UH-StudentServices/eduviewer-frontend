@@ -33,3 +33,18 @@ export const availableLanguages = {
 export const NO_DEGREE_PROGRAM_CODE = 'no_degree_programme';
 
 export const NO_MODULE_HIERARCHY = {};
+
+export const LIST_ITEM_RULES = [ruleTypes.ANY_COURSE_UNIT_RULE, ruleTypes.ANY_MODULE_RULE,
+  ruleTypes.COURSE_UNIT_RULE];
+
+export const STUDY_TRACK_DROPDOWN_MODULES = [
+  'opintosuunta',
+  'study track',
+  'studieinriktningen'
+];
+
+export const FOREIGN_LANGUAGE_DROPDOWN_MODULES = [
+  'vieras kieli',
+  'foreign language',
+  'främmande språk'
+];
