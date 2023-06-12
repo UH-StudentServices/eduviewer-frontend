@@ -25,24 +25,27 @@ const Heading = ({
   id,
   level,
   className,
+  ariaLabel,
   children
 }) => {
   const hLevel = `h${level}`;
   const limitedHLevel = `h${Math.min(level, 6)}`;
   return React.createElement(
     limitedHLevel,
-    { id, className: `${styles[hLevel]} ${className}` },
+    { id, className: `${styles[hLevel]} ${className}`, 'aria-label': ariaLabel },
     children
   );
 };
 
 Heading.defaultProps = {
   id: undefined,
+  ariaLabel: undefined,
   className: ''
 };
 
 Heading.propTypes = {
   id: string,
+  ariaLabel: string,
   className: string,
   level: number.isRequired,
   children: oneOfType([node, arrayOf(node), string]).isRequired

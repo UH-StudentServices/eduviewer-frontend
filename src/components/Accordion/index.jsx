@@ -22,7 +22,7 @@ import {
 import { withLocalize } from 'react-localize-redux';
 
 import { activeLanguageType, oneOfRulesType } from '../../types';
-import { getName } from '../../utils';
+import { ariaLabelForTitle, creditsToString, getName } from '../../utils';
 import styles from '../RootModule/rootModule.css';
 import Heading from '../Heading';
 
@@ -39,29 +39,9 @@ const Accordion = ({
 }) => {
   const [open, setOpen] = useState(startOpen);
 
-  const lang = activeLanguage.code;
-  const targetCreditText = () => {
-    const { targetCredits } = rule.dataNode;
-    if (!targetCredits) {
-      return '';
-    }
-
-    if (targetCredits.min === targetCredits.max
-      || targetCredits.max === null) {
-      return `${targetCredits.min} ${t('creditLabel')}`;
-    }
-    if (!targetCredits.max) {
-      return `${t('atLeast')} ${targetCredits.min} ${t('creditLabel')}`;
-    }
-    return `${targetCredits.min}–${targetCredits.max} ${t('creditLabel')}`;
-  };
-
-  const title = getName(rule, lang);
-  const myCredits = targetCreditText();
+  const title = getName(rule, activeLanguage.code);
+  const myCredits = creditsToString(rule.dataNode?.targetCredits, t);
   const { code } = rule.dataNode;
-  const ariaCode = code ? `${code}: ` : '';
-  const ariaCredits = myCredits ? `, ${myCredits}.` : '';
-
   return (
     <div className={internalAccordion
       ? styles.internalAccordionContainer : styles.accordionContainer}
@@ -69,9 +49,12 @@ const Accordion = ({
       <Heading level={hlevel} className={styles.accordionTitle}>
         <button
           type="button"
+          id={`ac-${rule.localId}`}
           className="button--action theme-transparent"
           onClick={() => setOpen(!open)}
-          aria-label={ariaCode + title + ariaCredits}
+          aria-label={ariaLabelForTitle(code, title, myCredits)}
+          aria-expanded={open}
+          aria-controls={`region-${rule.localId}`}
         >
           <div className={styles.titleRow}>
             <span className={styles.accordionNameParts}>{rule.dataNode.code}&nbsp;
@@ -82,7 +65,15 @@ const Accordion = ({
           <div>{myCredits}</div>
         </button>
       </Heading>
-      {open && children}
+      <div
+        role="region"
+        id={`region-${rule.localId}`}
+        aria-labelledby={`ac-${rule.localId}`}
+        hidden={!open}
+        className={styles.accordionRegion}
+      >
+        {open && children}
+      </div>
     </div>
   );
 };

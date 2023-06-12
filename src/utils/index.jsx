@@ -23,19 +23,14 @@ import styles from '../components/RootModule/rootModule.css';
 
 const { COURSE_UNIT_RULE } = ruleTypes;
 
-const getMinMaxString = (min, max, showMinRequirement = false) => {
-  const minLabel = 'väh.';
-
-  let minMaxString;
-
-  if (!max && showMinRequirement) {
-    minMaxString = `${minLabel} ${min}`;
-  } else if (min === max || !max) {
-    minMaxString = `${min}`;
-  } else {
-    minMaxString = `${min} - ${max}`;
+const getMinMaxString = (min, max, minLabel) => {
+  if (!max && minLabel) {
+    return `${minLabel} ${min}`;
   }
-  return minMaxString;
+  if (min === max || !max) {
+    return `${min}`;
+  }
+  return `${min}–${max}`;
 };
 
 const isModuleEducation = (module) => module.type === 'Education';
@@ -47,7 +42,8 @@ export const creditsToString = (credits, translate, showMinSPRequirement = false
 
   const { max, min } = credits;
   const spLabel = translate('creditLabel');
-  const creditsString = getMinMaxString(min, max, showMinSPRequirement);
+  const minLabel = (showMinSPRequirement) ? translate('atLeast') : '';
+  const creditsString = getMinMaxString(min, max, minLabel);
 
   return `${creditsString} ${spLabel}`;
 };
@@ -147,4 +143,10 @@ export const sortAndRenderRules = (rules, renderRule) => {
   const otherContent = sortedSubrules
     .filter((r) => !LIST_ITEM_RULES.includes(r.type)).map(renderRule);
   return [listContent, otherContent];
+};
+
+export const ariaLabelForTitle = (code, title, credits) => {
+  const ariaCode = code ? `${code}: ` : '';
+  const ariaCredits = credits ? `, ${credits}.` : '';
+  return ariaCode + title + ariaCredits;
 };

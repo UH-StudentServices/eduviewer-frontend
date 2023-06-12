@@ -16,7 +16,7 @@
  */
 
 import React, { Component } from 'react';
-import { bool, number } from 'prop-types';
+import { bool, func, number } from 'prop-types';
 import { withLocalize } from 'react-localize-redux';
 
 import { activeLanguageType, oneOfRulesType } from '../../types';
@@ -47,7 +47,7 @@ class DropdownModule extends Component {
   render() {
     const { selected } = this.state;
     const {
-      showAll, rule, activeLanguage: lang, hlevel, insideAccordion
+      showAll, rule, activeLanguage: lang, hlevel, insideAccordion, translate
     } = this.props;
     const subRules = rule.dataNode.rule.rules;
     const selectedRule = selected !== NOTHING_SELECTED
@@ -69,7 +69,7 @@ class DropdownModule extends Component {
         <label className={styles.label} htmlFor={`select-${rule.localId}`}>{getName(rule, lang)}</label>
         <div className={styles.selectContainer}>
           <select value={selected} id={`select-${rule.localId}`} onChange={this.onSelectChange}>
-            <option value="-">-</option>
+            <option value={NOTHING_SELECTED} aria-label={translate('noChoice')}>-</option>
             {subRules.map((subRule) => (
               <option key={subRule.localId} value={subRule.localId}>
                 {getName(subRule, lang.code)}
@@ -95,6 +95,7 @@ DropdownModule.propTypes = {
   rule: oneOfRulesType.isRequired,
   showAll: bool.isRequired,
   activeLanguage: activeLanguageType.isRequired,
+  translate: func.isRequired,
   hlevel: number.isRequired,
   insideAccordion: bool.isRequired
 };
