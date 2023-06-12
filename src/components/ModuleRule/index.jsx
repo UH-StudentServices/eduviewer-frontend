@@ -22,7 +22,12 @@ import {
 import { withLocalize } from 'react-localize-redux';
 
 import {
-  creditsToString, getDescription, getName, renderRequiredCourseAmount, sortAndRenderRules
+  ariaLabelForTitle,
+  creditsToString,
+  getDescription,
+  getName,
+  renderRequiredCourseAmount,
+  sortAndRenderRules
 } from '../../utils';
 
 import DropdownModule from '../DropdownModule'; // eslint-disable-line
@@ -91,10 +96,15 @@ const ModuleRule = ({
   const moduleCode = rule.dataNode.code;
   const moduleTitle = name && !accordion && !skipTitle
     && (
-      <Heading level={hlevel} className={styles.moduleTitle} id={`title-${rule.localId}`}>
-        {moduleCode && <span>{moduleCode} </span>}
+      <Heading
+        level={hlevel}
+        className={styles.moduleTitle}
+        id={`title-${rule.localId}`}
+        ariaLabel={ariaLabelForTitle(moduleCode, name, moduleCredits)}
+      >
+        {moduleCode && <span aria-hidden>{moduleCode} </span>}
         {name}
-        {moduleCredits && <span className={styles.moduleCredits}>{moduleCredits}</span>}
+        {moduleCredits && <span className={styles.moduleCredits} aria-hidden>{moduleCredits}</span>}
       </Heading>
     );
   const newClosestTitleId = (moduleTitle || accordion) ? `title-${rule.localId}` : closestTitleId;

@@ -63,5 +63,10 @@
     "op",
     "sp",
     "cr"
+  ],
+  "noChoice": [
+    "ei valintaa",
+    "inget val",
+    "no choice"
   ]
 }
