@@ -146,8 +146,8 @@ const createConfig = (options) => ({
     cleanWebPackPlugin,
     new ESLintWebpackPlugin()
   ],
-  devServer: devServerConfig,
-  devtool: 'eval-source-map'
+  devServer: devServerConfig
+  // devtool: 'eval-source-map'
 });
 
 
