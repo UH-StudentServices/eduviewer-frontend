@@ -26,7 +26,6 @@
 
 const eduviewerHostnames = {
   LOCAL: 'localhost',
-  DEV: 'eduviewer-dev.it.helsinki.fi',
   QA: 'eduviewer-qa.it.helsinki.fi',
   PROD: 'eduviewer.it.helsinki.fi'
 };
@@ -42,13 +41,36 @@ const eduviewerBaseUrls = {
 };
 
 const studiesCourseUnitBaseUrls = {
-  QA: 'https://studies-qa.it.helsinki.fi//opintotarjonta/cu/',
+  QA: 'https://studies-qa.it.helsinki.fi/opintotarjonta/cu/',
   PROD: 'https://studies.helsinki.fi/opintotarjonta/cu/'
+};
+
+const studiesHostBaseUrls = {
+  QA: 'https://studies-qa.it.helsinki.fi/',
+  PROD: 'https://studies.helsinki.fi/'
+};
+
+const studiesCourseUnits = {
+  fi: 'opintotarjonta/cu/',
+  en: 'courses/cu/',
+  sv: 'studieutbud/cu/'
+};
+
+const studiesStudyModules = {
+  fi: 'opintotarjonta/sm/',
+  en: 'courses/sm/',
+  sv: 'studieutbud/sm/'
+};
+
+const studiesDegreeProgrammes = {
+  fi: 'tutkinto-ohjelma/',
+  en: 'degree-program/',
+  sv: 'utbildningsprogram/'
 };
 
 const getTrackingId = () => {
   const { hostname } = window.location;
-  if (hostname === eduviewerHostnames.DEV || hostname === eduviewerHostnames.LOCAL) {
+  if (hostname === eduviewerHostnames.LOCAL) {
     return null;
   }
   return hostname === eduviewerHostnames.QA ? eduviewerTrackingIds.QA : eduviewerTrackingIds.PROD;
@@ -56,9 +78,7 @@ const getTrackingId = () => {
 
 const isNonProd = () => {
   const { hostname } = window.location;
-  return hostname === eduviewerHostnames.LOCAL
-    || hostname === eduviewerHostnames.DEV
-    || hostname === eduviewerHostnames.QA;
+  return hostname === eduviewerHostnames.LOCAL || hostname === eduviewerHostnames.QA;
 };
 
 const isQA = () => {
@@ -91,5 +111,9 @@ module.exports = {
   DEFAULT_BASE_URL: getBaseUrl(eduviewerBaseUrls),
   DEFAULT_STYLE_URL: getStyleUrl(),
   TRACKING_ID: getTrackingId(),
-  STUDIES_CU_PAGE_BASE_URL: getBaseUrl(studiesCourseUnitBaseUrls)
+  STUDIES_CU_PAGE_BASE_URL: getBaseUrl(studiesCourseUnitBaseUrls),
+  STUDIES_HOST_BASE_URL: getBaseUrl(studiesHostBaseUrls),
+  studiesCourseUnits,
+  studiesStudyModules,
+  studiesDegreeProgrammes
 };

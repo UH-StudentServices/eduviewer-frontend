@@ -368,18 +368,16 @@ class Main extends Component {
           showContent={!errorMsg}
           hideAccordion={hideAccordion}
           internalCourseLink={internalCourseLink}
+          academicYear={academicYear}
         />
       );
     };
-
-    const module = getModule(moduleCode, moduleHierarchy, showAll, errorMessage);
-
     return (
       <div>
         {errorMessage && <ErrorMessage errorMessage={errorMessage} /> }
         {
           hasContent
-            ? module
+            ? getModule(moduleCode, moduleHierarchy, showAll, errorMessage)
             : <div className={styles.noContent}><Translate id="noDegreeProgramToShow" /></div>
         }
       </div>

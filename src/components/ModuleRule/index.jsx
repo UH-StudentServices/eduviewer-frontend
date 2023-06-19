@@ -15,7 +15,7 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   func, bool, shape, number, string
 } from 'prop-types';
@@ -23,9 +23,9 @@ import { withLocalize } from 'react-localize-redux';
 
 import {
   ariaLabelForTitle,
-  creditsToString,
+  creditsToString, getDegreeProgrammeUrl,
   getDescription,
-  getName,
+  getName, getStudyModuleUrl, isDegreeProgramme,
   renderRequiredCourseAmount,
   sortAndRenderRules
 } from '../../utils';
@@ -33,12 +33,13 @@ import {
 import DropdownModule from '../DropdownModule'; // eslint-disable-line
 
 import styles from '../RootModule/rootModule.css';
-import { activeLanguageType } from '../../types';
 import Heading from '../Heading';
+import Link from '../Link';
 import Accordion from '../Accordion';
 // eslint-disable-next-line import/no-cycle
 import Rule from '../Rule';
 import { FOREIGN_LANGUAGE_DROPDOWN_MODULES, STUDY_TRACK_DROPDOWN_MODULES } from '../../constants';
+import OptionContext from '../../context/OptionContext';
 
 const getSubRules = (rule) => {
   const { dataNode } = rule;
@@ -49,21 +50,20 @@ const getSubRules = (rule) => {
 };
 
 const ModuleRule = ({
-  showAll,
   translate: t,
-  activeLanguage,
   skipTitle,
-  internalLinks,
   rule,
   insideAccordion,
   hlevel,
   closestTitleId,
-  isDegreeProgramme
+  atFirstDegreeProgramme
 }) => {
+  const {
+    lang, internalLinks, academicYear, showAll
+  } = useContext(OptionContext);
   if (!rule) {
     return null;
   }
-  const lang = activeLanguage.code;
   const name = getName(rule, lang);
   const shouldRenderDropdown = STUDY_TRACK_DROPDOWN_MODULES.includes(name.toLowerCase());
 
@@ -81,7 +81,7 @@ const ModuleRule = ({
   let nextInsideAccordion = insideAccordion;
   let accordion = false;
   let internalAccordion = false;
-  if (showAll || skipTitle || isDegreeProgramme) {
+  if (showAll || skipTitle || atFirstDegreeProgramme) {
     accordion = false;
   } else if (FOREIGN_LANGUAGE_DROPDOWN_MODULES.includes(name.toLowerCase())) {
     accordion = true;
@@ -94,19 +94,45 @@ const ModuleRule = ({
 
   const moduleCredits = creditsToString(rule.dataNode.targetCredits, t, true);
   const moduleCode = rule.dataNode.code;
-  const moduleTitle = name && !accordion && !skipTitle
-    && (
-      <Heading
-        level={hlevel}
-        className={styles.moduleTitle}
-        id={`title-${rule.localId}`}
-        ariaLabel={ariaLabelForTitle(moduleCode, name, moduleCredits)}
-      >
-        {moduleCode && <span aria-hidden>{moduleCode} </span>}
-        {name}
-        {moduleCredits && <span className={styles.moduleCredits} aria-hidden>{moduleCredits}</span>}
-      </Heading>
-    );
+  let moduleTitle = '';
+  if (name && !accordion && !skipTitle) {
+    if (moduleCode) {
+      moduleTitle = (
+        <Heading
+          level={hlevel}
+          className={styles.moduleTitle}
+          id={`title-${rule.localId}`}
+        >
+          <Link
+            href={isDegreeProgramme(rule.dataNode)
+              ? getDegreeProgrammeUrl(rule.dataNode.id, lang, academicYear)
+              : getStudyModuleUrl(rule.dataNode.id, lang, academicYear)}
+            ariaLabel={ariaLabelForTitle(moduleCode, name, moduleCredits)}
+            external={!internalLinks}
+          >
+            <span aria-hidden>{moduleCode} </span>
+            {name}
+          </Link>
+          {moduleCredits
+            && <span className={styles.moduleCredits} aria-hidden>{moduleCredits}</span>}
+        </Heading>
+      );
+    } else {
+      moduleTitle = (
+        <Heading
+          level={hlevel}
+          className={styles.moduleTitle}
+          id={`title-${rule.localId}`}
+          ariaLabel={ariaLabelForTitle(moduleCode, name, moduleCredits)}
+        >
+          {name}
+          {moduleCredits
+            && <span className={styles.moduleCredits} aria-hidden>{moduleCredits}</span>}
+        </Heading>
+      );
+    }
+  }
+
   const newClosestTitleId = (moduleTitle || accordion) ? `title-${rule.localId}` : closestTitleId;
   const renderRule = (r) => (
     <Rule
@@ -114,8 +140,6 @@ const ModuleRule = ({
       rule={r}
       showAll={showAll}
       translate={t}
-      activeLanguage={activeLanguage}
-      internalLinks={internalLinks}
       insideAccordion={nextInsideAccordion}
       hlevel={moduleTitle || accordion ? hlevel + 1 : hlevel}
       closestTitleId={newClosestTitleId}
@@ -149,7 +173,11 @@ const ModuleRule = ({
 
   if (accordion && name) {
     content = (
-      <Accordion rule={rule} internalAccordion={internalAccordion} hlevel={hlevel}>
+      <Accordion
+        rule={rule}
+        internalAccordion={internalAccordion}
+        hlevel={hlevel}
+      >
         {content}
       </Accordion>
     );
@@ -167,23 +195,19 @@ const ModuleRule = ({
 };
 
 ModuleRule.defaultProps = {
-  internalLinks: false,
   skipTitle: false,
   insideAccordion: false,
-  isDegreeProgramme: false,
+  atFirstDegreeProgramme: false,
   closestTitleId: undefined
 };
 
 ModuleRule.propTypes = {
-  showAll: bool.isRequired,
   rule: shape({}).isRequired,
   translate: func.isRequired,
-  activeLanguage: activeLanguageType.isRequired,
   hlevel: number.isRequired,
   skipTitle: bool,
-  internalLinks: bool,
   insideAccordion: bool,
-  isDegreeProgramme: bool,
+  atFirstDegreeProgramme: bool,
   closestTitleId: string
 };
 

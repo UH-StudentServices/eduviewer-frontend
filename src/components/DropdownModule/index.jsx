@@ -15,86 +15,69 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react';
+import React, { useContext, useState } from 'react';
 import { bool, func, number } from 'prop-types';
 import { withLocalize } from 'react-localize-redux';
 
-import { activeLanguageType, oneOfRulesType } from '../../types';
+import { oneOfRulesType } from '../../types';
 import { getName } from '../../utils';
 
 import styles from './dropdownModule.css';
 // eslint-disable-next-line import/no-cycle
 import Rule from '../Rule';
+import OptionContext from '../../context/OptionContext';
 
 const NOTHING_SELECTED = '-';
 
-class DropdownModule extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selected: NOTHING_SELECTED
-    };
+const DropdownModule = ({
+  rule, hlevel, insideAccordion, translate
+}) => {
+  const [selected, setSelected] = useState(NOTHING_SELECTED);
+  const { lang, showAll } = useContext(OptionContext);
+  const subRules = rule.dataNode.rule.rules;
+  const selectedRule = selected !== NOTHING_SELECTED
+    && subRules.find((subRule) => subRule.localId === selected);
 
-    this.onSelectChange = this.onSelectChange.bind(this);
-    this.render = this.render.bind(this);
+  if (showAll) {
+    return rule.dataNode.rules.map((r) => (
+      <Rule
+        key={r.localId}
+        rule={rule}
+        hlevel={hlevel}
+      />
+    ));
   }
-
-  onSelectChange(event) {
-    const { value } = event.target;
-    this.setState({ selected: value });
-  }
-
-  render() {
-    const { selected } = this.state;
-    const {
-      showAll, rule, activeLanguage: lang, hlevel, insideAccordion, translate
-    } = this.props;
-    const subRules = rule.dataNode.rule.rules;
-    const selectedRule = selected !== NOTHING_SELECTED
-      && subRules.find((subRule) => subRule.localId === selected);
-
-    if (showAll) {
-      return rule.dataNode.rules.map((r) => (
-        <Rule
-          key={r.localId}
-          rule={rule}
-          showAll={showAll}
-          activeLanguage={lang}
-          hlevel={hlevel}
-        />
-      ));
-    }
-    return (
-      <div className={styles.dropdownContainer} key={rule.localId}>
-        <label className={styles.label} htmlFor={`select-${rule.localId}`}>{getName(rule, lang)}</label>
-        <div className={styles.selectContainer}>
-          <select value={selected} id={`select-${rule.localId}`} onChange={this.onSelectChange}>
-            <option value={NOTHING_SELECTED} aria-label={translate('noChoice')}>-</option>
-            {subRules.map((subRule) => (
-              <option key={subRule.localId} value={subRule.localId}>
-                {getName(subRule, lang.code)}
-              </option>
-            ))}
-          </select>
-        </div>
-        {selectedRule ? (
-          <Rule
-            rule={selectedRule}
-            showAll={showAll}
-            hlevel={hlevel}
-            insideAccordion={insideAccordion}
-            isDegreeProgramme
-          />
-        ) : null}
+  return (
+    <div className={styles.dropdownContainer} key={rule.localId}>
+      <label className={styles.label} htmlFor={`select-${rule.localId}`}>{getName(rule, lang)}</label>
+      <div className={styles.selectContainer}>
+        <select
+          value={selected}
+          id={`select-${rule.localId}`}
+          onChange={(e) => { setSelected(e.target.value); }}
+        >
+          <option value={NOTHING_SELECTED} aria-label={translate('noChoice')}>-</option>
+          {subRules.map((subRule) => (
+            <option key={subRule.localId} value={subRule.localId}>
+              {getName(subRule, lang)}
+            </option>
+          ))}
+        </select>
       </div>
-    );
-  }
-}
+      {selectedRule ? (
+        <Rule
+          rule={selectedRule}
+          hlevel={hlevel}
+          insideAccordion={insideAccordion}
+          atFirstDegreeProgramme
+        />
+      ) : null}
+    </div>
+  );
+};
 
 DropdownModule.propTypes = {
   rule: oneOfRulesType.isRequired,
-  showAll: bool.isRequired,
-  activeLanguage: activeLanguageType.isRequired,
   translate: func.isRequired,
   hlevel: number.isRequired,
   insideAccordion: bool.isRequired

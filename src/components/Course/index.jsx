@@ -15,25 +15,27 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
-import { func, string, bool } from 'prop-types';
+import React, { useContext } from 'react';
+import { func, string } from 'prop-types';
 import { withLocalize } from 'react-localize-redux';
-import { activeLanguageType, creditsType, localizedTextType } from '../../types';
-import { creditsToString, getLocalizedText, getStudiesCourseUnitPageUrl } from '../../utils';
+import { creditsType, localizedTextType } from '../../types';
+import { creditsToString, getCourseUnitUrl, getLocalizedText } from '../../utils';
 
-import Link from './Link';
+import Link from '../Link';
 import styles from '../RootModule/rootModule.css';
+import OptionContext from '../../context/OptionContext';
 
 const Course = ({
-  id, code, name, credits, activeLanguage, internalLink, translate
+  id, code, name, credits, translate
 }) => {
-  const title = getLocalizedText(name, activeLanguage.code);
+  const { lang, academicYear, internalLink } = useContext(OptionContext);
+  const title = getLocalizedText(name, lang);
   const myCredits = creditsToString(credits, translate);
   return (
     <li className={styles.courseItem}>
       <Link
         external={!internalLink}
-        href={getStudiesCourseUnitPageUrl(id)}
+        href={getCourseUnitUrl(id, lang, academicYear)}
         ariaLabel={`${code}: ${title}, ${myCredits}.`}
       >
         {code} {title}
@@ -44,17 +46,11 @@ const Course = ({
   );
 };
 
-Course.defaultProps = {
-  internalLink: false
-};
-
 Course.propTypes = {
   id: string.isRequired,
   code: string.isRequired,
   name: localizedTextType.isRequired,
   credits: creditsType.isRequired,
-  activeLanguage: activeLanguageType.isRequired,
-  internalLink: bool,
   translate: func.isRequired
 };
 

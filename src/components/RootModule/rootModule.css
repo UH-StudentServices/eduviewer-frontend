@@ -87,6 +87,10 @@
   gap: 0.5em;
 }
 
+a .moduleTitle:hover {
+  color: var(--darkBlue);
+}
+
 .moduleTitle > .moduleCredits {
   margin-left: auto;
   margin-right: 1.5em;
