@@ -47,8 +47,9 @@ const Accordion = ({
   const { lang, academicYear, internalLinks } = useContext(OptionContext);
   const title = getName(rule, lang);
   const myCredits = creditsToString(rule.dataNode?.targetCredits, t);
-  const { code, id } = rule.dataNode;
-  const titlePart = code ? (
+  const { code, id, gradeScaleId } = rule.dataNode;
+  const showAsLink = gradeScaleId || isDegreeProgramme(rule.dataNode);
+  const titlePart = showAsLink ? (
     <Link
       href={
         isDegreeProgramme(rule.dataNode)
@@ -63,7 +64,7 @@ const Accordion = ({
       </span>
     </Link>
   ) : (
-    <span className={styles.accordionNameParts}>
+    <span className={styles.accordionNameParts}>{code ? `${code}&nbsp;` : ''}
       <span className={styles.accordionName}>{title}</span>
     </span>
   );

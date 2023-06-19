@@ -94,9 +94,10 @@ const ModuleRule = ({
 
   const moduleCredits = creditsToString(rule.dataNode.targetCredits, t, true);
   const moduleCode = rule.dataNode.code;
+  const showAsLink = rule.dataNode.gradeScaleId || isDegreeProgramme(rule.dataNode);
   let moduleTitle = '';
   if (name && !accordion && !skipTitle) {
-    if (moduleCode) {
+    if (showAsLink) {
       moduleTitle = (
         <Heading
           level={hlevel}
@@ -125,6 +126,7 @@ const ModuleRule = ({
           id={`title-${rule.localId}`}
           ariaLabel={ariaLabelForTitle(moduleCode, name, moduleCredits)}
         >
+          <span aria-hidden>{moduleCode} </span>
           {name}
           {moduleCredits
             && <span className={styles.moduleCredits} aria-hidden>{moduleCredits}</span>}
