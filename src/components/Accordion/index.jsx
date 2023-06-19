@@ -64,7 +64,7 @@ const Accordion = ({
       </span>
     </Link>
   ) : (
-    <span className={styles.accordionNameParts}>{code ? `${code}&nbsp;` : ''}
+    <span className={styles.accordionNameParts}>{code ? `${code} ` : ''}
       <span className={styles.accordionName}>{title}</span>
     </span>
   );
