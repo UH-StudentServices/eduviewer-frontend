@@ -24,7 +24,14 @@ import styles from '../RootModule/rootModule.css';
 const Link = ({
   href, external, children, ariaLabel
 }) => (
-  <a className={styles.link} href={href} aria-label={ariaLabel}>
+  // eslint-disable-next-line react/jsx-no-target-blank
+  <a
+    className={styles.link}
+    href={href}
+    aria-label={ariaLabel}
+    target={external ? '_blank' : undefined}
+    rel={external ? 'noopener nofollow' : undefined}
+  >
     {children}
     {external && (
       <div className={styles.iconContainer}>

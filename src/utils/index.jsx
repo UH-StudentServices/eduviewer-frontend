@@ -16,7 +16,9 @@
  */
 
 import React from 'react';
-import { STUDIES_CU_PAGE_BASE_URL } from '../config';
+import {
+  STUDIES_HOST_BASE_URL, studiesCourseUnits, studiesStudyModules, studiesDegreeProgrammes
+} from '../config';
 import { LIST_ITEM_RULES, ruleTypes } from '../constants';
 import InfoBox from '../components/InfoBox';
 import styles from '../components/RootModule/rootModule.css';
@@ -110,8 +112,6 @@ export const calculateCurrentLV = () => {
 export const getCode = (module) => (isModuleEducation(module)
   && module.dataNode?.code) || module.code;
 
-export const getStudiesCourseUnitPageUrl = (cuId) => `${STUDIES_CU_PAGE_BASE_URL}${cuId}`;
-
 export const renderRequiredCourseAmount = (rule, t) => {
   const { require, allMandatory } = rule;
 
@@ -150,3 +150,19 @@ export const ariaLabelForTitle = (code, title, credits) => {
   const ariaCredits = credits ? `, ${credits}.` : '';
   return ariaCode + title + ariaCredits;
 };
+
+const studyYearParam = (studyYear) => (studyYear ? `?cpId=${studyYear}` : '');
+
+export const getCourseUnitUrl = (id, lang, studyYear) =>
+  STUDIES_HOST_BASE_URL + (studiesCourseUnits[lang] || studiesCourseUnits.fi) + id
+  + studyYearParam(studyYear);
+
+export const getStudyModuleUrl = (id, lang, studyYear) =>
+  STUDIES_HOST_BASE_URL + (studiesStudyModules[lang] || studiesStudyModules.fi) + id
+  + studyYearParam(studyYear);
+
+export const getDegreeProgrammeUrl = (id, lang, studyYear) =>
+  STUDIES_HOST_BASE_URL + (studiesDegreeProgrammes[lang] || studiesDegreeProgrammes.fi) + id
+  + studyYearParam(studyYear);
+
+export const isDegreeProgramme = (moduleOrDataNode) => moduleOrDataNode?.type === 'DegreeProgramme';

@@ -15,7 +15,7 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   func, bool, shape, number, string
 } from 'prop-types';
@@ -24,34 +24,26 @@ import { withLocalize } from 'react-localize-redux';
 import {
   getDescription, renderRequiredCourseAmount, sortAndRenderRules
 } from '../../utils';
-
 // eslint-disable-next-line import/no-cycle
 import Rule from '../Rule';
-
-import { activeLanguageType } from '../../types';
+import OptionContext from '../../context/OptionContext';
 
 const CompositeRule = ({
   rule,
-  showAll,
-  internalLinks,
   insideAccordion,
   hlevel,
   closestTitleId,
-  translate: t,
-  activeLanguage
+  translate: t
 }) => {
+  const { lang } = useContext(OptionContext);
   if (!rule) {
     return null;
   }
-  const lang = activeLanguage.code;
   const renderRule = (r) => (
     <Rule
       key={r.localId}
       rule={r}
-      showAll={showAll}
       translate={t}
-      activeLanguage={activeLanguage}
-      internalLinks={internalLinks}
       insideAccordion={insideAccordion}
       hlevel={hlevel}
       closestTitleId={closestTitleId}
@@ -84,18 +76,14 @@ const CompositeRule = ({
 };
 
 CompositeRule.defaultProps = {
-  internalLinks: false,
   insideAccordion: false
 };
 
 CompositeRule.propTypes = {
-  showAll: bool.isRequired,
   rule: shape({}).isRequired,
   translate: func.isRequired,
-  activeLanguage: activeLanguageType.isRequired,
   hlevel: number.isRequired,
   closestTitleId: string.isRequired,
-  internalLinks: bool,
   insideAccordion: bool
 };
 

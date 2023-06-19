@@ -17,7 +17,6 @@
     "lint:css": "stylelint 'src/**/*.css'",
     "lint:js": "eslint src --ext .jsx,.js",
     "preinstall": "npx npm-force-resolutions",
-    "prepush": "npm test",
     "pretest": "npm run lint"
   },
   "engines": {

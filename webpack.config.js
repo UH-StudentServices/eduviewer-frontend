@@ -106,7 +106,7 @@ const createConfig = (options) => ({
             loader: 'css-loader',
             options: {
               modules: {
-                localIdentName: "[name]__[local]___[hash:base64:5]",
+                localIdentName: '[name]__[local]___[hash:base64:5]'
               },
               sourceMap: true,
               importLoaders: 1
@@ -146,19 +146,18 @@ const createConfig = (options) => ({
     cleanWebPackPlugin,
     new ESLintWebpackPlugin()
   ],
-  devServer: devServerConfig,
-  devtool: 'eval-source-map'
+  devServer: devServerConfig
+  // devtool: 'eval-source-map'
 });
-
 
 module.exports = (env, argv) => {
   const isDevelopment = argv.mode === 'development';
   const variants = isDevelopment ? [defaultTarget] : [defaultTarget, 'commonjs2', 'umd', 'amd'];
   const variantConfigs = [];
 
-  for(const variant of variants) {
+  for (const variant of variants) {
     const options = { target: variant };
     variantConfigs.push(createConfig(options));
   }
   return variantConfigs;
-}
+};

@@ -29,20 +29,16 @@ import {
 import Course from '../Course';
 
 import styles from '../RootModule/rootModule.css';
-import { activeLanguageType } from '../../types';
 // eslint-disable-next-line import/no-cycle
 import ModuleRule from '../ModuleRule';
 // eslint-disable-next-line import/no-cycle
 import CompositeRule from '../CompositeRule';
 
 const Rule = ({
-  showAll,
   translate: t,
-  activeLanguage,
-  internalLinks,
   rule,
   insideAccordion,
-  isDegreeProgramme,
+  atFirstDegreeProgramme,
   closestTitleId,
   hlevel
 }) => {
@@ -55,10 +51,7 @@ const Rule = ({
         <CompositeRule
           key={rule.localId}
           rule={rule}
-          showAll={showAll}
           translate={t}
-          activeLanguage={activeLanguage}
-          internalLinks={internalLinks}
           insideAccordion={insideAccordion}
           hlevel={hlevel}
           closestTitleId={closestTitleId}
@@ -69,12 +62,9 @@ const Rule = ({
         <ModuleRule
           key={rule.localId}
           rule={rule}
-          showAll={showAll}
           translate={t}
-          activeLanguage={activeLanguage}
-          internalLinks={internalLinks}
           insideAccordion={insideAccordion}
-          isDegreeProgramme={isDegreeProgramme}
+          atFirstDegreeProgramme={atFirstDegreeProgramme}
           hlevel={hlevel}
           closestTitleId={closestTitleId}
         />
@@ -100,7 +90,6 @@ const Rule = ({
           code={code}
           name={name}
           credits={credits}
-          internalLink={internalLinks}
         />
       );
     }
@@ -113,12 +102,9 @@ const Rule = ({
           <Rule
             key={r.localId}
             rule={r}
-            showAll={showAll}
             translate={t}
-            activeLanguage={activeLanguage}
-            internalLinks={internalLinks}
             insideAccordion={insideAccordion}
-            isDegreeProgramme={isDegreeProgramme}
+            atFirstDegreeProgramme={atFirstDegreeProgramme}
             hlevel={hlevel}
             closestTitleId={closestTitleId}
           />
@@ -132,21 +118,17 @@ const Rule = ({
 };
 
 Rule.defaultProps = {
-  internalLinks: false,
   insideAccordion: false,
-  isDegreeProgramme: false,
+  atFirstDegreeProgramme: false,
   closestTitleId: undefined
 };
 
 Rule.propTypes = {
-  showAll: bool.isRequired,
   rule: shape({}).isRequired,
   translate: func.isRequired,
-  activeLanguage: activeLanguageType.isRequired,
   hlevel: number.isRequired,
-  internalLinks: bool,
   insideAccordion: bool,
-  isDegreeProgramme: bool,
+  atFirstDegreeProgramme: bool,
   closestTitleId: string
 };
 
