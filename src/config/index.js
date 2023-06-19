@@ -83,7 +83,7 @@ const isNonProd = () => {
 
 const isQA = () => {
   const { hostname } = window.location;
-  return hostname === eduviewerHostnames.QA;
+  return hostname.toLowerCase().includes('-qa');
 };
 
 const getNonProdStyleUrl = () => {
