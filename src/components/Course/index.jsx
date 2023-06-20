@@ -28,13 +28,13 @@ import OptionContext from '../../context/OptionContext';
 const Course = ({
   id, code, name, credits, translate
 }) => {
-  const { lang, academicYear, internalLink } = useContext(OptionContext);
+  const { lang, academicYear, internalLinks } = useContext(OptionContext);
   const title = getLocalizedText(name, lang);
   const myCredits = creditsToString(credits, translate);
   return (
     <li className={styles.courseItem}>
       <Link
-        external={!internalLink}
+        external={!internalLinks}
         href={getCourseUnitUrl(id, lang, academicYear)}
         ariaLabel={`${code}: ${title}, ${myCredits}.`}
       >
