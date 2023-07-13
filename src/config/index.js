@@ -40,32 +40,27 @@ const eduviewerBaseUrls = {
   PROD: 'https://od.helsinki.fi/eduviewer'
 };
 
-const studiesCourseUnitBaseUrls = {
-  QA: 'https://studies-qa.it.helsinki.fi/opintotarjonta/cu/',
-  PROD: 'https://studies.helsinki.fi/opintotarjonta/cu/'
-};
-
 const studiesHostBaseUrls = {
   QA: 'https://studies-qa.it.helsinki.fi/',
   PROD: 'https://studies.helsinki.fi/'
 };
 
 const studiesCourseUnits = {
-  fi: 'opintotarjonta/cu/',
-  en: 'courses/cu/',
-  sv: 'studieutbud/cu/'
+  fi: 'kurssit/opintojakso/',
+  en: 'courses/course_unit/',
+  sv: 'kurser/studieavsnitt/'
 };
 
 const studiesStudyModules = {
-  fi: 'opintotarjonta/sm/',
-  en: 'courses/sm/',
-  sv: 'studieutbud/sm/'
+  fi: 'tutkintorakenne/opintokokonaisuus/',
+  en: 'degree_structure/study_module/',
+  sv: 'examensstruktur/studiehelhet/'
 };
 
 const studiesDegreeProgrammes = {
-  fi: 'tutkinto-ohjelma/',
-  en: 'degree-program/',
-  sv: 'utbildningsprogram/'
+  fi: 'tutkintorakenne/koulutusohjelma/',
+  en: 'degree_structure/degree_programme/',
+  sv: 'examensstruktur/utbildningsprogram/'
 };
 
 const getTrackingId = () => {
@@ -111,7 +106,6 @@ module.exports = {
   DEFAULT_BASE_URL: getBaseUrl(eduviewerBaseUrls),
   DEFAULT_STYLE_URL: getStyleUrl(),
   TRACKING_ID: getTrackingId(),
-  STUDIES_CU_PAGE_BASE_URL: getBaseUrl(studiesCourseUnitBaseUrls),
   STUDIES_HOST_BASE_URL: getBaseUrl(studiesHostBaseUrls),
   studiesCourseUnits,
   studiesStudyModules,
