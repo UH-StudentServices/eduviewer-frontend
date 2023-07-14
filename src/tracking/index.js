@@ -15,52 +15,42 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import ReactGA from 'react-ga';
-import { TRACKING_ID } from '../config';
-
-export const TRACKER_NAME = 'Eduviewer';
+import { isNonProd } from '../config';
 
 export const trackingCategories = {
-  SELECT_EDUCATION_HIERARCHY: 'SELECT_EDUCATION_HIERARCHY',
-  SELECT_ACADEMIC_YEAR: 'SELECT_ACADEMIC_YEAR',
-  TOGGLE_SHOW_ALL: 'TOGGLE_SHOW_ALL'
+  SELECT_EDUCATION_HIERARCHY: 'EDUVIEWER_SELECT_EDUCATION_HIERARCHY',
+  SELECT_ACADEMIC_YEAR: 'EDUVIEWER_SELECT_ACADEMIC_YEAR',
+  TOGGLE_SHOW_ALL: 'EDUVIEWER_TOGGLE_SHOW_ALL',
+  PAGE_VIEW: 'EDUVIEWER_PAGE_VIEW'
 };
 
-export const TEST_TRACKING_ID = 'test';
-
-const loadGoogleAnalyticsScript = () => {
+const loadMatomoTagManagerScript = () => {
   /* eslint-disable */
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.dataset.cookieconsent='statistics';a.type='text/plain';m.parentNode.appendChild(a)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  var _mtm = window._mtm = window._mtm || [];
+  _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
+  var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+  g.async=true; g.src='https://matomo.it.helsinki.fi/matomo/js/container_NMx6LTvF.js'; s.parentNode.insertBefore(g,s);
   /* eslint-enable */
 };
 
 export const initializeTracker = () => {
-  const testMode = TRACKING_ID === undefined;
-  if (!window.ga) {
-    loadGoogleAnalyticsScript();
+  // eslint-disable-next-line no-underscore-dangle
+  if (!window._mtm && !isNonProd()) {
+    loadMatomoTagManagerScript();
   }
-  window.ga('create', TRACKING_ID, 'auto');
-  window.ga('send', 'pageview');
-  ReactGA.initialize(testMode ? TEST_TRACKING_ID : TRACKING_ID, {
-    gaOptions: {
-      name: TRACKER_NAME
-    },
-    standardImplementation: true,
-    debug: testMode,
-    testMode
-  });
-
-  ReactGA.ga(`${TRACKER_NAME}.set`, 'anonymizeIp', true);
 };
 
-export const trackPageView = (degreeProgramCode, academicYearName, lang) => {
+export const trackEvent = (category, action, label = null) => {
+  /* eslint-disable no-underscore-dangle */
+  if (window._mtm) {
+    window._mtm.push({
+      event: action, category, label
+    });
+  }
+  /* eslint-enable no-underscore-dangle */
+};
+
+export const trackPageView = (moduleCode, academicYearName, lang) => {
   const host = window.location.hostname;
-  ReactGA.ga(`${TRACKER_NAME}.send`, 'pageview', { page: `/${degreeProgramCode}/${academicYearName}/${lang}/${host}` });
-};
-
-export const trackEvent = (category, action, label = null, value = null) => {
-  ReactGA.ga(`${TRACKER_NAME}.send`, 'event', category, action, label, value);
+  trackEvent(trackingCategories.PAGE_VIEW, `/${moduleCode}/${academicYearName}/${lang}/${host}`);
 };
