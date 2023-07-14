@@ -42,30 +42,30 @@ const studiesHostBaseUrls = {
 
 const studiesCourseUnits = {
   fi: 'kurssit/opintojakso/',
-  en: 'courses/course_unit/',
+  en: 'courses/course-unit/',
   sv: 'kurser/studieavsnitt/'
 };
 
 const studiesStudyModules = {
   fi: 'tutkintorakenne/opintokokonaisuus/',
-  en: 'degree_structure/study_module/',
+  en: 'degree-structure/study-module/',
   sv: 'examensstruktur/studiehelhet/'
 };
 
 const studiesDegreeProgrammes = {
   fi: 'tutkintorakenne/koulutusohjelma/',
-  en: 'degree_structure/degree_programme/',
+  en: 'degree-structure/degree-programme/',
   sv: 'examensstruktur/utbildningsprogram/'
-};
-
-const isNonProd = () => {
-  const { hostname } = window.location;
-  return hostname === eduviewerHostnames.LOCAL || hostname === eduviewerHostnames.QA;
 };
 
 const isQA = () => {
   const { hostname } = window.location;
   return hostname.toLowerCase().includes('-qa');
+};
+
+const isNonProd = () => {
+  const { hostname } = window.location;
+  return hostname === eduviewerHostnames.LOCAL || isQA();
 };
 
 const getNonProdStyleUrl = () => {
