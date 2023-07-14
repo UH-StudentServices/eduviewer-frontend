@@ -16,7 +16,7 @@
  */
 
 // This frontend app can be embedded on any site.
-// So we use the PROD tracking id and style url,
+// So we use the PROD matomo tracking and style url,
 // unless we know we are embedded on the QA or DEV server
 // or are running locally.
 
@@ -28,11 +28,6 @@ const eduviewerHostnames = {
   LOCAL: 'localhost',
   QA: 'eduviewer-qa.it.helsinki.fi',
   PROD: 'eduviewer.it.helsinki.fi'
-};
-
-const eduviewerTrackingIds = {
-  QA: 'UA-55852460-20',
-  PROD: 'UA-55852460-21'
 };
 
 const eduviewerBaseUrls = {
@@ -61,14 +56,6 @@ const studiesDegreeProgrammes = {
   fi: 'tutkintorakenne/koulutusohjelma/',
   en: 'degree_structure/degree_programme/',
   sv: 'examensstruktur/utbildningsprogram/'
-};
-
-const getTrackingId = () => {
-  const { hostname } = window.location;
-  if (hostname === eduviewerHostnames.LOCAL) {
-    return null;
-  }
-  return hostname === eduviewerHostnames.QA ? eduviewerTrackingIds.QA : eduviewerTrackingIds.PROD;
 };
 
 const isNonProd = () => {
@@ -105,8 +92,8 @@ const getBaseUrl = (urls) => (
 module.exports = {
   DEFAULT_BASE_URL: getBaseUrl(eduviewerBaseUrls),
   DEFAULT_STYLE_URL: getStyleUrl(),
-  TRACKING_ID: getTrackingId(),
   STUDIES_HOST_BASE_URL: getBaseUrl(studiesHostBaseUrls),
+  isNonProd,
   studiesCourseUnits,
   studiesStudyModules,
   studiesDegreeProgrammes

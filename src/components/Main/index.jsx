@@ -96,8 +96,7 @@ class Main extends Component {
   // TODO deprecated: "Move code with side effects to componentDidMount,
   // and set initial state in the constructor."
   async UNSAFE_componentWillMount() {
-    // Insert Cookiebot to header if it is not there already (from embed context),
-    // so that it is present before Google Analytics
+    // Insert Cookiebot to header if it is not there already (from embed context)
     const { lang } = this.props;
     if (!document.getElementById('Cookiebot')) {
       const cbot = document.createElement('script');
