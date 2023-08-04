@@ -25,7 +25,7 @@ import { activeLanguageType, rootModuleType } from '../../types';
 import styles from './rootModule.css';
 import { ruleTypes } from '../../constants';
 import ModuleRule from '../ModuleRule';
-import { isDegreeProgramme } from '../../utils';
+import { countPotentialAccordions, isDegreeProgramme } from '../../utils';
 import OptionContext from '../../context/OptionContext';
 
 const RootModule = ({
@@ -50,6 +50,7 @@ const RootModule = ({
     localId: 'rootRule',
     dataNode: module
   };
+
   return (
     <OptionContext.Provider
       value={options}
@@ -61,6 +62,7 @@ const RootModule = ({
           translate={translate}
           hlevel={rootLevel}
           skipTitle={hideAccordion}
+          canBeAccordion={countPotentialAccordions(module.rules || [module.rule]) > 1}
           atFirstDegreeProgramme={isDegreeProgramme(module)}
         />
       </div>

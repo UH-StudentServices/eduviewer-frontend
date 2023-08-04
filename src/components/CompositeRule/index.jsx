@@ -22,6 +22,7 @@ import {
 import { withLocalize } from 'react-localize-redux';
 
 import {
+  countPotentialAccordions,
   getDescription, renderRequiredCourseAmount, sortAndRenderRules
 } from '../../utils';
 // eslint-disable-next-line import/no-cycle
@@ -33,12 +34,15 @@ const CompositeRule = ({
   insideAccordion,
   hlevel,
   closestTitleId,
+  canBeAccordion,
   translate: t
 }) => {
   const { lang } = useContext(OptionContext);
   if (!rule) {
     return null;
   }
+  const nextCanBeAccordion = !insideAccordion
+    && (canBeAccordion || countPotentialAccordions([rule]) > 1);
   const renderRule = (r) => (
     <Rule
       key={r.localId}
@@ -46,6 +50,7 @@ const CompositeRule = ({
       translate={t}
       insideAccordion={insideAccordion}
       hlevel={hlevel}
+      canBeAccordion={nextCanBeAccordion}
       closestTitleId={closestTitleId}
     />
   );
@@ -76,7 +81,8 @@ const CompositeRule = ({
 };
 
 CompositeRule.defaultProps = {
-  insideAccordion: false
+  insideAccordion: false,
+  canBeAccordion: false
 };
 
 CompositeRule.propTypes = {
@@ -84,7 +90,8 @@ CompositeRule.propTypes = {
   translate: func.isRequired,
   hlevel: number.isRequired,
   closestTitleId: string.isRequired,
-  insideAccordion: bool
+  insideAccordion: bool,
+  canBeAccordion: bool
 };
 
 export default withLocalize(CompositeRule);

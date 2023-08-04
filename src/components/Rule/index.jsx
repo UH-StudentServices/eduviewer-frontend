@@ -40,6 +40,7 @@ const Rule = ({
   insideAccordion,
   atFirstDegreeProgramme,
   closestTitleId,
+  canBeAccordion,
   hlevel
 }) => {
   if (!rule) {
@@ -54,6 +55,7 @@ const Rule = ({
           translate={t}
           insideAccordion={insideAccordion}
           hlevel={hlevel}
+          canBeAccordion={canBeAccordion}
           closestTitleId={closestTitleId}
         />
       );
@@ -66,6 +68,7 @@ const Rule = ({
           insideAccordion={insideAccordion}
           atFirstDegreeProgramme={atFirstDegreeProgramme}
           hlevel={hlevel}
+          canBeAccordion={canBeAccordion}
           closestTitleId={closestTitleId}
         />
       );
@@ -106,6 +109,7 @@ const Rule = ({
             insideAccordion={insideAccordion}
             atFirstDegreeProgramme={atFirstDegreeProgramme}
             hlevel={hlevel}
+            canBeAccordion={canBeAccordion}
             closestTitleId={closestTitleId}
           />
           )}
@@ -120,6 +124,7 @@ const Rule = ({
 Rule.defaultProps = {
   insideAccordion: false,
   atFirstDegreeProgramme: false,
+  canBeAccordion: false,
   closestTitleId: undefined
 };
 
@@ -129,6 +134,7 @@ Rule.propTypes = {
   hlevel: number.isRequired,
   insideAccordion: bool,
   atFirstDegreeProgramme: bool,
+  canBeAccordion: bool,
   closestTitleId: string
 };
 

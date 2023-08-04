@@ -22,10 +22,10 @@ import {
 import { withLocalize } from 'react-localize-redux';
 
 import {
-  ariaLabelForTitle,
+  ariaLabelForTitle, countPotentialAccordions,
   creditsToString, getDegreeProgrammeUrl,
   getDescription,
-  getName, getStudyModuleUrl, isDegreeProgramme,
+  getName, getStudyModuleUrl, getSubRules, isDegreeProgramme,
   renderRequiredCourseAmount,
   sortAndRenderRules
 } from '../../utils';
@@ -41,19 +41,12 @@ import Rule from '../Rule';
 import { FOREIGN_LANGUAGE_DROPDOWN_MODULES, STUDY_TRACK_DROPDOWN_MODULES } from '../../constants';
 import OptionContext from '../../context/OptionContext';
 
-const getSubRules = (rule) => {
-  const { dataNode } = rule;
-  if (dataNode?.rules && dataNode.rules.length) {
-    return dataNode.rules;
-  }
-  return dataNode?.rule ? [dataNode.rule] : [];
-};
-
 const ModuleRule = ({
   translate: t,
   skipTitle,
   rule,
   insideAccordion,
+  canBeAccordion,
   hlevel,
   closestTitleId,
   atFirstDegreeProgramme
@@ -81,15 +74,18 @@ const ModuleRule = ({
   let nextInsideAccordion = insideAccordion;
   let accordion = false;
   let internalAccordion = false;
+  let nextCanBeAccordion = false;
   if (showAll || skipTitle || atFirstDegreeProgramme) {
     accordion = false;
   } else if (FOREIGN_LANGUAGE_DROPDOWN_MODULES.includes(name.toLowerCase())) {
     accordion = true;
     internalAccordion = true;
     nextInsideAccordion = true;
-  } else if (!insideAccordion) {
+  } else if (!insideAccordion && canBeAccordion) {
     accordion = true;
     nextInsideAccordion = true;
+  } else if (!insideAccordion) {
+    nextCanBeAccordion = countPotentialAccordions(getSubRules(rule)) > 1;
   }
 
   const moduleCredits = creditsToString(rule.dataNode.targetCredits, t, true);
@@ -145,6 +141,7 @@ const ModuleRule = ({
       insideAccordion={nextInsideAccordion}
       hlevel={moduleTitle || accordion ? hlevel + 1 : hlevel}
       closestTitleId={newClosestTitleId}
+      canBeAccordion={nextCanBeAccordion}
     />
   );
 
@@ -200,6 +197,7 @@ ModuleRule.defaultProps = {
   skipTitle: false,
   insideAccordion: false,
   atFirstDegreeProgramme: false,
+  canBeAccordion: false,
   closestTitleId: undefined
 };
 
@@ -210,7 +208,8 @@ ModuleRule.propTypes = {
   skipTitle: bool,
   insideAccordion: bool,
   atFirstDegreeProgramme: bool,
-  closestTitleId: string
+  closestTitleId: string,
+  canBeAccordion: bool
 };
 
 export default withLocalize(ModuleRule);
