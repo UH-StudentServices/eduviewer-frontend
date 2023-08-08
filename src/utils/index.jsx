@@ -166,3 +166,24 @@ export const getDegreeProgrammeUrl = (id, lang, studyYear) =>
   + studyYearParam(studyYear);
 
 export const isDegreeProgramme = (moduleOrDataNode) => moduleOrDataNode?.type === 'DegreeProgramme';
+
+export const getSubRules = (rule) => {
+  const { dataNode } = rule;
+  if (dataNode?.rules && dataNode.rules.length) {
+    return dataNode.rules;
+  }
+  return dataNode?.rule ? [dataNode.rule] : [];
+};
+
+export const countPotentialAccordions = (rules, stop = false) => rules.reduce((count, rule) => {
+  if (rule.type === ruleTypes.MODULE_RULE && rule.dataNode?.id) {
+    return count + 1;
+  }
+  if (rule.type === ruleTypes.CREDITS_RULE) {
+    return count + countPotentialAccordions([rule.rule]);
+  }
+  if (rule.type === ruleTypes.COMPOSITE_RULE && !stop) {
+    return count + countPotentialAccordions(rule.rules, true);
+  }
+  return count;
+}, 0);
