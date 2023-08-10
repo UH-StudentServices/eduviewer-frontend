@@ -16,7 +16,9 @@
  */
 
 import React, { useContext, useState } from 'react';
-import { bool, func, number } from 'prop-types';
+import {
+  bool, func, number, string
+} from 'prop-types';
 import { withLocalize } from 'react-localize-redux';
 
 import { oneOfRulesType } from '../../types';
@@ -30,7 +32,7 @@ import OptionContext from '../../context/OptionContext';
 const NOTHING_SELECTED = '-';
 
 const DropdownModule = ({
-  rule, hlevel, insideAccordion, translate
+  rule, hlevel, insideAccordion, translate, noChoiceContentTranslationId
 }) => {
   const [selected, setSelected] = useState(NOTHING_SELECTED);
   const { lang, showAll } = useContext(OptionContext);
@@ -56,7 +58,9 @@ const DropdownModule = ({
           id={`select-${rule.localId}`}
           onChange={(e) => { setSelected(e.target.value); }}
         >
-          <option value={NOTHING_SELECTED} aria-label={translate('noChoice')}>-</option>
+          <option value={NOTHING_SELECTED} aria-label={translate('noChoice')}>
+            {translate(noChoiceContentTranslationId, null, { onMissingTranslation: () => '-' })}
+          </option>
           {subRules.map((subRule) => (
             <option key={subRule.localId} value={subRule.localId}>
               {getName(subRule, lang)}
@@ -80,7 +84,12 @@ DropdownModule.propTypes = {
   rule: oneOfRulesType.isRequired,
   translate: func.isRequired,
   hlevel: number.isRequired,
-  insideAccordion: bool.isRequired
+  insideAccordion: bool.isRequired,
+  noChoiceContentTranslationId: string
+};
+
+DropdownModule.defaultProps = {
+  noChoiceContentTranslationId: undefined
 };
 
 export default withLocalize(DropdownModule);

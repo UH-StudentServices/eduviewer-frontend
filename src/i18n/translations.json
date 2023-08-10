@@ -68,5 +68,10 @@
     "ei valintaa",
     "inget val",
     "no choice"
+  ],
+  "chooseStudyTrack": [
+    "Valitse opintosuunta",
+    "Välj studieinriktning",
+    "Choose study track"
   ]
 }
