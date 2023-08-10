@@ -58,15 +58,17 @@ const ModuleRule = ({
     return null;
   }
   const name = getName(rule, lang);
-  const shouldRenderDropdown = STUDY_TRACK_DROPDOWN_MODULES.includes(name.toLowerCase());
+  const shouldRenderStudyTrackDropdown = STUDY_TRACK_DROPDOWN_MODULES.includes(name.toLowerCase())
+    && !showAll;
 
-  if (shouldRenderDropdown && !showAll) {
+  if (shouldRenderStudyTrackDropdown) {
     return (
       <DropdownModule
         rule={rule}
         showAll={showAll}
         hlevel={hlevel}
         insideAccordion={insideAccordion}
+        noChoiceContentTranslationId="chooseStudyTrack"
       />
     );
   }
@@ -120,9 +122,8 @@ const ModuleRule = ({
           level={hlevel}
           className={styles.moduleTitle}
           id={`title-${rule.localId}`}
-          ariaLabel={ariaLabelForTitle(moduleCode, name, moduleCredits)}
+          ariaLabel={ariaLabelForTitle(undefined, name, moduleCredits)}
         >
-          <span aria-hidden>{moduleCode} </span>
           {name}
           {moduleCredits
             && <span className={styles.moduleCredits} aria-hidden>{moduleCredits}</span>}

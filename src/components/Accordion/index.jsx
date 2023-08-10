@@ -25,10 +25,8 @@ import { oneOfRulesType } from '../../types';
 import {
   ariaLabelForTitle,
   creditsToString,
-  getDegreeProgrammeUrl,
   getName,
-  getStudyModuleUrl,
-  isDegreeProgramme
+  getStudyModuleUrl
 } from '../../utils';
 import styles from '../RootModule/rootModule.css';
 import Heading from '../Heading';
@@ -48,14 +46,10 @@ const Accordion = ({
   const title = getName(rule, lang);
   const myCredits = creditsToString(rule.dataNode?.targetCredits, t);
   const { code, id, gradeScaleId } = rule.dataNode;
-  const showAsLink = gradeScaleId || isDegreeProgramme(rule.dataNode);
+  const showAsLink = !!gradeScaleId;
   const titlePart = showAsLink ? (
     <Link
-      href={
-        isDegreeProgramme(rule.dataNode)
-          ? getDegreeProgrammeUrl(id, lang, academicYear)
-          : getStudyModuleUrl(id, lang, academicYear)
-    }
+      href={getStudyModuleUrl(id, lang, academicYear)}
       external={!internalLinks}
       ariaLabel={ariaLabelForTitle(code, title, myCredits)}
     >
@@ -64,7 +58,7 @@ const Accordion = ({
       </span>
     </Link>
   ) : (
-    <span className={styles.accordionNameParts}>{code ? `${code} ` : ''}
+    <span className={styles.accordionNameParts}>
       <span className={styles.accordionName}>{title}</span>
     </span>
   );
