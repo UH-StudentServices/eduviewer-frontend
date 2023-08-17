@@ -48,7 +48,8 @@ const getRootAttribute = (attributeName) => {
   return root ? root.getAttribute(attributeName) : null;
 };
 
-const render = () => {
+// eslint-disable-next-line import/prefer-default-export
+export const render = () => {
   const code = getRootAttribute(DEGREE_PROGRAM_ATTR_NAME) || getRootAttribute(MODULE_ATTR_NAME) || '';
   const academicYearCode = getRootAttribute(ACADEMIC_YEAR_ATTR_NAME) || calculateCurrentLV();
   const hideSelectionsString = getRootAttribute(HIDE_SELECTIONS);
@@ -62,7 +63,8 @@ const render = () => {
   const showOnlySelectedAcademicYear = onlySelectedAYValue !== null && onlySelectedAYValue.toLowerCase() !== 'false';
   const lang = getRootAttribute(LANGUAGE_ATTR_NAME) || availableLanguages.FI;
   const header = getRootAttribute(HEADER_ATTR_NAME) || '';
-
+  // eslint-disable-next-line no-console
+  console.log(' render eduviewer w. year ', academicYearCode);
   ReactDOM.render(
     <>
       <LocalizeProvider>
