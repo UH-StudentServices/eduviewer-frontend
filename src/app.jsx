@@ -63,8 +63,6 @@ export const render = () => {
   const showOnlySelectedAcademicYear = onlySelectedAYValue !== null && onlySelectedAYValue.toLowerCase() !== 'false';
   const lang = getRootAttribute(LANGUAGE_ATTR_NAME) || availableLanguages.FI;
   const header = getRootAttribute(HEADER_ATTR_NAME) || '';
-  // eslint-disable-next-line no-console
-  console.log(' render eduviewer w. year ', academicYearCode);
   ReactDOM.render(
     <>
       <LocalizeProvider>

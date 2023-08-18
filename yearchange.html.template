@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+       <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+       <title><%= title %></title>
+    </head>
+    <body>
+        <button onClick=toggleEduvwr() >Pois ja takaisin</button>
+        <button onClick=increaseYear() >Lisää vuosi</button>
+        <span id="selectedYear"></span>
+        <div id="outer">
+        </div>
+       <script>
+           let active = false;
+           let year = 68
+           
+           const toggleEduvwr = () => {
+                active = !active;
+                if (!active) {
+                    document.getElementById('eduviewer-root').remove();
+                }
+                if (active) {
+                   lv = 'hy-lv-' + year;
+                   const edvwr = document.createElement('div');
+                   edvwr.id = 'eduviewer-root';
+                   edvwr.setAttribute('academic-year', lv);
+                   edvwr.setAttribute('module-code', 'KH80_004');
+                   edvwr.setAttribute('selected-academic-year-only', true);
+                   edvwr.setAttribute('hide-selections', true);
+                   edvwr.lang = 'fi';
+                   document.getElementById("outer").appendChild(edvwr);
+                   document.getElementById('selectedYear').textContent = lv;
+                   eduviewer_var.render();
+                }
+                
+                console.log('active: ', active);
+           }
+    
+           const increaseYear = () => {
+                year++;
+                lv = 'hy-lv-' + year;
+                document.getElementById('eduviewer-root').setAttribute('academic-year', lv);
+                eduviewer_var.render();
+                document.getElementById('selectedYear').textContent = lv;
+           }
+           
+           toggleEduvwr();
+    
+       </script>
+    </body>
+</html>

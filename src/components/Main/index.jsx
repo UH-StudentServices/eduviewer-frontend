@@ -79,9 +79,11 @@ class Main extends Component {
     /* eslint-disable camelcase */
     this.UNSAFE_componentWillMount = this.UNSAFE_componentWillMount.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
+    this.componentDidUpdate = this.componentDidUpdate.bind(this);
     this.handleError = this.handleError.bind(this);
     this.onEducationChange = this.onEducationChange.bind(this);
     this.onAcademicYearsChange = this.onAcademicYearsChange.bind(this);
+    this.changeAcademicYear = this.changeAcademicYear.bind(this);
     this.onShowAll = this.onShowAll.bind(this);
     this.getAcademicYear = this.getAcademicYear.bind(this);
     this.initAcademicYears = this.initAcademicYears.bind(this);
@@ -134,6 +136,16 @@ class Main extends Component {
     trackPageView(trackingCode, academicYearNames[academicYear], lang);
   }
 
+  async componentDidUpdate() {
+    const { academicYearCode } = this.props;
+    const { defaultAcademicYearCode } = this.state;
+    if (academicYearCode !== defaultAcademicYearCode) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ defaultAcademicYearCode: academicYearCode });
+      this.changeAcademicYear(academicYearCode);
+    }
+  }
+
   handleError(error) {
     this.setState({ errorMessage: error.message, isLoading: false });
   }
@@ -159,22 +171,7 @@ class Main extends Component {
   }
 
   async onAcademicYearsChange(event) {
-    const { moduleHierarchy } = this.state;
-    this.setState({ isLoading: true, errorMessage: '' });
-    const academicYear = event.target.value;
-    const code = getCode(moduleHierarchy);
-    try {
-      const newModuleHierarchy = await getModuleHierarchy(code, academicYear);
-      const { academicYearNames } = this.state;
-      trackEvent(trackingCategories.SELECT_ACADEMIC_YEAR, academicYearNames[academicYear]);
-      this.setState({
-        moduleHierarchy: newModuleHierarchy,
-        academicYear,
-        isLoading: false
-      });
-    } catch (error) {
-      this.handleError(error);
-    }
+    return this.changeAcademicYear(event.target.value);
   }
 
   onShowAll() {
@@ -192,6 +189,24 @@ class Main extends Component {
     const latestAcademicYear = academicYears.length
       ? academicYears[academicYears.length - 1] : null;
     return isOldSelectionValid ? oldSelection : latestAcademicYear;
+  }
+
+  async changeAcademicYear(academicYear) {
+    const { moduleHierarchy } = this.state;
+    this.setState({ isLoading: true, errorMessage: '' });
+    const code = getCode(moduleHierarchy);
+    try {
+      const newModuleHierarchy = await getModuleHierarchy(code, academicYear);
+      const { academicYearNames } = this.state;
+      trackEvent(trackingCategories.SELECT_ACADEMIC_YEAR, academicYearNames[academicYear]);
+      this.setState({
+        moduleHierarchy: newModuleHierarchy,
+        academicYear,
+        isLoading: false
+      });
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   async initAcademicYears(defaultAcademicYearCode) {
