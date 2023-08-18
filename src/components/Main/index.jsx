@@ -141,7 +141,7 @@ class Main extends Component {
     const { defaultAcademicYearCode } = this.state;
     if (academicYearCode !== defaultAcademicYearCode) {
       // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ defaultAcademicYearCode: academicYearCode });
+      this.setState({ defaultAcademicYearCode: academicYearCode, isLoading: true });
       this.changeAcademicYear(academicYearCode);
     }
   }
