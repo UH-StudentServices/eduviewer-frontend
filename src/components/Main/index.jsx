@@ -161,7 +161,7 @@ const Main = ({
 
   useEffect(() => {
     async function initWhatNecessary() {
-      if (!onlySelectedAcademicYear && !hideSelections) {
+      if (!onlySelectedAcademicYear && !hideSelections && !code) {
         setOptionsLoading(true);
         await initAcademicYearNames();
         await initAllSelects();
