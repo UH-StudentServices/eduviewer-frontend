@@ -34,6 +34,16 @@
     "En av följande",
     "One of the following"
   ],
+  "oneOfFollowingCourses": [
+    "Jokin seuraavista opintojaksoista",
+    "En av följande kurser",
+    "One of the following courses"
+  ],
+  "oneOfFollowingModules": [
+    "Jokin seuraavista kokonaisuuksista",
+    "En av följande studiehelhet",
+    "One of the following modules"
+  ],
   "total": [
     "Yhteensä",
     "Sammanlagt",

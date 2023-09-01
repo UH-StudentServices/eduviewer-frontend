@@ -16,7 +16,7 @@
  */
 
 .rootModule {
-  padding-bottom: 2em;
+  padding-bottom: 2rem;
 }
 
 .rootModuleTitle {
@@ -41,7 +41,7 @@
 }
 
 .h5 {
-  font-size: 1.2em;
+  font-size: 1.4em;
 }
 
 .h6,
@@ -54,35 +54,32 @@
 }
 
 .module {
-  margin-top: 0.5em;
+  margin-bottom: 0.5rem;
 }
 
 .module > ul,
-.accordionRegion > ul {
+.accordionRegion > ul,
+.oneOfFollowingContent > ul {
   list-style-type: none;
-  margin: 0.3em 0.25em 0.5em 0.25em;
-  border: 0.1px solid var(--silver);
+  border: 0.025em solid var(--silver);
+  margin: 0 0.8rem 1rem 0.8rem;
 
   & li {
     &:nth-child(odd) {
       background-color: var(--silver);
     }
 
-    background-color: #f8f8f8;
+    background-color: var(--lightSilver);
     color: var(--black);
-    padding: 0.5em;
+    padding: 0.5rem;
     margin: 0;
   }
-}
-
-.groupingModule {
-  margin-top: 0.5em;
 }
 
 .moduleTitle {
   color: var(--black);
   font-weight: bold;
-  padding: 1em 0 1em 1em;
+  padding: 2.4em 0 1em 0.8rem;
   display: flex;
   gap: 0.5em;
 }
@@ -91,14 +88,44 @@ a .moduleTitle:hover {
   color: var(--darkBlue);
 }
 
+.module:first-of-type > .moduleTitle {
+  padding-top: 0.5em;
+}
+
 .moduleTitle > .moduleCredits {
   margin-left: auto;
-  margin-right: 1.5em;
+  margin-right: 1.5rem;
+  white-space: nowrap;
+}
+
+.oneOfFollowing {
+  margin: 0.8rem;
+}
+
+.oneOfFollowingContent {
+  border-left: 0.025em dotted var(--darkGray);
+  border-bottom: 0.025em dotted var(--darkGray);
+}
+
+.oneOfFollowingContent:has(.module > .accordionContainer) {
+  border: 0;
+}
+
+.oneOfFollowingTitle {
+  display: inline-block;
+  text-transform: uppercase;
+  padding-bottom: 1rem;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.groupingModule {
+  margin-top: 0.5rem;
 }
 
 .compositeRuleCourseAmounts {
   display: flex;
-  padding: 1em 1em 0.5em 1em;
+  padding: 1rem 1rem 0.5rem 1rem;
 }
 
 .courseItem {
@@ -108,19 +135,20 @@ a .moduleTitle:hover {
 
 .credits {
   font-weight: 500;
-  margin-right: 1.25em;
+  margin-right: 1.25rem;
+  white-space: nowrap;
 }
 
 .iconContainer {
   display: inline-block;
-  margin-left: 0.5em;
+  margin-left: 0.5rem;
 }
 
 .icon {
   transform: rotate(-45deg) translateY(-0.2em);
   position: relative;
   top: 0.3em;
-  height: 1em;
+  height: 1rem;
 }
 
 .link {
@@ -142,19 +170,20 @@ a .moduleTitle:hover {
 
 .creditRequirement,
 .module div .creditsRule {
-  margin-left: 1em;
+  margin-top: 1rem;
+  margin-left: 1rem;
 }
 
-.rootModule > section > .moduleTitle {
+.rootModule > section {
   padding-left: 0;
 }
 
 .rootModule > section > .creditsRule {
-  margin-bottom: 1em;
+  margin-bottom: 1rem;
 }
 
 .accordionContainer {
-  border: 1px solid var(--mediumSilver);
+  border: 0.025em solid var(--mediumSilver);
   background-color: var(--lightSilver);
   margin: 0 0 1em 0;
   display: flex;
@@ -162,9 +191,9 @@ a .moduleTitle:hover {
 }
 
 .internalAccordionContainer {
-  border: 1px solid var(--mediumSilver);
+  border: 0.025em solid var(--mediumSilver);
   background-color: var(--white);
-  margin: 0 0.5em 0.5em 0.5em;
+  margin: 0 0.5rem 0.5rem 0.5rem;
   display: flex;
   flex-direction: column;
 }
@@ -181,7 +210,7 @@ a .moduleTitle:hover {
   align-items: start !important;
   gap: 0.5em;
   color: var(--black) !important;
-  padding: 0.8em 1.25em 0.8em 1em !important;
+  padding: 0.8rem 1.25rem 0.8rem 1rem !important;
   width: 100%;
 }
 

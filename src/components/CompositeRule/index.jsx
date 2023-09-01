@@ -23,11 +23,12 @@ import { withLocalize } from 'react-localize-redux';
 
 import {
   countPotentialAccordions,
-  getDescription, renderRequiredCourseAmount, sortAndRenderRules
+  sortAndRenderRules
 } from '../../utils';
 // eslint-disable-next-line import/no-cycle
 import Rule from '../Rule';
 import OptionContext from '../../context/OptionContext';
+import RuleInfo from '../RuleInfo';
 
 const CompositeRule = ({
   rule,
@@ -55,7 +56,6 @@ const CompositeRule = ({
     />
   );
   const [listContent, otherContent] = sortAndRenderRules(rule.rules, renderRule);
-  const description = getDescription(rule, lang);
   let content = otherContent;
 
   if (listContent.length) {
@@ -64,7 +64,7 @@ const CompositeRule = ({
       <ul
         key={`ul-${rule.localId}`}
         aria-labelledby={closestTitleId}
-        aria-describedby={description ? `desc-${rule.localId}` : undefined}
+        aria-describedby={rule.description ? `desc-${rule.localId}` : undefined}
         role="list"
       >
         {listContent}
@@ -72,11 +72,7 @@ const CompositeRule = ({
     ), ...otherContent];
   }
   return (
-    <>
-      {renderRequiredCourseAmount(rule, t)}
-      {description}
-      {content}
-    </>
+    <RuleInfo rule={rule} lang={lang} content={content} />
   );
 };
 
