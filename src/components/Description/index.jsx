@@ -14,43 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
+import React from 'react';
+import { shape, string } from 'prop-types';
+import { withLocalize } from 'react-localize-redux';
+import InfoBox from '../InfoBox';
+import { getLocalizedText } from '../../utils';
 
-.mainContainer {
-  margin: 1em;
-  padding: 0.5em 1em 1em;
-  border: 0.0125em solid var(--mediumSilver);
-}
+const Description = ({ rule, lang }) => {
+  const { description: ruleDesc, localId } = rule;
+  if (ruleDesc) {
+    return (
+      <InfoBox content={getLocalizedText(ruleDesc, lang)} id={`desc-${localId}`} setInnerHtml />
+    );
+  }
+  return null;
+};
 
-.mainHeader {
-  letter-spacing: unset;
-  line-height: unset;
-}
+Description.propTypes = {
+  rule: shape({}).isRequired,
+  lang: string.isRequired
+};
 
-.selectContainer {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 0.05em;
-}
-
-.noContent {
-  margin-bottom: 0.5em;
-  margin-left: 0.25em;
-  font-size: 1.1em;
-  color: var(--black);
-  font-weight: 300;
-}
-
-.academicYearContainer {
-  margin-top: 0.5em;
-  font-size: 1.45em;
-}
-
-.academicYearLabel {
-  color: var(--lightGray);
-  font-weight: 400;
-}
-
-.academicYearText {
-  color: var(--black);
-  font-weight: 600;
-}
+export default withLocalize(Description);

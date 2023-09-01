@@ -24,9 +24,7 @@ import { withLocalize } from 'react-localize-redux';
 import {
   ariaLabelForTitle, countPotentialAccordions,
   creditsToString, getDegreeProgrammeUrl,
-  getDescription,
   getName, getStudyModuleUrl, getSubRules, isDegreeProgramme,
-  renderRequiredCourseAmount,
   sortAndRenderRules
 } from '../../utils';
 
@@ -40,6 +38,7 @@ import Accordion from '../Accordion';
 import Rule from '../Rule';
 import { FOREIGN_LANGUAGE_DROPDOWN_MODULES, STUDY_TRACK_DROPDOWN_MODULES } from '../../constants';
 import OptionContext from '../../context/OptionContext';
+import RuleInfo from '../RuleInfo';
 
 const ModuleRule = ({
   translate: t,
@@ -165,9 +164,7 @@ const ModuleRule = ({
   content = (
     <>
       {moduleTitle}
-      {renderRequiredCourseAmount(rule, t)}
-      {getDescription(rule, lang)}
-      {content}
+      <RuleInfo rule={rule} lang={lang} content={content} />
     </>
   );
 

@@ -14,14 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import React from 'react';
 import {
   STUDIES_HOST_BASE_URL, studiesCourseUnits, studiesStudyModules, studiesDegreeProgrammes
 } from '../config';
 import { LIST_ITEM_RULES, ruleTypes } from '../constants';
-import InfoBox from '../components/InfoBox';
-import styles from '../components/RootModule/rootModule.css';
 
 const { COURSE_UNIT_RULE } = ruleTypes;
 
@@ -112,30 +108,6 @@ export const calculateCurrentLV = () => {
 export const getCode = (module) => (isModuleEducation(module)
   && module.dataNode?.code) || module.code;
 
-export const renderRequiredCourseAmount = (rule, t) => {
-  const { require, allMandatory } = rule;
-
-  if (require?.min === 1 && require?.max === 1) {
-    return (<div className={styles.creditRequirement}>{t('oneOfFollowing')}</div>);
-  }
-
-  const hasRequiredCoursesRange = require && (require.max || require.min > 0);
-  if (!allMandatory && hasRequiredCoursesRange) {
-    return (<div className={styles.creditRequirement}>{t('select')} {requiredCoursesToString(require)}</div>);
-  }
-  return null;
-};
-
-export const getDescription = (rule, lang) => {
-  const { description: ruleDesc, localId } = rule;
-  if (ruleDesc) {
-    return (
-      <InfoBox content={getLocalizedText(ruleDesc, lang)} id={`desc-${localId}`} setInnerHtml />
-    );
-  }
-  return null;
-};
-
 export const sortAndRenderRules = (rules, renderRule) => {
   const sortedSubrules = rules?.sort(compareSubRules) || [];
   const listContent = sortedSubrules
@@ -173,6 +145,13 @@ export const getSubRules = (rule) => {
     return dataNode.rules;
   }
   return dataNode?.rule ? [dataNode.rule] : [];
+};
+
+export const getRules = (rule) => {
+  if (rule.type === ruleTypes.MODULE_RULE) {
+    return getSubRules(rule);
+  }
+  return rule.rules ?? [];
 };
 
 export const countPotentialAccordions = (rules, stop = false) => rules.reduce((count, rule) => {
