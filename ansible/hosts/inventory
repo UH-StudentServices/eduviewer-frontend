@@ -1,5 +1,0 @@
-dev ansible_host=eduviewer-dev.it.helsinki.fi ansible_user=deployer
-
-qa ansible_host=eduviewer-qa.it.helsinki.fi ansible_user=deployer
-
-prod ansible_host=eduviewer.it.helsinki.fi ansible_user=deployer
