@@ -1,5 +1,0 @@
----
-
-ssl_cert_file: eduviewer-dev.it.helsinki.fi.crt
-ssl_cert_bundle_file: eduviewer-dev.it.helsinki.fi.bundle.crt
-ssl_key_file: eduviewer-dev.it.helsinki.fi.key

@@ -1,7 +1,6 @@
 image: docker:stable
 
 stages:
-  - build_node_git_image
   - test_and_build
   - build_image
   - provision
@@ -17,65 +16,6 @@ test_and_build:
   artifacts:
     paths:
       - dist/
-
-.deploy_template: &deploy_definition
-  image: williamyeh/ansible:alpine3
-  stage: deploy
-  script:
-    - ci/deploy/deploy.sh $CI_COMMIT_SHA $HOST
-  environment:
-    name: $ENVR
-    url: https://$HOST
-
-.build_image_template: &build_image_definition
-  stage: build_image
-  script:
-    - docker login -u="$REGISTRY_USER" -p="$REGISTRY_TOKEN" $REGISTRY_URL
-    - docker build -f ci/build/frontend/Dockerfile -t $REGISTRY_URL/tike/eduviewer-frontend:$CI_COMMIT_SHA .
-    - docker push $REGISTRY_URL/tike/eduviewer-frontend:$CI_COMMIT_SHA
-
-.provision_template: &provision_definition
-  image: williamyeh/ansible:alpine3
-  stage: provision
-  script:
-    - eval `ssh-agent -s`
-    - echo "$DEPLOYER_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
-    - export ANSIBLE_HOST_KEY_CHECKING=false
-    - ansible-playbook -u deployer --limit $ENVIRONMENT -i ansible/hosts/inventory ansible/provision.yml
-  when: manual
-
-build_image:
-  <<: *build_image_definition
-  only:
-    - master
-
-build_image_manual:
-  <<: *build_image_definition
-  when: manual
-
-provision_qa:
-  variables:
-    ENVIRONMENT: "qa"
-  <<: *provision_definition
-
-provision_prod:
-  variables:
-    ENVIRONMENT: "prod"
-  <<: *provision_definition
-
-deploy_qa:
-  variables:
-    HOST: "eduviewer-qa.it.helsinki.fi"
-    ENVR: "qa"
-  when: manual
-  <<: *deploy_definition
-
-deploy_prod:
-  variables:
-    HOST: "eduviewer.it.helsinki.fi"
-    ENVR: "prod"
-  when: manual
-  <<: *deploy_definition
 
 push_master_to_github:
   stage: deploy
@@ -160,8 +100,8 @@ provision_openshift_stack_prod:
   - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
   - export IMAGE_TAG=${IMAGE_TAG_PREFIX}-${CI_COMMIT_SHA}
   - docker login -u="$REGISTRY_USER" -p="$REGISTRY_TOKEN" $REGISTRY_URL
-  - sed "s/\${SERVER_NAME}/$SERVER_NAME/g" ci/build/frontend/nginx2.conf.template > ./default.conf
-  - docker build -f ci/build/frontend/Dockerfile2 -t $IMAGE_REPOSITORY:$IMAGE_TAG .
+  - sed "s/\${SERVER_NAME}/$SERVER_NAME/g" ci/build/frontend/nginx.conf.template > ./default.conf
+  - docker build -f ci/build/frontend/Dockerfile -t $IMAGE_REPOSITORY:$IMAGE_TAG .
   - docker push $IMAGE_REPOSITORY:$IMAGE_TAG
 
 build_image_openshift_qa:
@@ -196,7 +136,6 @@ build_image_openshift_prod:
 deploy_image_openshift_qa:
   <<: *openshift_image_definition
   stage: deploy
-  when: manual
   variables:
     OC_SERVER: $OC_SERVER_TEST
     OC_SA_TOKEN: $OC_SA_TOKEN_TEST
@@ -204,6 +143,8 @@ deploy_image_openshift_qa:
     IMAGE_TAG_PREFIX: qa
   script:
     - *deploy_image_openshift_scripts
+  only: 
+    - master
 
 deploy_image_openshift_prod:
   <<: *openshift_image_definition
