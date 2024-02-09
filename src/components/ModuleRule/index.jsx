@@ -36,7 +36,7 @@ import Link from '../Link';
 import Accordion from '../Accordion';
 // eslint-disable-next-line import/no-cycle
 import Rule from '../Rule';
-import { FOREIGN_LANGUAGE_DROPDOWN_MODULES, STUDY_TRACK_DROPDOWN_MODULES } from '../../constants';
+import { FOREIGN_LANGUAGE_DROPDOWN_MODULES, STUDY_TRACK_DROPDOWN_MODULES, SPECIALISATION_DROPDOWN_MODULES } from '../../constants';
 import OptionContext from '../../context/OptionContext';
 import RuleInfo from '../RuleInfo';
 
@@ -57,17 +57,26 @@ const ModuleRule = ({
     return null;
   }
   const name = getName(rule, lang);
-  const shouldRenderStudyTrackDropdown = STUDY_TRACK_DROPDOWN_MODULES.includes(name.toLowerCase())
-    && !showAll;
+  const nameLower = name.toLowerCase();
 
-  if (shouldRenderStudyTrackDropdown) {
+  const shouldRenderDropdown = !showAll
+    && (
+      STUDY_TRACK_DROPDOWN_MODULES.includes(nameLower)
+      || SPECIALISATION_DROPDOWN_MODULES.includes(nameLower)
+    );
+
+  if (shouldRenderDropdown) {
     return (
       <DropdownModule
         rule={rule}
         showAll={showAll}
         hlevel={hlevel}
         insideAccordion={insideAccordion}
-        noChoiceContentTranslationId="chooseStudyTrack"
+        noChoiceContentTranslationId={
+          STUDY_TRACK_DROPDOWN_MODULES.includes(nameLower)
+            ? 'chooseStudyTrack'
+            : 'chooseSpecialisation'
+        }
       />
     );
   }
@@ -78,7 +87,7 @@ const ModuleRule = ({
   let nextCanBeAccordion = false;
   if (showAll || skipTitle || atFirstDegreeProgramme) {
     accordion = false;
-  } else if (FOREIGN_LANGUAGE_DROPDOWN_MODULES.includes(name.toLowerCase())) {
+  } else if (FOREIGN_LANGUAGE_DROPDOWN_MODULES.includes(nameLower)) {
     accordion = true;
     internalAccordion = true;
     nextInsideAccordion = true;
