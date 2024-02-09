@@ -43,6 +43,12 @@ export const STUDY_TRACK_DROPDOWN_MODULES = [
   'studieinriktningen'
 ];
 
+export const SPECIALISATION_DROPDOWN_MODULES = [
+  'suuntautuminen',
+  'inriktning',
+  'specialisation'
+];
+
 export const FOREIGN_LANGUAGE_DROPDOWN_MODULES = [
   'vieras kieli',
   'foreign language',

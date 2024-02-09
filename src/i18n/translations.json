@@ -83,5 +83,10 @@
     "Valitse opintosuunta",
     "Välj studieinriktning",
     "Choose study track"
+  ],
+  "chooseSpecialisation": [
+    "Valitse suuntautuminen",
+    "Välj inriktning",
+    "Choose specialisation"
   ]
 }
