@@ -54,7 +54,6 @@ push_master_to_github:
     - oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CERTIFICATE}' | base64 -d
     - >-
       oc process -f ./openshift
-      -p NAMESPACE=$OC_NAMESPACE
       -p STAGE=$OC_STAGE
       -p STACK=$OC_STACK
       -p HOST=$OC_HOST
@@ -72,7 +71,6 @@ provision_openshift_stack_qa:
   variables:
     OC_SERVER: $OC_SERVER_TEST
     OC_SA_TOKEN: $OC_SA_TOKEN_TEST
-    OC_NAMESPACE: eduviewer
     OC_STAGE: qa
     OC_STACK: qa
     OC_HOST: eduviewer-qa.it.helsinki.fi
@@ -86,7 +84,6 @@ provision_openshift_stack_prod:
   variables:
     OC_SERVER: $OC_SERVER_PROD
     OC_SA_TOKEN: $OC_SA_TOKEN_PROD
-    OC_NAMESPACE: eduviewer
     OC_STAGE: prod
     OC_STACK: prod
     OC_HOST: eduviewer.it.helsinki.fi
