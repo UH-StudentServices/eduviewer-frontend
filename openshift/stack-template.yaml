@@ -51,26 +51,32 @@ objects:
     spec:
       lookupPolicy:
         local: false
-
-  - kind: Route
-    apiVersion: route.openshift.io/v1
+  - kind: Ingress
+    apiVersion: networking.k8s.io/v1
     metadata:
       <<: *frontend_resource_metadata
       labels:
         app: ${STACK}
         type: ${ROUTE_TYPE}
+      annotations:
+        cert-manager.io/issuer: ${CERT_ISSUER}
     spec:
-      host: ${HOST}
-      to:
-        kind: Service
-        name: ${STACK}-frontend
+      ingressClassName: openshift-${ROUTE_TYPE}
+      rules:
+        - host: ${HOST}
+          http:
+            paths:
+              - backend:
+                  service:
+                    name: ${STACK}-frontend
+                    port:
+                      number: 80
+                path: /
+                pathType: Prefix
       tls:
-        termination: edge
-        insecureEdgeTerminationPolicy: Redirect
-        key: ${TLS_KEY}
-        certificate: ${TLS_CERTIFICATE}
-        caCertificate: ${TLS_CA_CERTIFICATE}
-
+        - hosts:
+            - ${HOST}
+          secretName: ${TLS_SECRET_NAME}
   - kind: Service
     apiVersion: v1
     metadata:
@@ -91,8 +97,7 @@ parameters:
   - name: STAGE
   - name: STACK
   - name: HOST
-  - name: TLS_KEY
-  - name: TLS_CERTIFICATE
-  - name: TLS_CA_CERTIFICATE
+  - name: TLS_SECRET_NAME
+  - name: CERT_ISSUER
   - name: ROUTE_TYPE
     description: "default for inner/perimeter networks and external for public"

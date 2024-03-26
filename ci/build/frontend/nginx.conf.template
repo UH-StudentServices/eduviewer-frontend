@@ -18,9 +18,4 @@ server {
       expires 100;
       etag on;
     }
-
-    location /.well-known/acme-challenge/0T7KqlmE00aSqpqMfxBlYtmRcAiQnp0D0lbUCnj90CY {
-        return 200 "0T7KqlmE00aSqpqMfxBlYtmRcAiQnp0D0lbUCnj90CY.aRCM_oAJUbYePJQGcHQ__EC7XjO43rQ88XQ5h5k5unI";
-    }
-
 }
