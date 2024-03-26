@@ -87,7 +87,7 @@ provision_openshift_stack_prod:
     OC_STAGE: prod
     OC_STACK: prod
     OC_HOST: eduviewer.it.helsinki.fi
-    OC_TLS_SECRET: ssl-secret-prod
+    OC_TLS_SECRET: ssl-certbot-secret
     OC_IMAGE_STREAM: prod-frontend
     ROUTE_TYPE: external
     IMAGE_TAG_PREFIX: prod
