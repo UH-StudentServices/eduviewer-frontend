@@ -57,10 +57,9 @@ push_master_to_github:
       -p STAGE=$OC_STAGE
       -p STACK=$OC_STACK
       -p HOST=$OC_HOST
-      -p ROUTE_TYPE=$ROUTE_TYPE
-      -p TLS_KEY="$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_KEY}' | base64 -d)"
-      -p TLS_CERTIFICATE="$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CERTIFICATE}' | base64 -d)"
-      -p TLS_CA_CERTIFICATE="$(oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CA_CERTIFICATE}' | base64 -d)"
+      -p ROUTE_TYPE=$OC_ROUTE_TYPE
+      -p TLS_SECRET_NAME=$OC_TLS_SECRET
+      -p CERT_ISSUER=$OC_CERT_ISSUER
       | oc apply -f -
     - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
     - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:${CI_COMMIT_SHA}
@@ -74,9 +73,10 @@ provision_openshift_stack_qa:
     OC_STAGE: qa
     OC_STACK: qa
     OC_HOST: eduviewer-qa.it.helsinki.fi
-    OC_TLS_SECRET: ssl-secret-qa
+    OC_TLS_SECRET: eduviewer-qa-tls
+    OC_CERT_ISSUER: acme-eduviewer-qa
     OC_IMAGE_STREAM: qa-frontend
-    ROUTE_TYPE: default
+    OC_ROUTE_TYPE: default
     IMAGE_TAG_PREFIX: qa
   <<: *provision_openshift_stack_definition
 
@@ -87,9 +87,10 @@ provision_openshift_stack_prod:
     OC_STAGE: prod
     OC_STACK: prod
     OC_HOST: eduviewer.it.helsinki.fi
-    OC_TLS_SECRET: ssl-certbot-secret
+    OC_TLS_SECRET: acme-eduviewer-it-helsinki-fi
+    OC_CERT_ISSUER: acme-eduviewer
     OC_IMAGE_STREAM: prod-frontend
-    ROUTE_TYPE: external
+    OC_ROUTE_TYPE: external
     IMAGE_TAG_PREFIX: prod
   <<: *provision_openshift_stack_definition
 
