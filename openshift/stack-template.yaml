@@ -43,6 +43,10 @@ objects:
               ports:
                 - containerPort: 8080
                   name: http
+              resources:
+                requests:
+                  memory: 100Mi
+                  cpu: 100m
 
   - kind: ImageStream
     apiVersion: image.openshift.io/v1
