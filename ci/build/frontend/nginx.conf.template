@@ -14,7 +14,9 @@ server {
       try_files /$uri /index.html =404;
 
       add_header Access-Control-Allow-Origin * always;
-
+      add_header X-Content-Type-Options "nosniff";
+      add_header Referrer-Policy "no-referrer"; 
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
       expires 100;
       etag on;
     }
