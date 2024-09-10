@@ -18,7 +18,7 @@ server {
       add_header Referrer-Policy "no-referrer"; 
       add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
       # frame-ancestors has redundant *.helsinki.fi to cover other possible use cases that we don't know about
-      add_header Content-Security-Policy "default-src 'self' https://*.helsinki.fi; frame-ancestors 'self' https://studies.helsinki.fi/ https://studies-qa.it.helsinki.fi/ https://eduviewer.it.helsinki.fi https://eduviewer-qa.it.helsinki.fi https://*.helsinki.fi; script-src 'self' https://eduviewer.it.helsinki.fi https://eduviewer-qa.it.helsinki.fi https://consent.cookiebot.com https://consentcdn.cookiebot.com; style-src 'self' https://eduviewer.it.helsinki.fi https://eduviewer-qa.it.helsinki.fi; connect 'self' https://*.helsinki.fi https://consentcdn.cookiebot.com; child-src 'self' https://consentcdn.cookiebot.com";
+      add_header Content-Security-Policy "default-src 'self' https://*.helsinki.fi; frame-ancestors 'self' https://studies.helsinki.fi/ https://studies-qa.it.helsinki.fi/ https://eduviewer.it.helsinki.fi https://eduviewer-qa.it.helsinki.fi https://*.helsinki.fi; script-src 'self' https://eduviewer.it.helsinki.fi https://eduviewer-qa.it.helsinki.fi https://consent.cookiebot.com https://consentcdn.cookiebot.com; style-src 'self' blob: https://eduviewer.it.helsinki.fi https://eduviewer-qa.it.helsinki.fi; connect 'self' https://*.helsinki.fi https://consentcdn.cookiebot.com; child-src 'self' https://consentcdn.cookiebot.com";
       expires 100;
       etag on;
     }
