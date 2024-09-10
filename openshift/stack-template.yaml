@@ -45,7 +45,7 @@ objects:
                   name: http
               resources:
                 requests:
-                  memory: 100Mi
+                  memory: 50Mi
                   cpu: 100m
 
   - kind: ImageStream
