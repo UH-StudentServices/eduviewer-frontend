@@ -53,7 +53,7 @@ const ModuleRule = ({
   const {
     lang, internalLinks, academicYear, showAll
   } = useContext(OptionContext);
-  if (!rule) {
+  if (!rule || !rule.dataNode || typeof rule.dataNode !== 'object') {
     return null;
   }
   const name = getName(rule, lang);
