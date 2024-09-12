@@ -53,10 +53,13 @@ const ModuleRule = ({
   const {
     lang, internalLinks, academicYear, showAll
   } = useContext(OptionContext);
-  if (!rule || !rule.dataNode) {
+  if (!rule) {
     return null;
   }
   const name = getName(rule, lang);
+  if (!name) {
+    return null;
+  }
   const nameLower = name.toLowerCase();
 
   const shouldRenderDropdown = !showAll
