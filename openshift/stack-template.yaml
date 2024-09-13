@@ -45,7 +45,10 @@ objects:
                   name: http
               resources:
                 requests:
-                  memory: 50Mi
+                  # NOTE: low memory request so that creating new pods dont get stuck due to
+                  # memory request limit reached
+                  # pods can still use memory up to memory limit which should be higher
+                  memory: 10Mi
                   cpu: 100m
 
   - kind: ImageStream
