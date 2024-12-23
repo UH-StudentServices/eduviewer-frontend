@@ -32,7 +32,6 @@ const Link = ({
     <a
       className={styles.link}
       href={href}
-      aria-label={ariaLabel}
       target={external ? '_blank' : undefined}
       rel={external ? 'noopener nofollow' : undefined}
       onClick={onNavigate}

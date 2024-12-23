@@ -53,14 +53,16 @@ const Accordion = ({
       external={!internalLinks}
       ariaLabel={ariaLabelForTitle(code, title, myCredits)}
     >
-      <span className={styles.accordionNameParts}>{code}&nbsp;
+      <div className={styles.accordionNameParts}>{code}&nbsp;
         <span className={styles.accordionName}>{title}</span>
-      </span>
+        <div>{myCredits}</div>
+      </div>
     </Link>
   ) : (
-    <span className={styles.accordionNameParts}>
+    <div className={styles.accordionNameParts}>
       <span className={styles.accordionName}>{title}</span>
-    </span>
+      <div>{myCredits}</div>
+    </div>
   );
 
   return (
@@ -73,7 +75,6 @@ const Accordion = ({
           id={`ac-${rule.localId}`}
           className="button--action theme-transparent"
           onClick={() => setOpen(!open)}
-          aria-label={code ? undefined : ariaLabelForTitle(code, title, myCredits)}
           aria-expanded={open}
           aria-controls={`region-${rule.localId}`}
         >
@@ -81,7 +82,6 @@ const Accordion = ({
             {titlePart}
             <span className={`${styles.caretIcon} ${open ? 'icon--caret-up' : 'icon--caret-down'}`} />
           </div>
-          <div>{myCredits}</div>
         </button>
       </Heading>
       <div

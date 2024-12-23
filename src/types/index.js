@@ -57,7 +57,7 @@ export const rootModuleType = shape({
 
 export const selectOptionsType = arrayOf(shape({
   value: oneOfType([string, number]).isRequired,
-  text: string.isRequired
+  text: string
 }));
 
 export const activeLanguageType = shape({
