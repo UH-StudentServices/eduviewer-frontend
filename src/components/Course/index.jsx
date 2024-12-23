@@ -36,12 +36,10 @@ const Course = ({
       <Link
         external={!internalLinks}
         href={getCourseUnitUrl(id, lang, academicYear)}
-        ariaLabel={`${code}: ${title}, ${myCredits}.`}
       >
         {code} {title}
+        <span className={styles.credits}>{myCredits}</span>
       </Link>
-      {' '}
-      <span className={styles.credits} aria-hidden>{myCredits}</span>
     </li>
   );
 };

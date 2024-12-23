@@ -7,7 +7,7 @@ stages:
   - deploy
 
 test_and_build:
-  image: timbru31/node-alpine-git
+  image: node:18
   stage: test_and_build
   script:
     - npm ci

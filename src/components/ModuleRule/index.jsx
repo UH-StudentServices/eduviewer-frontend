@@ -22,7 +22,7 @@ import {
 import { withLocalize } from 'react-localize-redux';
 
 import {
-  ariaLabelForTitle, countPotentialAccordions,
+  countPotentialAccordions,
   creditsToString, getDegreeProgrammeUrl,
   getName, getStudyModuleUrl, getSubRules, isDegreeProgramme,
   sortAndRenderRules
@@ -117,14 +117,13 @@ const ModuleRule = ({
             href={isDegreeProgramme(rule.dataNode)
               ? getDegreeProgrammeUrl(rule.dataNode.id, lang, academicYear)
               : getStudyModuleUrl(rule.dataNode.id, lang, academicYear)}
-            ariaLabel={ariaLabelForTitle(moduleCode, name, moduleCredits)}
             external={!internalLinks}
           >
-            <span aria-hidden>{moduleCode} </span>
+            <span>{moduleCode} </span>
             {name}
           </Link>
           {moduleCredits
-            && <span className={styles.moduleCredits} aria-hidden>{moduleCredits}</span>}
+            && <span className={styles.moduleCredits}>{moduleCredits}</span>}
         </Heading>
       );
     } else {
@@ -133,11 +132,10 @@ const ModuleRule = ({
           level={hlevel}
           className={styles.moduleTitle}
           id={`title-${rule.localId}`}
-          ariaLabel={ariaLabelForTitle(undefined, name, moduleCredits)}
         >
           {name}
           {moduleCredits
-            && <span className={styles.moduleCredits} aria-hidden>{moduleCredits}</span>}
+            && <span className={styles.moduleCredits}>{moduleCredits}</span>}
         </Heading>
       );
     }
