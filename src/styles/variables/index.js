@@ -17,4 +17,5 @@
 
 const colors = require('./colors');
 
+/** DEPRECATED */
 module.exports = { ...colors };

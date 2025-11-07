@@ -15,17 +15,14 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const cssNextPlugin = require('postcss-cssnext'); // eslint-disable-line import/no-extraneous-dependencies
-
-const variables = require('./src/styles/variables');
+const postCssPresetEnvPlugin = require('postcss-preset-env'); // eslint-disable-line import/no-extraneous-dependencies
+const postcssDesignTokens = require('@csstools/postcss-design-tokens'); // eslint-disable-line import/no-extraneous-dependencies
 
 module.exports = {
   plugins: [
-    cssNextPlugin({
-      browsers: 'last 2 versions',
-      features: {
-        customProperties: { variables }
-      }
-    })
+    postCssPresetEnvPlugin({
+      stage: 3
+    }),
+    postcssDesignTokens()
   ]
 };

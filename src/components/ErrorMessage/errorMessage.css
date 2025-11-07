@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
+@design-tokens url('../../styles/variables/variables.json') format('style-dictionary3');
 
 .errorContainer {
   display: flex;
   padding: 1em !important;
   padding-bottom: 0.5em !important;
   border-radius: 0.3em;
-  border: solid 0.1em var(--darkOrange);
+  border: solid 0.1em design-token("color.darkOrange");
   margin-bottom: 1em;
   font-size: 0.8em !important;
 }
