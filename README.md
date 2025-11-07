@@ -6,7 +6,7 @@ This repository contains source code for the front end of the Eduviewer
 
 - Webpack 5.0
 - css-loader 3.6.0 (loading breaks in 4.x version, fix later)
-- Node 17+ (upgraded due to OpenSSL version change)
+- Node 24+ (upgraded due to OpenSSL version change)
 
 ## Usage
 

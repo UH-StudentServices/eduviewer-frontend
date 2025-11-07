@@ -1,11 +1,10 @@
 
 {
-  "plugins": ["transform-class-properties"],
   "presets": [
     ["@babel/preset-env", {
       "modules": false,
       "targets": {
-        "browsers": ["last 2 versions", "ie 11", "not ie 10"]
+        "browsers": ["last 2 versions", "Firefox ESR", "not dead", ">0.5%"]
       }
     }],
     "@babel/preset-react"

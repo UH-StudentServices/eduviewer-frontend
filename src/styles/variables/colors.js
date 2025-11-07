@@ -15,6 +15,7 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/** DEPRECATED */
 module.exports = {
   white: '#fff',
   black: '#222',

@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
+@design-tokens url('../../styles/variables/variables.json') format('style-dictionary3');
 
 .toggleContainer {
   position: relative;
@@ -41,18 +42,18 @@
 
 /* react-toggle-overrides */
 :global(.react-toggle-thumb) {
-  border-color: var(--darkSilver) !important;
+  border-color: design-token("color.darkSilver") !important;
 }
 
 :global(.react-toggle-track) {
   font-size: 1rem;
-  background-color: var(--darkSilver) !important;
+  background-color: design-token("color.darkSilver") !important;
 }
 
 :global(.react-toggle--checked) :global(.react-toggle-track) {
-  background-color: var(--blueActive) !important;
+  background-color: design-token("color.blueActive") !important;
 }
 
 :global(.react-toggle--checked) :global(.react-toggle-thumb) {
-  border-color: var(--blueActive) !important;
+  border-color: design-token("color.blueActive") !important;
 }

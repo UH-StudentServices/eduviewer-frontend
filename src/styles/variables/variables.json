@@ -1,0 +1,58 @@
+{
+    "color": {
+        "white": {
+            "value": "#fff"
+        },
+        "black": {
+            "value": "#222"
+        },
+        "deepBlack": {
+            "value": "#000"
+        },
+        "blue": {
+            "value": "#0479A4"
+        },
+        "blueActive": {
+            "value": "#0882b3"
+        },
+        "darkBlue": {
+            "value": "#005379"
+        },
+        "darkBlueActive": {
+            "value": "#003146"
+        },
+        "lightSilver": {
+            "value": "#f8f8f8"
+        },
+        "mediumSilver": {
+            "value": "#d2d2d2"
+        },
+        "silver": {
+            "value": "#f1f1f1"
+        },
+        "darkSilver": {
+            "value": "#979797"
+        },
+        "lightGray": {
+            "value": "#555"
+        },
+        "darkGray": {
+            "value": "#424242"
+        },
+        "red": {
+            "value": "#e5053a"
+        },
+        "orange": {
+            "value": "#fca311"
+        },
+        "darkOrange": {
+            "value": "#cc622e"
+        },
+        "gray": {
+            "value": "#555"
+        },
+        "greenSuccess": {
+            "value": "#5bbf21"
+        }
+    }
+}

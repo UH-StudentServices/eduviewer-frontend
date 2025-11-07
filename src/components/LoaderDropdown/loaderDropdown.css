@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
+@design-tokens url('../../styles/variables/variables.json') format('style-dictionary3');
 
 .loaderContainer {
   display: flex;
@@ -22,7 +23,7 @@
 
 .labelText {
   font-size: 1.125em;
-  color: var(--lightGray);
+  color: design-token("color.lightGray");
   font-weight: 300;
   line-height: 2.4;
   padding: 0;
@@ -32,13 +33,13 @@
 .loadingContainer {
   display: flex;
   justify-content: space-between;
-  border: 1px solid var(--darkSilver);
+  border: 1px solid design-token("color.darkSilver");
   padding: 10px;
 }
 
 .loadingText {
   font-weight: bold;
-  color: var(--darkSilver);
+  color: design-token("color.darkSilver");
   font-size: 1rem;
   padding-top: 10px;
   padding-bottom: 10px;

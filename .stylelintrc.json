@@ -1,10 +1,26 @@
 {
   "extends": "stylelint-config-standard",
   "rules": {
-    "selector-pseudo-class-no-unknown": [true, {
-      "ignorePseudoClasses": ["global"]
-    }],
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": [
+          "global"
+        ]
+      }
+    ],
     "selector-class-pattern": null,
-    "custom-property-pattern": null
+    "custom-property-pattern": null,
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": ["design-tokens"]
+      }
+    ],
+    "declaration-property-value-no-unknown": [
+      true, {
+        "ignoreProperties": {"/.+/": ["/design-token/"]}
+      }
+    ]
   }
 }

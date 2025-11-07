@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
+@design-tokens url('../../styles/variables/variables.json') format('style-dictionary3');
 
 .mainContainer {
   margin: 1em;
   padding: 0.5em 1em 1em;
-  border: 0.0125em solid var(--mediumSilver);
+  border: 0.0125em solid design-token("color.mediumSilver");
 }
 
 .mainHeader {
@@ -36,7 +37,7 @@
   margin-bottom: 0.5em;
   margin-left: 0.25em;
   font-size: 1.1em;
-  color: var(--black);
+  color: design-token("color.black");
   font-weight: 300;
 }
 
@@ -46,11 +47,11 @@
 }
 
 .academicYearLabel {
-  color: var(--lightGray);
+  color: design-token("color.lightGray");
   font-weight: 400;
 }
 
 .academicYearText {
-  color: var(--black);
+  color: design-token("color.black");
   font-weight: 600;
 }
