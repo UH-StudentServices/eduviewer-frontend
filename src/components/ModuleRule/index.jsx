@@ -17,9 +17,8 @@
 
 import React, { useContext } from 'react';
 import {
-  func, bool, shape, number, string
+  bool, shape, number, string
 } from 'prop-types';
-import { withLocalize } from 'react-localize-redux';
 
 import {
   countPotentialAccordions,
@@ -39,9 +38,9 @@ import Rule from '../Rule';
 import { FOREIGN_LANGUAGE_DROPDOWN_MODULES, STUDY_TRACK_DROPDOWN_MODULES, SPECIALISATION_DROPDOWN_MODULES } from '../../constants';
 import OptionContext from '../../context/OptionContext';
 import RuleInfo from '../RuleInfo';
+import useTranslation from '../../hooks/useTranslation';
 
 const ModuleRule = ({
-  translate: t,
   skipTitle,
   rule,
   insideAccordion,
@@ -53,6 +52,8 @@ const ModuleRule = ({
   const {
     lang, internalLinks, academicYear, showAll
   } = useContext(OptionContext);
+  const { t } = useTranslation();
+
   if (!rule || !rule.dataNode || typeof rule.dataNode !== 'object') {
     return null;
   }
@@ -147,7 +148,6 @@ const ModuleRule = ({
       key={r.localId}
       rule={r}
       showAll={showAll}
-      translate={t}
       insideAccordion={nextInsideAccordion}
       hlevel={moduleTitle || accordion ? hlevel + 1 : hlevel}
       closestTitleId={newClosestTitleId}
@@ -211,7 +211,6 @@ ModuleRule.defaultProps = {
 
 ModuleRule.propTypes = {
   rule: shape({}).isRequired,
-  translate: func.isRequired,
   hlevel: number.isRequired,
   skipTitle: bool,
   insideAccordion: bool,
@@ -220,4 +219,4 @@ ModuleRule.propTypes = {
   canBeAccordion: bool
 };
 
-export default withLocalize(ModuleRule);
+export default ModuleRule;

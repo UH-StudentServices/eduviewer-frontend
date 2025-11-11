@@ -17,9 +17,8 @@
 
 import React, { useContext } from 'react';
 import {
-  func, bool, shape, number, string
+  bool, shape, number, string
 } from 'prop-types';
-import { withLocalize } from 'react-localize-redux';
 
 import {
   countPotentialAccordions,
@@ -35,8 +34,7 @@ const CompositeRule = ({
   insideAccordion,
   hlevel,
   closestTitleId,
-  canBeAccordion,
-  translate: t
+  canBeAccordion
 }) => {
   const { lang } = useContext(OptionContext);
   if (!rule) {
@@ -48,7 +46,6 @@ const CompositeRule = ({
     <Rule
       key={r.localId}
       rule={r}
-      translate={t}
       insideAccordion={insideAccordion}
       hlevel={hlevel}
       canBeAccordion={nextCanBeAccordion}
@@ -83,11 +80,10 @@ CompositeRule.defaultProps = {
 
 CompositeRule.propTypes = {
   rule: shape({}).isRequired,
-  translate: func.isRequired,
   hlevel: number.isRequired,
   closestTitleId: string.isRequired,
   insideAccordion: bool,
   canBeAccordion: bool
 };
 
-export default withLocalize(CompositeRule);
+export default CompositeRule;

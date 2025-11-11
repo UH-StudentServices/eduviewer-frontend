@@ -17,16 +17,16 @@
 
 import React, { useMemo } from 'react';
 import {
-  bool, func, number, string
+  bool, number, string
 } from 'prop-types';
-import { withLocalize } from 'react-localize-redux';
-import { activeLanguageType, rootModuleType } from '../../types';
+import { rootModuleType } from '../../types';
 
 import styles from './rootModule.css';
 import { ruleTypes } from '../../constants';
 import ModuleRule from '../ModuleRule';
 import { countPotentialAccordions, isDegreeProgramme } from '../../utils';
 import OptionContext from '../../context/OptionContext';
+import useTranslation from '../../hooks/useTranslation';
 
 const RootModule = ({
   showAll,
@@ -35,13 +35,12 @@ const RootModule = ({
   hideAccordion,
   internalCourseLink,
   rootLevel,
-  translate,
-  activeLanguage,
   academicYear
 }) => {
+  const { lang } = useTranslation();
   const options = useMemo(() => ({
-    showAll, academicYear, internalLinks: internalCourseLink, lang: activeLanguage.code
-  }), [showAll, academicYear, internalCourseLink, activeLanguage.code]);
+    showAll, academicYear, internalLinks: internalCourseLink, lang
+  }), [showAll, academicYear, internalCourseLink, lang]);
   if (!showContent) {
     return null;
   }
@@ -59,7 +58,6 @@ const RootModule = ({
         <ModuleRule
           key={rootRule.localId}
           rule={rootRule}
-          translate={translate}
           hlevel={rootLevel}
           skipTitle={hideAccordion}
           canBeAccordion={countPotentialAccordions(module.rules || [module.rule]) > 1}
@@ -79,12 +77,10 @@ RootModule.propTypes = {
   module: rootModuleType.isRequired,
   showAll: bool.isRequired,
   showContent: bool.isRequired,
-  translate: func.isRequired,
-  activeLanguage: activeLanguageType.isRequired,
   hideAccordion: bool.isRequired,
   internalCourseLink: bool.isRequired,
   rootLevel: number,
   academicYear: string
 };
 
-export default withLocalize(RootModule);
+export default RootModule;

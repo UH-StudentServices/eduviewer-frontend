@@ -17,7 +17,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { LocalizeProvider } from 'react-localize-redux';
 import { initializeTracker } from './tracking';
 import Main from './components/Main';
 
@@ -25,6 +24,8 @@ import './styles';
 import { availableLanguages } from './constants';
 import { loadLocalStyleGuide } from './utils/dependencyLoader';
 import { calculateCurrentLV } from './utils';
+import LangContextProvider from './context/LangContext/LangContextProvider';
+import InitializeLang from './components/InititializeLang';
 
 const EDUVIEWER_ROOT_ID = 'eduviewer-root';
 const LANGUAGE_ATTR_NAME = 'lang';
@@ -65,18 +66,20 @@ export const render = () => {
   const header = getRootAttribute(HEADER_ATTR_NAME) || '';
   ReactDOM.render(
     <>
-      <LocalizeProvider>
-        <Main
-          code={code}
-          academicYearCode={academicYearCode}
-          hideSelections={hideSelections}
-          hideAccordion={hideAccordion}
-          internalCourseLink={internalCourseLink}
-          onlySelectedAcademicYear={showOnlySelectedAcademicYear}
-          lang={lang}
-          header={header}
-        />
-      </LocalizeProvider>
+      <LangContextProvider>
+        <InitializeLang currentLang={lang}>
+          <Main
+            code={code}
+            academicYearCode={academicYearCode}
+            hideSelections={hideSelections}
+            hideAccordion={hideAccordion}
+            internalCourseLink={internalCourseLink}
+            onlySelectedAcademicYear={showOnlySelectedAcademicYear}
+            lang={lang}
+            header={header}
+          />
+        </InitializeLang>
+      </LangContextProvider>
     </>,
     getRoot()
   );

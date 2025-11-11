@@ -15,24 +15,24 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React from 'react';
-import { func, shape } from 'prop-types';
-import { withLocalize } from 'react-localize-redux';
+import { shape } from 'prop-types';
 import styles from '../RootModule/rootModule.css';
 import { requiredCoursesToString } from '../../utils';
+import useTranslation from '../../hooks/useTranslation';
 
-const CreditRequirement = ({ rule, translate }) => {
+const CreditRequirement = ({ rule }) => {
+  const { t } = useTranslation();
   const { require, allMandatory } = rule;
 
   const hasRequiredCoursesRange = require && (require.max || require.min > 0);
   if (!allMandatory && hasRequiredCoursesRange) {
-    return (<div className={styles.creditRequirement}>{translate('select')} {requiredCoursesToString(require)}</div>);
+    return (<div className={styles.creditRequirement}>{t('select')} {requiredCoursesToString(require)}</div>);
   }
   return null;
 };
 
 CreditRequirement.propTypes = {
-  rule: shape({}).isRequired,
-  translate: func.isRequired
+  rule: shape({}).isRequired
 };
 
-export default withLocalize(CreditRequirement);
+export default CreditRequirement;

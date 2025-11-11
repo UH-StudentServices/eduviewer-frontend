@@ -17,9 +17,8 @@
 
 import React, { useContext, useState } from 'react';
 import {
-  arrayOf, bool, func, node, number, oneOfType, string
+  arrayOf, bool, node, number, oneOfType, string
 } from 'prop-types';
-import { withLocalize } from 'react-localize-redux';
 
 import { oneOfRulesType } from '../../types';
 import {
@@ -32,17 +31,18 @@ import styles from '../RootModule/rootModule.css';
 import Heading from '../Heading';
 import Link from '../Link';
 import OptionContext from '../../context/OptionContext';
+import useTranslation from '../../hooks/useTranslation';
 
 const Accordion = ({
   rule,
   internalAccordion,
-  translate: t,
   startOpen,
   hlevel = 3,
   children
 }) => {
   const [open, setOpen] = useState(startOpen);
   const { lang, academicYear, internalLinks } = useContext(OptionContext);
+  const { t } = useTranslation();
   const title = getName(rule, lang);
   const myCredits = creditsToString(rule.dataNode?.targetCredits, t);
   const { code, id, gradeScaleId } = rule.dataNode;
@@ -106,10 +106,9 @@ Accordion.defaultProps = {
 Accordion.propTypes = {
   rule: oneOfRulesType.isRequired,
   internalAccordion: bool,
-  translate: func.isRequired,
   startOpen: bool,
   hlevel: number,
   children: oneOfType([node, arrayOf(node), string]).isRequired
 };
 
-export default withLocalize(Accordion);
+export default Accordion;

@@ -59,7 +59,3 @@ export const selectOptionsType = arrayOf(shape({
   value: oneOfType([string, number]).isRequired,
   text: string
 }));
-
-export const activeLanguageType = shape({
-  code: string.isRequired
-});

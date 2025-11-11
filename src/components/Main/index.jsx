@@ -17,13 +17,10 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-  func,
   string,
   bool,
   oneOf
 } from 'prop-types';
-import { Translate, withLocalize } from 'react-localize-redux';
-import { renderToStaticMarkup } from 'react-dom/server';
 import {
   getEducations,
   getAcademicYearNames,
@@ -41,9 +38,9 @@ import {
 } from '../../constants';
 import ErrorMessage from '../ErrorMessage';
 import Loader from '../Loader';
-import translation from '../../i18n/translations.json';
 import { getCode, getLocalizedText } from '../../utils';
 import { trackEvent, trackingCategories, trackPageView } from '../../tracking';
+import useTranslation from '../../hooks/useTranslation';
 
 const fetchModuleHierarchy = async (code, academicYear) => {
   if (academicYear) {
@@ -60,9 +57,7 @@ const Main = ({
   hideSelections,
   hideAccordion,
   internalCourseLink,
-  header,
-  translate,
-  initialize
+  header
 }) => {
   const [educations, setEducations] = useState([]);
   const [academicYears, setAcademicYears] = useState([]);
@@ -73,18 +68,7 @@ const Main = ({
   const [moduleAndYear, setModuleAndYear] = useState({ code, academicYear: academicYearCode });
   const [errorMessage, setErrorMessage] = useState('');
   const [showAll, setShowAll] = useState(false);
-  const [langInitialized, setLangInitialized] = useState(false);
-
-  useEffect(() => {
-    if (!langInitialized) {
-      initialize({
-        languages: Object.values(availableLanguages),
-        translation,
-        options: { defaultLanguage: lang, renderToStaticMarkup }
-      });
-      setLangInitialized(true);
-    }
-  }, [langInitialized, initialize, lang]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     let cbot;
@@ -231,9 +215,9 @@ const Main = ({
       .map((ed, i) => getOption(i, ed.degreeProgrammeCode, `${getLocalizedText(ed.name, lang)} [${ed.degreeProgrammeCode}]`));
     const academicYearOptions = academicYears.map((ay) => getOption(ay, ay, academicYearNames[ay]));
 
-    const academicYearsLabel = translate('academicYear');
-    const educationsLabel = translate('degreeProgrammes');
-    const showAllLabel = translate('showAll');
+    const academicYearsLabel = t('academicYear');
+    const educationsLabel = t('degreeProgrammes');
+    const showAllLabel = t('showAll');
 
     return (
       <div className={styles.selectContainer}>
@@ -255,7 +239,7 @@ const Main = ({
             ? (
               <div className={styles.academicYearContainer}>
                 <div className={styles.academicYearLabel}>
-                  <Translate id="academicYear" />{' '}
+                  {t('academicYear')}{' '}
                   <span className={styles.academicYearText}>
                     {academicYearNames[moduleAndYear.academicYear]}
                   </span>
@@ -314,7 +298,7 @@ const Main = ({
         {
           hasContent
             ? renderRootModule()
-            : <div className={styles.noContent}><Translate id="noDegreeProgramToShow" /></div>
+            : <div className={styles.noContent}>{t('noDegreeProgramToShow')}</div>
         }
       </div>
     );
@@ -339,9 +323,7 @@ Main.propTypes = {
   internalCourseLink: bool.isRequired,
   onlySelectedAcademicYear: bool.isRequired,
   lang: oneOf(Object.values(availableLanguages)).isRequired,
-  header: string.isRequired,
-  translate: func.isRequired,
-  initialize: func.isRequired
+  header: string.isRequired
 };
 
-export default withLocalize(Main);
+export default Main;

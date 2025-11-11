@@ -30,6 +30,8 @@ export const availableLanguages = {
   EN: 'en'
 };
 
+export const DEFAULT_LANG = availableLanguages.FI;
+
 export const NO_DEGREE_PROGRAM_CODE = 'no_degree_programme';
 
 export const NO_MODULE_HIERARCHY = {};

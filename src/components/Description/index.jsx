@@ -16,7 +16,6 @@
  */
 import React from 'react';
 import { shape, string } from 'prop-types';
-import { withLocalize } from 'react-localize-redux';
 import InfoBox from '../InfoBox';
 import { getLocalizedText } from '../../utils';
 
@@ -35,4 +34,4 @@ Description.propTypes = {
   lang: string.isRequired
 };
 
-export default withLocalize(Description);
+export default Description;
