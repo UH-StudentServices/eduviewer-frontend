@@ -17,9 +17,8 @@
 
 import React, { Fragment } from 'react';
 import {
-  func, bool, shape, number, string
+  bool, shape, number, string
 } from 'prop-types';
-import { Translate, withLocalize } from 'react-localize-redux';
 
 import { ruleTypes } from '../../constants';
 import {
@@ -33,9 +32,9 @@ import styles from '../RootModule/rootModule.css';
 import ModuleRule from '../ModuleRule';
 // eslint-disable-next-line import/no-cycle
 import CompositeRule from '../CompositeRule';
+import useTranslation from '../../hooks/useTranslation';
 
 const Rule = ({
-  translate: t,
   rule,
   insideAccordion,
   atFirstDegreeProgramme,
@@ -43,6 +42,8 @@ const Rule = ({
   canBeAccordion,
   hlevel
 }) => {
+  const { t } = useTranslation();
+
   if (!rule) {
     return null;
   }
@@ -52,7 +53,6 @@ const Rule = ({
         <CompositeRule
           key={rule.localId}
           rule={rule}
-          translate={t}
           insideAccordion={insideAccordion}
           hlevel={hlevel}
           canBeAccordion={canBeAccordion}
@@ -64,7 +64,6 @@ const Rule = ({
         <ModuleRule
           key={rule.localId}
           rule={rule}
-          translate={t}
           insideAccordion={insideAccordion}
           atFirstDegreeProgramme={atFirstDegreeProgramme}
           hlevel={hlevel}
@@ -73,9 +72,9 @@ const Rule = ({
         />
       );
     case ruleTypes.ANY_COURSE_UNIT_RULE:
-      return <li key={rule.localId}><Translate id="anyCourseUnit" /></li>;
+      return <li key={rule.localId}>{t('anyModule')}</li>;
     case ruleTypes.ANY_MODULE_RULE:
-      return <li key={rule.localId}><Translate id="anyModule" /></li>;
+      return <li key={rule.localId}>{t('anyModule')}</li>;
     case ruleTypes.COURSE_UNIT_RULE: {
       const {
         id, code, name, credits
@@ -105,7 +104,6 @@ const Rule = ({
           <Rule
             key={r.localId}
             rule={r}
-            translate={t}
             insideAccordion={insideAccordion}
             atFirstDegreeProgramme={atFirstDegreeProgramme}
             hlevel={hlevel}
@@ -130,7 +128,6 @@ Rule.defaultProps = {
 
 Rule.propTypes = {
   rule: shape({}).isRequired,
-  translate: func.isRequired,
   hlevel: number.isRequired,
   insideAccordion: bool,
   atFirstDegreeProgramme: bool,
@@ -138,4 +135,4 @@ Rule.propTypes = {
   closestTitleId: string
 };
 
-export default withLocalize(Rule);
+export default Rule;

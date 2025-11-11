@@ -17,24 +17,23 @@
 
 import React from 'react';
 import {
-  func,
   node,
   shape,
   string
 } from 'prop-types';
-import { withLocalize } from 'react-localize-redux';
 import styles from '../RootModule/rootModule.css';
 import Description from '../Description';
 import CreditRequirement from '../CreditRequirement';
 import { ruleTypes } from '../../constants';
 import { getRules } from '../../utils';
+import useTranslation from '../../hooks/useTranslation';
 
 const RuleInfo = ({
   rule,
   lang,
-  content,
-  translate
+  content
 }) => {
+  const { t } = useTranslation();
   const { require } = rule;
   const rules = getRules(rule);
 
@@ -51,7 +50,7 @@ const RuleInfo = ({
       <>
         <Description rule={rule} lang={lang} />
         <div className={styles.oneOfFollowing}>
-          <div className={styles.oneOfFollowingTitle}>{translate(titleTranslationId)}</div>
+          <div className={styles.oneOfFollowingTitle}>{t(titleTranslationId)}</div>
           <div className={styles.oneOfFollowingContent}>
             {content}
           </div>
@@ -72,8 +71,7 @@ const RuleInfo = ({
 RuleInfo.propTypes = {
   rule: shape({}).isRequired,
   lang: string.isRequired,
-  content: node.isRequired,
-  translate: func.isRequired
+  content: node.isRequired
 };
 
-export default withLocalize(RuleInfo);
+export default RuleInfo;

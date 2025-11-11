@@ -17,9 +17,8 @@
 
 import React, { useContext, useState } from 'react';
 import {
-  bool, func, number, string
+  bool, number, string
 } from 'prop-types';
-import { withLocalize } from 'react-localize-redux';
 
 import { oneOfRulesType } from '../../types';
 import { getName } from '../../utils';
@@ -28,12 +27,14 @@ import styles from './dropdownModule.css';
 // eslint-disable-next-line import/no-cycle
 import Rule from '../Rule';
 import OptionContext from '../../context/OptionContext';
+import useTranslation from '../../hooks/useTranslation';
 
 const NOTHING_SELECTED = '-';
 
 const DropdownModule = ({
-  rule, hlevel, insideAccordion, translate, noChoiceContentTranslationId
+  rule, hlevel, insideAccordion, noChoiceContentTranslationId
 }) => {
+  const { t } = useTranslation();
   const [selected, setSelected] = useState(NOTHING_SELECTED);
   const { lang, showAll } = useContext(OptionContext);
   const subRules = rule.dataNode.rule.rules;
@@ -58,8 +59,8 @@ const DropdownModule = ({
           id={`select-${rule.localId}`}
           onChange={(e) => { setSelected(e.target.value); }}
         >
-          <option value={NOTHING_SELECTED} aria-label={translate('noChoice')}>
-            {translate(noChoiceContentTranslationId, null, { onMissingTranslation: () => '-' })}
+          <option value={NOTHING_SELECTED} aria-label={t('noChoice')}>
+            {t(noChoiceContentTranslationId)}
           </option>
           {subRules.map((subRule) => (
             <option key={subRule.localId} value={subRule.localId}>
@@ -82,7 +83,6 @@ const DropdownModule = ({
 
 DropdownModule.propTypes = {
   rule: oneOfRulesType.isRequired,
-  translate: func.isRequired,
   hlevel: number.isRequired,
   insideAccordion: bool.isRequired,
   noChoiceContentTranslationId: string
@@ -92,4 +92,4 @@ DropdownModule.defaultProps = {
   noChoiceContentTranslationId: undefined
 };
 
-export default withLocalize(DropdownModule);
+export default DropdownModule;

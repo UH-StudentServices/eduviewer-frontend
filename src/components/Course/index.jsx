@@ -16,21 +16,22 @@
  */
 
 import React, { useContext } from 'react';
-import { func, string } from 'prop-types';
-import { withLocalize } from 'react-localize-redux';
+import { string } from 'prop-types';
 import { creditsType, localizedTextType } from '../../types';
 import { creditsToString, getCourseUnitUrl, getLocalizedText } from '../../utils';
 
 import Link from '../Link';
 import styles from '../RootModule/rootModule.css';
 import OptionContext from '../../context/OptionContext';
+import useTranslation from '../../hooks/useTranslation';
 
 const Course = ({
-  id, code, name, credits, translate
+  id, code, name, credits
 }) => {
+  const { t } = useTranslation();
   const { lang, academicYear, internalLinks } = useContext(OptionContext);
   const title = getLocalizedText(name, lang);
-  const myCredits = creditsToString(credits, translate);
+  const myCredits = creditsToString(credits, t);
   return (
     <li className={styles.courseItem}>
       <Link
@@ -48,8 +49,7 @@ Course.propTypes = {
   id: string.isRequired,
   code: string.isRequired,
   name: localizedTextType.isRequired,
-  credits: creditsType.isRequired,
-  translate: func.isRequired
+  credits: creditsType.isRequired
 };
 
-export default withLocalize(Course);
+export default Course;

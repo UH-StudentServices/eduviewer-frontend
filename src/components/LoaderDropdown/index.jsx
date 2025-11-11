@@ -16,7 +16,6 @@
  */
 
 import React from 'react';
-import { Translate, withLocalize } from 'react-localize-redux';
 import {
   oneOfType, string, number, bool, func
 } from 'prop-types';
@@ -24,6 +23,7 @@ import Loader from '../Loader';
 import { selectOptionsType } from '../../types';
 
 import styles from './loaderDropdown.css';
+import useTranslation from '../../hooks/useTranslation';
 
 const LoadingDropdown = ({ label, text }) => (
   <div className={styles.loaderContainer}>
@@ -41,12 +41,14 @@ LoadingDropdown.propTypes = {
 };
 
 const LoadedDropdown = ({
-  id, value, onChange, options, label, translate
+  id, value, onChange, options, label
 }) => {
+  const { t } = useTranslation();
+
   const hasOptions = options && options.length > 0;
   const optionElements = hasOptions
     ? options.map((o) => <option key={o.id} value={o.value}>{o.text}</option>)
-    : <option label={translate('noContent')}><Translate id="noContent" /></option>;
+    : <option label={t('noContent')}>{t('noContent')}</option>;
 
   return (
     <label htmlFor={id}>
@@ -70,8 +72,7 @@ LoadedDropdown.propTypes = {
   value: oneOfType([string, number]),
   onChange: func.isRequired,
   options: selectOptionsType.isRequired,
-  label: string.isRequired,
-  translate: func.isRequired
+  label: string.isRequired
 };
 
 LoadedDropdown.defaultProps = {
@@ -80,7 +81,7 @@ LoadedDropdown.defaultProps = {
 
 const LoaderDropdown = (props) => {
   const {
-    isLoading, value, options, translate
+    isLoading, value, options
   } = props;
   const selectedValue = options.find((o) => o.value === value);
   const selectedText = selectedValue ? selectedValue.text : '';
@@ -91,13 +92,13 @@ const LoaderDropdown = (props) => {
           ? (
             <>
               {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-              <LoadingDropdown text={selectedText} translate={translate} {...props} />
+              <LoadingDropdown text={selectedText} {...props} />
             </>
           )
           : (
             <>
               {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-              <LoadedDropdown translate={translate} {...props} />
+              <LoadedDropdown {...props} />
             </>
           )
       }
@@ -108,12 +109,11 @@ const LoaderDropdown = (props) => {
 LoaderDropdown.propTypes = {
   isLoading: bool.isRequired,
   value: oneOfType([string, number]),
-  options: selectOptionsType.isRequired,
-  translate: func.isRequired
+  options: selectOptionsType.isRequired
 };
 
 LoaderDropdown.defaultProps = {
   value: ''
 };
 
-export default withLocalize(LoaderDropdown);
+export default LoaderDropdown;

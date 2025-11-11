@@ -14,28 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
+import React, { useState } from 'react';
+import { element } from 'prop-types';
 
-import React from 'react';
-import { string } from 'prop-types';
+import LangContext from '.';
+import {
+  availableLanguages
+} from '../../constants';
 
-import styles from './errorMessage.css';
-import useTranslation from '../../hooks/useTranslation';
+const LangContextProvider = ({ children }) => {
+  const [lang, setLang] = useState(availableLanguages[0]);
 
-const ErrorMessage = ({ errorMessage }) => {
-  const { t } = useTranslation();
   return (
-    <div className={`messages error ${styles.errorContainer}`}>
-      <span className={`icon--warning ${styles.iconContainer}`} />
-      <div className={styles.message}>
-        <div className={styles.messageTitle}>{t('dataFetchError')}:</div>
-        <div>{errorMessage}</div>
-      </div>
-    </div>
+    <LangContext.Provider value={{ lang, setLang }}>
+      { children }
+    </LangContext.Provider>
   );
 };
 
-ErrorMessage.propTypes = {
-  errorMessage: string.isRequired
+LangContextProvider.propTypes = {
+  children: element.isRequired
 };
 
-export default ErrorMessage;
+export default LangContextProvider;
