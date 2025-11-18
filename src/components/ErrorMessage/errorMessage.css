@@ -16,6 +16,66 @@
  */
 @design-tokens url('../../styles/variables/variables.json') format('style-dictionary3');
 
+.iconWarning::after {
+  display: inline-block;
+  font-family: hy-icons, emoji;
+  font-style: normal;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: bottom;
+  content: "";
+}
+
+/*
+ section: 6.12.3
+ title: Error message
+ template: 6_12_3-message-error
+ description: Used for displaying error messages to the user.
+*/
+.messages {
+  font-size: 0.75rem;
+  padding: 1.3em 0;
+  text-align: center;
+}
+
+.messages p {
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  font-size: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+.messages a {
+  font-weight: 700;
+  font-style: normal;
+}
+
+.messages.error {
+  background-color: #964822;
+  color: #FFF;
+}
+
+.messages.error * {
+  color: #FFF;
+}
+
+.messages.error p::before,
+.messages.error li::before {
+  display: inline-block;
+  font-family: hy-icons, emoji;
+  font-style: normal;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: bottom;
+  content: "";
+  font-size: 1.4em;
+  margin-right: 0.5em;
+  position: relative;
+  top: 2px;
+}
+
 .errorContainer {
   display: flex;
   padding: 1em !important;

@@ -47,7 +47,7 @@
 
 /* According to styleguide, select-menus are white boxes with no hint about their interactions. Add caret icon.
 If the options are long and the select box is wide, locally adjust caret x-position to be >90% */
-.loadedSelect {
+label>select.loadedSelect {
   &::-ms-expand {
     display: none;
   }

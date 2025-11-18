@@ -18,218 +18,226 @@
 
 .rootModule {
   padding-bottom: 2rem;
-}
-
-.rootModuleTitle {
-  letter-spacing: unset;
-  line-height: unset;
-}
-
-.h1 {
-  font-size: 2.75em;
-}
-
-.h2 {
-  font-size: 2.5em;
-}
-
-.h3 {
-  font-size: 2em;
-}
-
-.h4 {
-  font-size: 1.5em;
-}
-
-.h5 {
-  font-size: 1.4em;
-}
-
-.h6,
-.h7,
-.h8,
-.h9,
-.h10,
-.h11 {
-  font-size: 1em;
-}
-
-.module {
-  margin-bottom: 0.5rem;
-}
-
-.module > ul,
-.accordionRegion > ul,
-.oneOfFollowingContent > ul {
-  list-style-type: none;
-  border: 0.025em solid design-token("color.silver");
-  margin: 0 0.8rem 1rem;
-
-  & li {
-    &:nth-child(odd) {
-      background-color: design-token("color.silver");
-    }
-
-    background-color: design-token("color.lightSilver");
-    color: design-token("color.black");
-    padding: 0.5rem;
-    margin: 0;
-  }
-}
-
-.moduleTitle {
-  color: design-token("color.black");
-  font-weight: bold;
-  padding: 2.4em 0 1em 0.8rem;
-  display: flex;
-  gap: 0.5em;
-}
-
-a .moduleTitle:hover {
-  color: design-token("color.darkBlue");
-}
-
-.module:first-of-type > .moduleTitle {
-  padding-top: 0.5em;
-}
-
-.moduleTitle > .moduleCredits {
-  margin-left: auto;
-  margin-right: 1.5rem;
-  white-space: nowrap;
-}
-
-.oneOfFollowing {
-  margin: 0.8rem;
-}
-
-.oneOfFollowingContent {
-  border-left: 0.025em dotted design-token("color.darkGray");
-  border-bottom: 0.025em dotted design-token("color.darkGray");
-}
-
-.oneOfFollowingContent:has(.module > .accordionContainer) {
-  border: 0;
-}
-
-.oneOfFollowingTitle {
-  display: inline-block;
-  text-transform: uppercase;
-  padding-bottom: 1rem;
-  font-size: 0.8em;
-  font-weight: bold;
-}
-
-.groupingModule {
-  margin-top: 0.5rem;
-}
-
-.compositeRuleCourseAmounts {
-  display: flex;
-  padding: 1rem 1rem 0.5rem;
-}
-
-.courseItem {
-  display: flow-root;
-  justify-content: space-between;
-}
-
-.credits {
-  font-weight: 500;
-  margin-right: 1.25rem;
-  white-space: nowrap;
-  float: right;
-}
-
-.iconContainer {
-  display: inline-block;
-  margin-left: 0.5rem;
-}
-
-.icon {
-  transform: rotate(-45deg) translateY(-0.2em);
-  position: relative;
-  top: 0.3em;
-  height: 1rem;
-}
-
-.link {
-  color: design-token("color.blue");
 
   & .icon {
-    fill: design-token("color.blue");
+    transform: rotate(-45deg) translateY(-0.2em);
+    position: relative;
+    top: 0.3em;
+    height: 1rem;
   }
 
-  &:hover,
-  &:focus {
-    color: design-token("color.darkBlue");
+  & a.link {
+    color: design-token("color.blue");
 
     & .icon {
-      fill: design-token("color.darkBlue");
+      fill: design-token("color.blue");
     }
+
+    &:hover,
+    &:focus {
+      color: design-token("color.darkBlue");
+
+      & .icon {
+        fill: design-token("color.darkBlue");
+      }
+    }
+  }
+
+  & .h1 {
+    font-size: 2.75em;
+  }
+
+  & .h2 {
+    font-size: 2.5em;
+  }
+
+  & .h3 {
+    font-size: 2em;
+  }
+
+  & .h4 {
+    font-size: 1.5em;
+  }
+
+  & .h5 {
+    font-size: 1.4em;
+  }
+
+  & .h6,
+  & .h7,
+  & .h8,
+  & .h9,
+  & .h10,
+  & .h11 {
+    font-size: 1em;
+  }
+
+  & .accordionTitle {
+    padding: 0 !important;
+  }
+
+  & .accordionTitle > button {
+    display: flex;
+    flex-direction: column;
+    font-weight: normal;
+    font-size: 0.9375rem !important;
+    align-items: start !important;
+    gap: 0.5em;
+    color: design-token("color.black") !important;
+    padding: 0.8rem 1.25rem 0.8rem 1rem !important;
+    width: 100%;
+  }
+
+  & .rootModuleTitle {
+    letter-spacing: unset;
+    line-height: unset;
+  }
+
+  & .module {
+    margin-bottom: 0.5rem;
+  }
+
+  & .module > ul,
+  & .accordionRegion > ul,
+  & .oneOfFollowingContent > ul {
+    list-style-type: none;
+    border: 0.025em solid design-token("color.silver");
+    margin: 0 0.8rem 1rem;
+
+    & li {
+      &:nth-child(odd) {
+        background-color: design-token("color.silver");
+      }
+
+      background-color: design-token("color.lightSilver");
+      color: design-token("color.black");
+      padding: 0.5rem;
+      margin: 0;
+    }
+  }
+
+  & .moduleTitle {
+    color: design-token("color.black");
+    font-weight: bold;
+    padding: 2.4em 0 1em 0.8rem;
+    display: flex;
+    gap: 0.5em;
+  }
+
+  & a .moduleTitle:hover {
+    color: design-token("color.darkBlue");
+  }
+
+  & .module:first-of-type > .moduleTitle {
+    padding-top: 0.5em;
+  }
+
+  & .moduleTitle > .moduleCredits {
+    margin-left: auto;
+    margin-right: 1.5rem;
+    white-space: nowrap;
+  }
+
+  & .oneOfFollowing {
+    margin: 0.8rem;
+  }
+
+  & .oneOfFollowingContent {
+    border-left: 0.025em dotted design-token("color.darkGray");
+    border-bottom: 0.025em dotted design-token("color.darkGray");
+  }
+
+  & .oneOfFollowingContent:has(.module > .accordionContainer) {
+    border: 0;
+  }
+
+  & .oneOfFollowingTitle {
+    display: inline-block;
+    text-transform: uppercase;
+    padding-bottom: 1rem;
+    font-size: 0.8em;
+    font-weight: bold;
+  }
+
+  & .groupingModule {
+    margin-top: 0.5rem;
+  }
+
+  & .compositeRuleCourseAmounts {
+    display: flex;
+    padding: 1rem 1rem 0.5rem;
+  }
+
+  & .courseItem {
+    display: flow-root;
+    justify-content: space-between;
+  }
+
+  & .credits {
+    font-weight: 500;
+    margin-right: 1.25rem;
+    white-space: nowrap;
+    float: right;
+  }
+
+  & .iconContainer {
+    display: inline-block;
+    margin-left: 0.5rem;
+  }
+
+  & > section > .creditsRule {
+    margin-bottom: 1rem;
+  }
+
+  & .creditRequirement,
+  & .module div .creditsRule {
+    margin-top: 1rem;
+    margin-left: 1rem;
+  }
+
+  & > section {
+    padding-left: 0;
+  }
+
+  & .accordionContainer {
+    border: 0.025em solid design-token("color.mediumSilver");
+    background-color: design-token("color.lightSilver");
+    margin: 0 0 1em;
+    display: flex;
+    flex-direction: column;
+  }
+
+  & .internalAccordionContainer {
+    border: 0.025em solid design-token("color.mediumSilver");
+    background-color: design-token("color.white");
+    margin: 0 0.5rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  & .titleRow {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  & .accordionNameParts {
+    font-size: 1.125em;
+    flex: 5 1 auto;
+    text-align: left;
+  }
+
+  & .accordionName {
+    font-weight: 700;
   }
 }
 
-.creditRequirement,
-.module div .creditsRule {
-  margin-top: 1rem;
-  margin-left: 1rem;
-}
-
-.rootModule > section {
-  padding-left: 0;
-}
-
-.rootModule > section > .creditsRule {
-  margin-bottom: 1rem;
-}
-
-.accordionContainer {
-  border: 0.025em solid design-token("color.mediumSilver");
-  background-color: design-token("color.lightSilver");
-  margin: 0 0 1em;
-  display: flex;
-  flex-direction: column;
-}
-
-.internalAccordionContainer {
-  border: 0.025em solid design-token("color.mediumSilver");
-  background-color: design-token("color.white");
-  margin: 0 0.5rem 0.5rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.accordionTitle {
-  padding: 0 !important;
-}
-
-.accordionTitle > button {
-  display: flex;
-  flex-direction: column;
-  font-weight: normal;
-  font-size: 0.9375rem !important;
-  align-items: start !important;
-  gap: 0.5em;
-  color: design-token("color.black") !important;
-  padding: 0.8rem 1.25rem 0.8rem 1rem !important;
-  width: 100%;
-}
-
-.titleRow {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-}
-
-.accordionNameParts {
-  font-size: 1.125em;
-  flex: 5 1 auto;
-  text-align: left;
-}
-
-.accordionName {
-  font-weight: 700;
+@media (width <= 48em) {
+  .rootModule {
+    & .moduleTitle {
+      flex-direction: column;
+    }
+  }
 }
 
 .caretIcon {
@@ -237,4 +245,121 @@ a .moduleTitle:hover {
   flex: 1 0 60px;
   /* stylelint-disable-next-line declaration-property-value-no-unknown */
   -webkit-text-stroke-width: medium;
+}
+
+.icon--caret-down::after {
+  display: inline-block;
+  font-family: hy-icons, emoji;
+  font-style: normal;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: bottom;
+  content: "";
+}
+
+.icon--caret-up::after {
+  display: inline-block;
+  font-family: hy-icons, emoji;
+  font-style: normal;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: bottom;
+  content: "";
+}
+
+.button--action {
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  font-size: 0.9375rem;
+  border: none;
+  cursor: pointer;
+  transition-duration: 0.1s;
+  transition-property: all;
+  user-select: none;
+  font-weight: 600;
+  position: relative;
+}
+
+.button--action:focus,
+.button--action:hover {
+  background-color: #005479;
+  color: #FFF;
+}
+
+.button--action:active {
+  background-color: #003146;
+}
+
+.button--action::before,
+.button--action::after {
+  transition-duration: 0.1s;
+  transition-property: all;
+}
+
+.theme-transparent.button--action {
+  background-color: transparent;
+  color: #0098d0;
+}
+
+.theme-transparent.button--action:hover {
+  background-color: #0098d0;
+}
+
+.theme-transparent.button--action a:hover,
+.theme-transparent.button--action:hover {
+  color: #FFF;
+}
+
+.button--action::after {
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #0882B3;
+  color: #FFF;
+  display: flex;
+  height: 100%;
+  -ms-flex-pack: center;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 3rem;
+}
+
+.button--action:focus::after,
+.button--action:active::after {
+  background: #003146;
+}
+
+
+.button--action:hover::after {
+  background: #003146;
+}
+
+.button--action.theme-transparent {
+  -ms-flex-align: center;
+  align-items: center;
+  display: flex;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.button--action.theme-transparent::after {
+  background: none;
+  color: #0098d0;
+  margin-left: 15px;
+  line-height: 0;
+  position: static;
+  width: auto;
+}
+
+.button--action.theme-transparent:hover,
+.button--action.theme-transparent::before {
+  background-color: transparent;
+}
+
+.button--action.theme-transparent a:hover,
+.button--action.theme-transparent:hover,
+.button--action.theme-transparent:hover::after {
+  color: #005479;
 }

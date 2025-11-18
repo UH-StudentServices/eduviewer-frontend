@@ -16,6 +16,20 @@
  */
 @design-tokens url('../../styles/variables/variables.json') format('style-dictionary3');
 
+@keyframes icon-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.icon-spin::after {
+  animation: icon-spin 2s infinite linear;
+}
+
 .loader {
   display: flex;
   align-items: center;
@@ -25,4 +39,15 @@
   font-size: 2rem;
   z-index: 2;
   color: design-token("color.darkSilver");
+}
+
+.icon--spinner::after {
+  display: inline-block;
+  font-family: hy-icons, emoji;
+  font-style: normal;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: bottom;
+  content: "";
 }

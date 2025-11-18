@@ -22,6 +22,35 @@
   border: 0.075em solid design-token("color.orange");
   display: flex;
   background-color: design-token("color.white");
+
+  & .content {
+    font-size: 1em;
+    color: design-token("color.black");
+    font-weight: 300;
+
+    & > p {
+      font-size: 1em;
+      color: design-token("color.black");
+      font-weight: 300;
+      line-height: 1.4;
+      margin-bottom: 0;
+
+      & > a {
+        word-break: break-all;
+      }
+    }
+
+    & b {
+      color: design-token("color.black");
+      font-weight: 600;
+    }
+
+    & li:nth-child(odd),
+    & li:nth-child(even) {
+      background-color: design-token("color.white") !important;
+      border: none !important;
+    }
+  }
 }
 
 .iconContainer {
@@ -34,31 +63,13 @@
   vertical-align: baseline !important;
 }
 
-.content {
-  font-size: 1em;
-  color: design-token("color.black");
-  font-weight: 300;
-}
-
-.content > p {
-  font-size: 1em;
-  color: design-token("color.black");
-  font-weight: 300;
-  line-height: 1.4;
-  margin-bottom: 0;
-}
-
-.content b {
-  color: design-token("color.black");
-  font-weight: 600;
-}
-
-.content > p > a {
-  word-break: break-all;
-}
-
-.content li:nth-child(odd),
-.content li:nth-child(even) {
-  background-color: design-token("color.white") !important;
-  border: none !important;
+.icon--info-stroke::after {
+  display: inline-block;
+  font-family: hy-icons, emoji;
+  font-style: normal;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: bottom;
+  content: "";
 }

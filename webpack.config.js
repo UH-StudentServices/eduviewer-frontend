@@ -81,17 +81,8 @@ const createConfig = (options) => ({
       },
       {
         test: /.*\/node_modules\/.+\.css$/,
-        exclude: /\/uh-living-styleguide\//,
         use: [
           'style-loader',
-          'css-loader'
-        ]
-      },
-      {
-        test: /.*\/node_modules\/.+\.css$/,
-        include: /\/uh-living-styleguide\//,
-        use: [
-          MiniCssExtractPlugin.loader,
           'css-loader'
         ]
       },
@@ -120,7 +111,7 @@ const createConfig = (options) => ({
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
-        include: /\/uh-living-styleguide\//,
+        include: /\/fonts\//,
         use: 'file-loader?name=fonts/[name]-[hash].[ext]'
       },
 
