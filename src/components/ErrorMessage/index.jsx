@@ -24,8 +24,8 @@ import useTranslation from '../../hooks/useTranslation';
 const ErrorMessage = ({ errorMessage }) => {
   const { t } = useTranslation();
   return (
-    <div className={`messages error ${styles.errorContainer}`}>
-      <span className={`icon--warning ${styles.iconContainer}`} />
+    <div className={`${styles.messages} ${styles.error} ${styles.errorContainer}`}>
+      <span className={`${styles.iconWarning} ${styles.iconContainer}`} />
       <div className={styles.message}>
         <div className={styles.messageTitle}>{t('dataFetchError')}:</div>
         <div>{errorMessage}</div>

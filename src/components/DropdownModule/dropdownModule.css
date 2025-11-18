@@ -21,17 +21,17 @@
   margin-top: 0.125em;
   border-top: 1px dotted;
   border-bottom: 1px dotted;
-}
+  
+  & label.label {
+    font-weight: bold;
+  }
 
-.selectContainer {
-  margin-bottom: 0.5em;
-}
+  & .selectContainer {
+    margin-bottom: 0.5em;
 
-.selectContainer select {
-  color: design-token("color.blue");
-  max-width: max-content;
-}
-
-.label {
-  font-weight: bold;
+    & select {
+      color: design-token("color.blue");
+      max-width: max-content;
+    }
+  }
 }

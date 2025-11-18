@@ -26,11 +26,12 @@
   & input[type="checkbox"] {
     display: block;
   }
+  
+  & .toggle {
+    line-height: normal;
+  }
 }
 
-.toggle {
-  line-height: normal;
-}
 
 .toggleLabelText {
   position: absolute;

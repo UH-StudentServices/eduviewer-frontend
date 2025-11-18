@@ -73,14 +73,14 @@ const Accordion = ({
         <button
           type="button"
           id={`ac-${rule.localId}`}
-          className="button--action theme-transparent"
+          className={`${styles['button--action']} ${styles['theme-transparent']}`}
           onClick={() => setOpen(!open)}
           aria-expanded={open}
           aria-controls={`region-${rule.localId}`}
         >
           <div className={styles.titleRow}>
             {titlePart}
-            <span className={`${styles.caretIcon} ${open ? 'icon--caret-up' : 'icon--caret-down'}`} />
+            <span className={`${styles.caretIcon} ${open ? styles['icon--caret-up'] : styles['icon--caret-down']}`} />
           </div>
         </button>
       </Heading>

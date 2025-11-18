@@ -22,7 +22,6 @@ import Main from './components/Main';
 
 import './styles';
 import { availableLanguages } from './constants';
-import { loadLocalStyleGuide } from './utils/dependencyLoader';
 import { calculateCurrentLV } from './utils';
 import LangContextProvider from './context/LangContext/LangContextProvider';
 import InitializeLang from './components/InititializeLang';
@@ -41,7 +40,6 @@ const ONLY_SELECTED_YEAR_ATTR_NAME = 'only-selected-academic-year';
 // Unknown values starting with "on" are not allowed in React
 const SELECTED_YEAR__ONLY_ATTR_NAME = 'selected-academic-year-only';
 const HEADER_ATTR_NAME = 'header';
-const DISABLE_GLOBAL_STYLES_ATTR_NAME = 'disable-global-style';
 
 const getRoot = () => document.getElementById(EDUVIEWER_ROOT_ID);
 const getRootAttribute = (attributeName) => {
@@ -88,14 +86,7 @@ export const render = () => {
 const initializeApp = () => {
   initializeTracker();
 
-  const useLocalStyleGuide = getRootAttribute(DISABLE_GLOBAL_STYLES_ATTR_NAME) === null;
-
-  if (useLocalStyleGuide) {
-    loadLocalStyleGuide()
-      .then(render);
-  } else {
-    render(Main);
-  }
+  render(Main);
 };
 
 if (module.hot) {

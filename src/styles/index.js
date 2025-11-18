@@ -17,4 +17,4 @@
 
 import 'react-toggle/style.css';
 import './variables/colors';
-import 'uh-living-styleguide/css/styles.css';
+import './fonts.css';

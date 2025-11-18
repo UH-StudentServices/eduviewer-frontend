@@ -22,7 +22,7 @@ import styles from './infoBox.css';
 
 const InfoBox = ({ content, setInnerHtml, id }) => (
   <div className={styles.infoContainer} id={id}>
-    <span className={`${styles.iconContainer} icon--info-stroke`} />
+    <span className={`${styles.iconContainer} ${styles['icon--info-stroke']}`} />
     {
       setInnerHtml
         ? (

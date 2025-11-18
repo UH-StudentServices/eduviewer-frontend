@@ -21,7 +21,7 @@ import styles from './loader.css';
 
 const Loader = () => (
   <div className={styles.loader}>
-    <span className="icon--spinner icon-spin" />
+    <span className={`${styles['icon--spinner']} ${styles['icon-spin']}`} />
   </div>
 );
 

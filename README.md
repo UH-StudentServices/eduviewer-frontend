@@ -38,7 +38,7 @@ Webpack will ouput following different build files inside the `dist` folder:
 Eduviewer frontend can be embedded to any web page using the following `div` tag:
 
 ```html
-<div id="eduviewer-root" module-code="CODE" academic-year="ACADEMIC_YEAR" only-selected-academic-year="true|false" lang="LANG" header="HEADER" disable-global-style></div>
+<div id="eduviewer-root" module-code="CODE" academic-year="ACADEMIC_YEAR" only-selected-academic-year="true|false" lang="LANG" header="HEADER"></div>
 ```
 All attributes are optional.
 * `lang` defaults to `fi`, other valid values are: `sv` & `en`
@@ -53,7 +53,6 @@ All attributes are optional.
   * `internal-course-links` sets course links as internal, removing the arrow marking an external link
 * `module-code` or `degree-program-id` is the code of degree program set in Sisu. Valid examples: `KH10_001`, `MH30_004`
 * If `header` isn't set, Eduviewer page won't have a h2 header on top of selects
-* `disable-global-style` disables usage of uh-living-styleguide in eduviewer. Use this only if embedding app already uses uh-living-styleguide.
 
 
 
