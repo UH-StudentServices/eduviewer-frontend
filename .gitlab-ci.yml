@@ -121,8 +121,8 @@ provision_openshift_stack_prod:
 build_image_openshift_qa:
   <<: *openshift_image_definition
   stage: build_image
-  # only:
-  #   - master
+  only:
+    - master
   variables:
     SERVER_NAME: eduviewer-qa.it.helsinki.fi
     IMAGE_TAG_PREFIX: qa
