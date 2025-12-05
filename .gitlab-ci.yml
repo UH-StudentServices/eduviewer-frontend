@@ -5,6 +5,8 @@ stages:
   - build_image
   - provision
   - deploy
+  - sbom
+  - build-sonar
 
 test_and_build:
   image: node:18
@@ -141,7 +143,7 @@ deploy_image_openshift_qa:
     IMAGE_TAG_PREFIX: qa
   script:
     - *deploy_image_openshift_scripts
-  only: 
+  only:
     - master
 
 deploy_image_openshift_prod:
@@ -155,3 +157,60 @@ deploy_image_openshift_prod:
     IMAGE_TAG_PREFIX: prod
   script:
     - *deploy_image_openshift_scripts
+
+# Generate an SBOM file and upload it to Dependency Track.
+sbom:
+  stage: sbom
+  image: node:jod-alpine
+  needs:
+    - job: deploy_image_openshift_prod
+      optional: true
+  when: manual
+  only:
+    - master
+  before_script:
+    - apk add --no-cache curl
+    - npm install -g @cyclonedx/cyclonedx-npm
+    - npm install
+  script:
+    # Generate SBOM
+    - npx @cyclonedx/cyclonedx-npm --output-file eduviewer-frontend-sbom.xml --output-format xml
+    - |
+      for sbom in *-sbom.xml; do
+        project_name=uhma2-$(echo $sbom | sed 's/-sbom.xml//')
+        echo "Uploading SBOM for $project_name"
+        curl -v -X POST "${DEPENDENCY_TRACK_URL}/v1/bom" \
+          -H "X-Api-Key: ${DEPENDENCY_TRACK_API_KEY}" \
+          -H "Content-Type: multipart/form-data" \
+          -F "projectName=${project_name}" \
+          -F "autoCreate=true" \
+          -F "bom=@${sbom}" \
+          --fail-with-body
+      done
+  artifacts:
+    paths:
+      - "*-sbom.xml"
+    expire_in: 1h
+
+# Note: there are currently no tests in this project. When some are added, the Sonar configuration
+# needs to be updated so that a coverage report is generated and uploaded into SonarQube.
+build-sonar:
+  stage: build-sonar
+  image:
+    name: sonarsource/sonar-scanner-cli:11
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    policy: pull-push
+    key: "sonar-cache-$CI_COMMIT_REF_SLUG"
+    paths:
+      - "${SONAR_USER_HOME}/cache"
+      - sonar-scanner/
+  script:
+    - sonar-scanner -Dsonar.host.url="${SONAR_HOST_URL}"
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'master'
