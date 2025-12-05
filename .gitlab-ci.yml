@@ -36,9 +36,11 @@ push_master_to_github:
     - master
 
 .openshift_image: &openshift_image_definition
-  image: docker:20.10.16
+  image: docker:24-dind
   services:
-    - docker:20.10.16-dind
+    - docker:24-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
   before_script:
     # Install openshift client
     - apk add --update tar gzip curl ca-certificates gettext && rm -rf /var/cache/apk/*
