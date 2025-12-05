@@ -36,20 +36,29 @@ push_master_to_github:
     - master
 
 .openshift_image: &openshift_image_definition
-  image: docker:24
+  image: docker:27
+
   services:
-    - docker:24-dind
+    - name: docker:27-dind
+      alias: docker
+      command: ["dockerd", "--host=tcp://0.0.0.0:2375", "--tls=false"]
   variables:
-    DOCKER_HOST: tcp://docker:2376
-    DOCKER_TLS_CERTDIR: "/certs"
-    DOCKER_TLS_VERIFY: 1
-    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_DRIVER: overlay2
+    FF_NETWORK_PER_BUILD: 1
   before_script:
-    # Install openshift client
-    - apk add --update tar gzip curl ca-certificates gettext && rm -rf /var/cache/apk/*
+    # Install openshift client and required libraries
+    - apk add --update tar gzip curl ca-certificates gettext libc6-compat && rm -rf /var/cache/apk/*
     - curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.10/openshift-client-linux.tar.gz
     - tar xzvf /tmp/oc.tar.gz -C /usr/local/bin
+    - chmod +x /usr/local/bin/oc /usr/local/bin/kubectl
     - rm -rf /tmp/oc.tar.gz
+    # Verify oc works
+    - /usr/local/bin/oc version --client
+    # Wait for Docker daemon to be ready
+    - timeout 60 sh -c 'until docker info >/dev/null 2>&1; do echo "Waiting for Docker..."; sleep 2; done' || true
+    - docker info
 
 .provision_openshift_stack: &provision_openshift_stack_definition
   <<: *openshift_image_definition
@@ -112,8 +121,8 @@ provision_openshift_stack_prod:
 build_image_openshift_qa:
   <<: *openshift_image_definition
   stage: build_image
-  only:
-    - master
+  # only:
+  #   - master
   variables:
     SERVER_NAME: eduviewer-qa.it.helsinki.fi
     IMAGE_TAG_PREFIX: qa
