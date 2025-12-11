@@ -191,7 +191,7 @@ sbom:
     - npx @cyclonedx/cyclonedx-npm --output-file eduviewer-frontend-sbom.xml --output-format xml
     - |
       for sbom in *-sbom.xml; do
-        project_name=uhma2-$(echo $sbom | sed 's/-sbom.xml//')
+        project_name=$(echo $sbom | sed 's/-sbom.xml//')
         echo "Uploading SBOM for $project_name"
         curl -v -X POST "${DEPENDENCY_TRACK_URL}/v1/bom" \
           -H "X-Api-Key: ${DEPENDENCY_TRACK_API_KEY}" \
