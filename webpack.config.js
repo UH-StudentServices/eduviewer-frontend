@@ -135,7 +135,7 @@ const createConfig = (options) => ({
     getHtmlPlugin(options.target, 'sv'),
     miniCssExtractPlugin,
     cleanWebPackPlugin,
-    new ESLintWebpackPlugin()
+    new ESLintWebpackPlugin({ extensions: ['js', 'jsx'] })
   ],
   devServer: devServerConfig
   // devtool: 'eval-source-map'
