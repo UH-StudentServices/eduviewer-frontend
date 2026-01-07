@@ -15,6 +15,6 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.toggleContainer {
-  position: relative;
-}
+import '@uh-design-system/component-library/dist/component-library/component-library.css';
+import '@uh-design-system/component-library/dist/styles/variables.css';
+import '@uh-design-system/component-library/dist/fonts/fonts.css';

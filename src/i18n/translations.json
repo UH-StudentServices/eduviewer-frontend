@@ -14,6 +14,11 @@
     "Visa allt ",
     "Show all"
   ],
+  "hide": [
+    "Piilota",
+    "Dölj",
+    "Hide"
+  ],
   "noDegreeProgramToShow": [
     "Ei näytettävää koulutusohjelmaa",
     "Inget utbildningsprogram att visa",

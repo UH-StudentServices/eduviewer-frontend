@@ -21,6 +21,7 @@ import {
   bool,
   oneOf
 } from 'prop-types';
+
 import {
   getEducations,
   getAcademicYearNames,
@@ -111,7 +112,7 @@ const Main = ({
     if (newAcademicYears.includes(moduleAndYear.academicYear)) {
       return moduleAndYear.academicYear;
     }
-    return newAcademicYears.length ? newAcademicYears[newAcademicYears.length - 1] : null;
+    return newAcademicYears.length ? newAcademicYears.at(-1) : null;
   };
 
   const initAcademicYearNames = async () => {
@@ -217,7 +218,7 @@ const Main = ({
 
     const academicYearsLabel = t('academicYear');
     const educationsLabel = t('degreeProgrammes');
-    const showAllLabel = t('showAll');
+    const toggleSelectLabel = t(showAll ? 'hide' : 'showAll');
 
     return (
       <div className={styles.selectContainer}>
@@ -260,7 +261,7 @@ const Main = ({
         <ToggleSelect
           onChange={onShowAll}
           checked={showAll}
-          label={showAllLabel}
+          label={toggleSelectLabel}
         />
       </div>
     );
