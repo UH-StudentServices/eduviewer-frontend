@@ -15,6 +15,6 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import 'react-toggle/style.css';
 import './variables/colors';
 import './fonts.css';
+import './ds';

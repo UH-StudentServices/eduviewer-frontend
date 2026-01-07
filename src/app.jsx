@@ -16,7 +16,8 @@
  */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
+import './register-components';
 import { initializeTracker } from './tracking';
 import Main from './components/Main';
 
@@ -62,24 +63,21 @@ export const render = () => {
   const showOnlySelectedAcademicYear = onlySelectedAYValue !== null && onlySelectedAYValue.toLowerCase() !== 'false';
   const lang = getRootAttribute(LANGUAGE_ATTR_NAME) || availableLanguages.FI;
   const header = getRootAttribute(HEADER_ATTR_NAME) || '';
-  ReactDOM.render(
-    <>
-      <LangContextProvider>
-        <InitializeLang currentLang={lang}>
-          <Main
-            code={code}
-            academicYearCode={academicYearCode}
-            hideSelections={hideSelections}
-            hideAccordion={hideAccordion}
-            internalCourseLink={internalCourseLink}
-            onlySelectedAcademicYear={showOnlySelectedAcademicYear}
-            lang={lang}
-            header={header}
-          />
-        </InitializeLang>
-      </LangContextProvider>
-    </>,
-    getRoot()
+  createRoot(getRoot()).render(
+    <LangContextProvider>
+      <InitializeLang currentLang={lang}>
+        <Main
+          code={code}
+          academicYearCode={academicYearCode}
+          hideSelections={hideSelections}
+          hideAccordion={hideAccordion}
+          internalCourseLink={internalCourseLink}
+          onlySelectedAcademicYear={showOnlySelectedAcademicYear}
+          lang={lang}
+          header={header}
+        />
+      </InitializeLang>
+    </LangContextProvider>
   );
 };
 

@@ -16,23 +16,19 @@
  */
 
 import React from 'react';
-import Toggle from 'react-toggle';
 import { func, bool, string } from 'prop-types';
 
 import styles from './toggleSelect.css';
 
-const TOGGLE_ID = 'toggle';
-
 const ToggleSelect = ({ onChange, label, checked }) => (
-  <div className={styles.toggleContainer}>
-    <label htmlFor={TOGGLE_ID} className={styles.toggle}>
-      <Toggle
-        id={TOGGLE_ID}
-        defaultChecked={checked}
-        onChange={onChange}
-      />
-      <span className={styles.toggleLabelText}>{label}</span>
-    </label>
+  <div className={`${styles.toggleContainer} ds-my-md`}>
+    <eduviewer-ds-button
+      dsVariant="secondary"
+      dsText={label}
+      dsIcon={checked ? 'visibility_off' : 'visibility'}
+      aria-pressed={checked}
+      onClick={onChange}
+    />
   </div>
 );
 

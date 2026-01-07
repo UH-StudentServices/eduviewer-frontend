@@ -24,11 +24,11 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
+    "@uh-design-system/component-library": "^1.1.0",
     "mini-css-extract-plugin": "^2.7.3",
     "prop-types": "^15.6.2",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "react-toggle": "^4.1.3"
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
