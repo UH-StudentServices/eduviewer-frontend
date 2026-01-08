@@ -39,7 +39,7 @@ push_master_to_github:
 
 .openshift_image:
   services:
-    - name: docker:dind
+    - name: docker:28-dind
   variables:
     DOCKER_HOST: "unix:///runner/services/docker/docker.sock"
   before_script:
