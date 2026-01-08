@@ -1,4 +1,6 @@
-image: docker:stable
+image:
+  name: docker:latest
+  entrypoint: [""]
 
 stages:
   - test_and_build
@@ -35,10 +37,9 @@ push_master_to_github:
   only:
     - master
 
-.openshift_image: &openshift_image_definition
-  image: docker:27
+.openshift_image:
   services:
-    - name: docker:27-dind
+    - name: docker:dind
   variables:
     DOCKER_HOST: "unix:///runner/services/docker/docker.sock"
   before_script:
@@ -54,8 +55,8 @@ push_master_to_github:
     - timeout 60 sh -c 'until docker info >/dev/null 2>&1; do echo "Waiting for Docker..."; sleep 2; done' || true
     - docker info
 
-.provision_openshift_stack: &provision_openshift_stack_definition
-  <<: *openshift_image_definition
+.provision_openshift_stack:
+  extends: .openshift_image
   stage: provision
   script:
     - export IMAGE_TAG=${IMAGE_TAG_PREFIX}-${CI_COMMIT_SHA}
@@ -77,6 +78,7 @@ push_master_to_github:
   when: manual
 
 provision_openshift_stack_qa:
+  extends: .provision_openshift_stack
   variables:
     OC_SERVER: $OC_SERVER_TEST
     OC_SA_TOKEN: $OC_SA_TOKEN_TEST
@@ -88,9 +90,9 @@ provision_openshift_stack_qa:
     OC_IMAGE_STREAM: qa-frontend
     OC_ROUTE_TYPE: default
     IMAGE_TAG_PREFIX: qa
-  <<: *provision_openshift_stack_definition
 
 provision_openshift_stack_prod:
+  extends: .provision_openshift_stack
   variables:
     OC_SERVER: $OC_SERVER_PROD
     OC_SA_TOKEN: $OC_SA_TOKEN_PROD
@@ -102,7 +104,6 @@ provision_openshift_stack_prod:
     OC_IMAGE_STREAM: prod-frontend
     OC_ROUTE_TYPE: external
     IMAGE_TAG_PREFIX: prod
-  <<: *provision_openshift_stack_definition
 
 .build_push_image_openshift: &build_push_image_openshift_scripts
   - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
@@ -113,7 +114,7 @@ provision_openshift_stack_prod:
   - docker push $IMAGE_REPOSITORY:$IMAGE_TAG
 
 build_image_openshift_qa:
-  <<: *openshift_image_definition
+  extends: .openshift_image
   stage: build_image
   only:
     - master
@@ -124,7 +125,7 @@ build_image_openshift_qa:
     - *build_push_image_openshift_scripts
 
 build_image_openshift_prod:
-  <<: *openshift_image_definition
+  extends: .openshift_image
   stage: build_image
   only:
     - master
@@ -142,7 +143,7 @@ build_image_openshift_prod:
   - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:latest
 
 deploy_image_openshift_qa:
-  <<: *openshift_image_definition
+  extends: .openshift_image
   stage: deploy
   variables:
     OC_SERVER: $OC_SERVER_TEST
@@ -155,7 +156,7 @@ deploy_image_openshift_qa:
     - master
 
 deploy_image_openshift_prod:
-  <<: *openshift_image_definition
+  extends: .openshift_image
   stage: deploy
   when: manual
   variables:
