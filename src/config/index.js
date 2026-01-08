@@ -89,11 +89,29 @@ const getBaseUrl = (urls) => (
     : urls.PROD
 );
 
+// We check for localhost and local.appis.helsinki.fi -style aliases.
+const isLocal = () => [eduviewerHostnames.LOCAL, 'local.'].some((hostNamePattern) =>
+  window.location.hostname.includes(hostNamePattern));
+
+const getEnv = () => {
+  if (isLocal()) {
+    return 'local';
+  }
+  if (isQA()) {
+    return 'qa';
+  }
+  return 'production';
+};
+
+const SENTRY_ENABLED = !isLocal();
+
 module.exports = {
   DEFAULT_BASE_URL: getBaseUrl(eduviewerBaseUrls),
   DEFAULT_STYLE_URL: getStyleUrl(),
   STUDIES_HOST_BASE_URL: getBaseUrl(studiesHostBaseUrls),
   isNonProd,
+  getEnv,
+  SENTRY_ENABLED,
   studiesCourseUnits,
   studiesStudyModules,
   studiesDegreeProgrammes

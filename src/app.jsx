@@ -15,6 +15,7 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import './sentry';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import './register-components';
