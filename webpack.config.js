@@ -15,7 +15,7 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require('path');
+const path = require('node:path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -59,7 +59,6 @@ const devServerConfig = {
 const createConfig = (options) => ({
   context: path.join(__dirname, 'src'),
   entry: [
-    '@babel/polyfill',
     './app'
   ],
   output: {

@@ -7,6 +7,9 @@
   "env": {
     "browser": true
   },
+  "globals": {
+    "globalThis": "readonly"
+  },
   "rules": {
     "comma-dangle": [2, "never"],
     "import/no-unresolved": 2,

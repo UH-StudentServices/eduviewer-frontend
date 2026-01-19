@@ -27,7 +27,7 @@ export const trackingCategories = {
 
 const loadMatomoTagManagerScript = () => {
   /* eslint-disable */
-  var _mtm = window._mtm = window._mtm || [];
+  var _mtm = globalThis._mtm = globalThis._mtm || [];
   _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
   var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
   g.async=true; g.src='https://matomo.it.helsinki.fi/matomo/js/container_NMx6LTvF.js'; s.parentNode.insertBefore(g,s);
@@ -36,15 +36,15 @@ const loadMatomoTagManagerScript = () => {
 
 export const initializeTracker = () => {
   // eslint-disable-next-line no-underscore-dangle
-  if (!window._mtm && !isNonProd()) {
+  if (!globalThis._mtm && !isNonProd()) {
     loadMatomoTagManagerScript();
   }
 };
 
 export const trackEvent = (category, action, label = null) => {
   /* eslint-disable no-underscore-dangle */
-  if (window._mtm) {
-    window._mtm.push({
+  if (globalThis._mtm) {
+    globalThis._mtm.push({
       event: action, category, label
     });
   }
@@ -52,6 +52,6 @@ export const trackEvent = (category, action, label = null) => {
 };
 
 export const trackPageView = (moduleCode, academicYearName, lang) => {
-  const host = window.location.hostname;
+  const host = globalThis.location.hostname;
   trackEvent(trackingCategories.PAGE_VIEW, `/${moduleCode}/${academicYearName}/${lang}/${host}`);
 };

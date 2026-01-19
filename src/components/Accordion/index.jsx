@@ -84,15 +84,14 @@ const Accordion = ({
           </div>
         </button>
       </Heading>
-      <div
-        role="region"
+      <section
         id={`region-${rule.localId}`}
         aria-labelledby={`ac-${rule.localId}`}
         hidden={!open}
         className={styles.accordionRegion}
       >
         {open && children}
-      </div>
+      </section>
     </div>
   );
 };

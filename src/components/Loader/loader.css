@@ -43,7 +43,7 @@
 
 .icon--spinner::after {
   display: inline-block;
-  font-family: hy-icons, emoji;
+  font-family: hy-icons, emoji, sans-serif;
   font-style: normal;
   font-weight: normal;
   -webkit-font-smoothing: antialiased;

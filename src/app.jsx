@@ -84,8 +84,7 @@ export const render = () => {
 
 const initializeApp = () => {
   initializeTracker();
-
-  render(Main);
+  render();
 };
 
 if (module.hot) {

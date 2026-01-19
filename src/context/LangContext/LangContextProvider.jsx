@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { element } from 'prop-types';
 
 import LangContext from '.';
@@ -25,8 +25,10 @@ import {
 const LangContextProvider = ({ children }) => {
   const [lang, setLang] = useState(availableLanguages[0]);
 
+  const value = useMemo(() => ({ lang, setLang }), [lang, setLang]);
+
   return (
-    <LangContext.Provider value={{ lang, setLang }}>
+    <LangContext.Provider value={value}>
       { children }
     </LangContext.Provider>
   );
