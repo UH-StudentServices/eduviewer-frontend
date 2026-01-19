@@ -73,7 +73,7 @@ const useTranslation = () => {
       return trimKey;
     }
     const myLang = lang || langContext.lang || DEFAULT_LANG;
-    const textObject = trimKey.split('.').reduce((translation, keyPart) => translation && translation[keyPart], translations);
+    const textObject = trimKey.split('.').reduce((translation, keyPart) => translation?.[keyPart], translations);
     if (textObject !== null && textObject !== undefined) {
       const text = textObject[langIndex[myLang]];
       return mapping && text ? interpolation(text, mapping) : text;

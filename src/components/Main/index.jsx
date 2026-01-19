@@ -85,7 +85,7 @@ const Main = ({
     }
     return () => {
       if (cbot) {
-        document.head.removeChild(cbot);
+        cbot.remove();
       }
     };
   }, [lang]);

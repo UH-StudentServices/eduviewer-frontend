@@ -23,7 +23,7 @@ const getJson = (path) => fetch(`${DEFAULT_BASE_URL}${path}`, {
   }
 }).then((response) => {
   if (!response.ok) {
-    return Promise.reject(new Error(`${response.url} ${response.status}`));
+    throw new Error(`${response.url} ${response.status}`);
   }
   return response.json();
 });

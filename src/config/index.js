@@ -59,17 +59,17 @@ const studiesDegreeProgrammes = {
 };
 
 const isQA = () => {
-  const { hostname } = window.location;
+  const { hostname } = globalThis.location;
   return hostname.toLowerCase().includes('-qa');
 };
 
 const isNonProd = () => {
-  const { hostname } = window.location;
+  const { hostname } = globalThis.location;
   return hostname === eduviewerHostnames.LOCAL || isQA();
 };
 
 const getNonProdStyleUrl = () => {
-  const { protocol, hostname, port } = window.location;
+  const { protocol, hostname, port } = globalThis.location;
   let url = `${protocol}//${hostname}`;
   if (port) {
     url = `${url}:${port}`;
@@ -91,7 +91,7 @@ const getBaseUrl = (urls) => (
 
 // We check for localhost and local.appis.helsinki.fi -style aliases.
 const isLocal = () => [eduviewerHostnames.LOCAL, 'local.'].some((hostNamePattern) =>
-  window.location.hostname.includes(hostNamePattern));
+  globalThis.location.hostname.includes(hostNamePattern));
 
 const getEnv = () => {
   if (isLocal()) {

@@ -29,10 +29,10 @@ const InfoBox = ({ content, setInnerHtml, id }) => (
           <div
             className={styles.content}
             // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: content && content.trim() }}
+            dangerouslySetInnerHTML={{ __html: content?.trim() }}
           />
         )
-        : <div className={styles.content}>{content && content.trim()}</div>
+        : <div className={styles.content}>{content?.trim()}</div>
     }
   </div>
 );

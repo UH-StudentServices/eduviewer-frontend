@@ -141,7 +141,7 @@ export const isDegreeProgramme = (moduleOrDataNode) => moduleOrDataNode?.type ==
 
 export const getSubRules = (rule) => {
   const { dataNode } = rule;
-  if (dataNode?.rules && dataNode.rules.length) {
+  if (dataNode?.rules?.length) {
     return dataNode.rules;
   }
   return dataNode?.rule ? [dataNode.rule] : [];

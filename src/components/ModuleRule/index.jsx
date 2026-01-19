@@ -22,23 +22,57 @@ import {
 
 import {
   countPotentialAccordions,
-  creditsToString, getDegreeProgrammeUrl,
-  getName, getStudyModuleUrl, getSubRules, isDegreeProgramme,
+  creditsToString,
+  getName,
+  getSubRules,
+  isDegreeProgramme,
   sortAndRenderRules
 } from '../../utils';
 
 import DropdownModule from '../DropdownModule'; // eslint-disable-line
 
 import styles from '../RootModule/rootModule.css';
-import Heading from '../Heading';
-import Link from '../Link';
+import ModuleTitle from '../ModuleTitle';
 import Accordion from '../Accordion';
 // eslint-disable-next-line import/no-cycle
 import Rule from '../Rule';
-import { FOREIGN_LANGUAGE_DROPDOWN_MODULES, STUDY_TRACK_DROPDOWN_MODULES, SPECIALISATION_DROPDOWN_MODULES } from '../../constants';
+import {
+  FOREIGN_LANGUAGE_DROPDOWN_MODULES,
+  STUDY_TRACK_DROPDOWN_MODULES,
+  SPECIALISATION_DROPDOWN_MODULES
+} from '../../constants';
 import OptionContext from '../../context/OptionContext';
 import RuleInfo from '../RuleInfo';
 import useTranslation from '../../hooks/useTranslation';
+
+const calculateAccordionState = (
+  showAll,
+  skipTitle,
+  atFirstDegreeProgramme,
+  name,
+  insideAccordion,
+  canBeAccordion,
+  rule
+) => {
+  const skipAccordionLogic = showAll || skipTitle || atFirstDegreeProgramme;
+  const isForeignLanguage = FOREIGN_LANGUAGE_DROPDOWN_MODULES.includes(name);
+
+  return {
+    accordion:
+      !skipAccordionLogic
+      && (isForeignLanguage || (!insideAccordion && canBeAccordion)),
+    internalAccordion: !skipAccordionLogic && isForeignLanguage,
+    nextInsideAccordion:
+      insideAccordion
+      || (!skipAccordionLogic && (isForeignLanguage || canBeAccordion)),
+    nextCanBeAccordion:
+      !skipAccordionLogic
+      && !insideAccordion
+      && !isForeignLanguage
+      && !canBeAccordion
+      && countPotentialAccordions(getSubRules(rule)) > 1
+  };
+};
 
 const ModuleRule = ({
   skipTitle,
@@ -54,7 +88,7 @@ const ModuleRule = ({
   } = useContext(OptionContext);
   const { t } = useTranslation();
 
-  if (!rule || !rule.dataNode || typeof rule.dataNode !== 'object') {
+  if (!rule?.dataNode || typeof rule.dataNode !== 'object') {
     return null;
   }
   const name = getName(rule, lang);
@@ -64,10 +98,8 @@ const ModuleRule = ({
   const nameLower = name.toLowerCase();
 
   const shouldRenderDropdown = !showAll
-    && (
-      STUDY_TRACK_DROPDOWN_MODULES.includes(nameLower)
-      || SPECIALISATION_DROPDOWN_MODULES.includes(nameLower)
-    );
+    && (STUDY_TRACK_DROPDOWN_MODULES.includes(nameLower)
+      || SPECIALISATION_DROPDOWN_MODULES.includes(nameLower));
 
   if (shouldRenderDropdown) {
     return (
@@ -85,95 +117,70 @@ const ModuleRule = ({
     );
   }
 
-  let nextInsideAccordion = insideAccordion;
-  let accordion = false;
-  let internalAccordion = false;
-  let nextCanBeAccordion = false;
-  if (showAll || skipTitle || atFirstDegreeProgramme) {
-    accordion = false;
-  } else if (FOREIGN_LANGUAGE_DROPDOWN_MODULES.includes(nameLower)) {
-    accordion = true;
-    internalAccordion = true;
-    nextInsideAccordion = true;
-  } else if (!insideAccordion && canBeAccordion) {
-    accordion = true;
-    nextInsideAccordion = true;
-  } else if (!insideAccordion) {
-    nextCanBeAccordion = countPotentialAccordions(getSubRules(rule)) > 1;
-  }
+  const {
+    nextInsideAccordion,
+    accordion,
+    internalAccordion,
+    nextCanBeAccordion
+  } = calculateAccordionState(
+    showAll,
+    skipTitle,
+    atFirstDegreeProgramme,
+    name,
+    insideAccordion,
+    canBeAccordion,
+    rule
+  );
 
   const moduleCredits = creditsToString(rule.dataNode.targetCredits, t, true);
   const moduleCode = rule.dataNode.code;
   const showAsLink = rule.dataNode.gradeScaleId || isDegreeProgramme(rule.dataNode);
-  let moduleTitle = '';
-  if (name && !accordion && !skipTitle) {
-    if (showAsLink) {
-      moduleTitle = (
-        <Heading
-          level={hlevel}
-          className={styles.moduleTitle}
-          id={`title-${rule.localId}`}
-        >
-          <Link
-            href={isDegreeProgramme(rule.dataNode)
-              ? getDegreeProgrammeUrl(rule.dataNode.id, lang, academicYear)
-              : getStudyModuleUrl(rule.dataNode.id, lang, academicYear)}
-            external={!internalLinks}
-          >
-            <span>{moduleCode} </span>
-            {name}
-          </Link>
-          {moduleCredits
-            && <span className={styles.moduleCredits}>{moduleCredits}</span>}
-        </Heading>
-      );
-    } else {
-      moduleTitle = (
-        <Heading
-          level={hlevel}
-          className={styles.moduleTitle}
-          id={`title-${rule.localId}`}
-        >
-          {name}
-          {moduleCredits
-            && <span className={styles.moduleCredits}>{moduleCredits}</span>}
-        </Heading>
-      );
-    }
-  }
 
-  const newClosestTitleId = (moduleTitle || accordion) ? `title-${rule.localId}` : closestTitleId;
+  const hasTitle = name && !accordion && !skipTitle;
+  const newClosestTitleId = hasTitle || accordion ? `title-${rule.localId}` : closestTitleId;
   const renderRule = (r) => (
     <Rule
       key={r.localId}
       rule={r}
       showAll={showAll}
       insideAccordion={nextInsideAccordion}
-      hlevel={moduleTitle || accordion ? hlevel + 1 : hlevel}
+      hlevel={hasTitle || accordion ? hlevel + 1 : hlevel}
       closestTitleId={newClosestTitleId}
       canBeAccordion={nextCanBeAccordion}
     />
   );
 
-  const [listContent, otherContent] = sortAndRenderRules(getSubRules(rule), renderRule);
+  const [listContent, otherContent] = sortAndRenderRules(
+    getSubRules(rule),
+    renderRule
+  );
   let content = otherContent;
 
   if (listContent.length) {
-    content = [(
+    content = [
       // eslint-disable-next-line jsx-a11y/no-redundant-roles
-      <ul
-        key={`ul-${rule.localId}`}
-        aria-labelledby={newClosestTitleId}
-        role="list"
-      >
+      <ul key={`ul-${rule.localId}`} aria-labelledby={newClosestTitleId}>
         {listContent}
-      </ul>
-    ), ...otherContent];
+      </ul>,
+      ...otherContent
+    ];
   }
 
   content = (
     <>
-      {moduleTitle}
+      <ModuleTitle
+        name={name}
+        hlevel={hlevel}
+        accordion={accordion}
+        skipTitle={skipTitle}
+        showAsLink={showAsLink}
+        moduleCode={moduleCode}
+        moduleCredits={moduleCredits}
+        rule={rule}
+        lang={lang}
+        academicYear={academicYear}
+        internalLinks={internalLinks}
+      />
       <RuleInfo rule={rule} lang={lang} content={content} />
     </>
   );
@@ -191,11 +198,7 @@ const ModuleRule = ({
   }
 
   return (
-    <section
-      id={rule.localId}
-      key={rule.localId}
-      className={styles.module}
-    >
+    <section id={rule.localId} key={rule.localId} className={styles.module}>
       {content}
     </section>
   );

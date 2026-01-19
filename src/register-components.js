@@ -20,7 +20,7 @@ const TAG_NAME_PREFIX = 'eduviewer-';
 
 const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
-defineCustomElements(window, {
+defineCustomElements(globalThis, {
   transformTagName: (tagName) => `${TAG_NAME_PREFIX}${tagName}`,
   ce: (eventName, opts) => {
     const renamedEvent = eventName.startsWith('ds') ? capitalize(eventName) : eventName;
