@@ -19,7 +19,9 @@ import React from 'react';
 import {
   arrayOf, node, number, oneOfType, string
 } from 'prop-types';
+
 import styles from '../RootModule/rootModule.css';
+import { getHeadingSizeForLevel } from '../../utils';
 
 const Heading = ({
   id,
@@ -27,15 +29,11 @@ const Heading = ({
   className,
   ariaLabel,
   children
-}) => {
-  const hLevel = `h${level}`;
-  const limitedHLevel = `h${Math.min(level, 6)}`;
-  return React.createElement(
-    limitedHLevel,
-    { id, className: `${styles[hLevel]} ${className}`, 'aria-label': ariaLabel },
-    children
-  );
-};
+}) => (
+  <div id={id} className={`${className} ds-heading-${getHeadingSizeForLevel(level)} ${styles.semibold}`} role="heading" aria-level={level} aria-label={ariaLabel}>
+    {children}
+  </div>
+);
 
 Heading.defaultProps = {
   id: undefined,

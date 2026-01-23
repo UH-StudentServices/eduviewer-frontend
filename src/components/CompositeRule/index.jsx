@@ -15,75 +15,154 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useContext } from 'react';
-import {
-  bool, shape, number, string
-} from 'prop-types';
+import React, { Fragment, useContext } from 'react';
+import { shape, number } from 'prop-types';
+import classNames from 'classnames';
 
 import {
-  countPotentialAccordions,
+  getRuleHints,
+  getParentRuleHints,
+  hasCreditRequirement,
+  idGenerator,
   sortAndRenderRules
 } from '../../utils';
 // eslint-disable-next-line import/no-cycle
 import Rule from '../Rule';
 import OptionContext from '../../context/OptionContext';
-import RuleInfo from '../RuleInfo';
+import Description from '../Description';
+import styles from '../RootModule/rootModule.css';
+import { hintsType } from '../../types';
+import GroupHeader from '../GroupHeader';
+import CreditRequirement from '../CreditRequirement';
+import useTranslation from '../../hooks/useTranslation';
+
+const ruleGenerator = idGenerator('composite-rule');
 
 const CompositeRule = ({
   rule,
-  insideAccordion,
   hlevel,
-  closestTitleId,
-  canBeAccordion
+  hints
 }) => {
+  const ruleId = ruleGenerator.next().value;
+  const { t } = useTranslation();
   const { lang } = useContext(OptionContext);
   if (!rule) {
     return null;
   }
-  const nextCanBeAccordion = !insideAccordion
-    && (canBeAccordion || countPotentialAccordions([rule]) > 1);
-  const renderRule = (r) => (
-    <Rule
-      key={r.localId}
-      rule={r}
-      insideAccordion={insideAccordion}
-      hlevel={hlevel}
-      canBeAccordion={nextCanBeAccordion}
-      closestTitleId={closestTitleId}
-    />
+
+  const ruleHints = getRuleHints(hints);
+  const parentHints = getParentRuleHints(hints);
+
+  const hasCourseUnitsTitle = ruleHints?.get('hasCourseUnits') && ruleHints?.get('isInStudyModule') && !parentHints?.get('hasCourseUnitHeader');
+  const hasTitle = (
+    hasCourseUnitsTitle
+    || (ruleHints?.get('hasStudyModules') && !parentHints?.get('hasStudyModuleHeader'))
   );
-  const [listContent, otherContent] = sortAndRenderRules(rule.rules, renderRule);
+  const titleId = hasTitle ? `${ruleId}-title` : undefined;
+  const hasCreditRequirementHeader = hasCreditRequirement(rule);
+  const creditRequirementId = hasCreditRequirementHeader ? `${ruleId}-credit-requirement` : undefined;
+  const hasGroupHeader = ruleHints.has('ordinal');
+  const groupHeaderId = hasGroupHeader ? `${ruleId}-group-header` : undefined;
+  const descriptionId = rule.description ? `${ruleId}-description` : undefined;
+
+  const renderRule = (opts) => (r, index) => {
+    const Tag = opts?.isListItem ? 'li' : Fragment;
+    const { localId } = r;
+    return (
+      <Tag key={localId}>
+        <Rule
+          key={localId}
+          rule={r}
+          hlevel={hasTitle ? hlevel + 1 : hlevel}
+          hints={hints}
+          extras={{ index }}
+        />
+      </Tag>
+    );
+  };
+  const [listContent, otherContent] = sortAndRenderRules(rule, renderRule);
   let content = otherContent;
 
   if (listContent.length) {
     content = [(
-      // eslint-disable-next-line jsx-a11y/no-redundant-roles
       <ul
         key={`ul-${rule.localId}`}
-        aria-labelledby={closestTitleId}
-        aria-describedby={rule.description ? `desc-${rule.localId}` : undefined}
-        role="list"
+        aria-labelledby={[groupHeaderId, creditRequirementId, titleId].filter(Boolean).join(' ')}
+        aria-describedby={descriptionId}
       >
         {listContent}
       </ul>
     ), ...otherContent];
   }
+
+  const renderComponents = () => {
+    if (hasCreditRequirementHeader) {
+      return (
+        <>
+          <Description id={descriptionId} rule={rule} lang={lang} />
+          <CreditRequirement id={creditRequirementId} rule={rule} hints={hints} />
+          <GroupHeader id={groupHeaderId} hints={hints} borderTop borderBottom />
+        </>
+      );
+    }
+    if (hasGroupHeader) {
+      return (
+        <>
+          <GroupHeader id={groupHeaderId} hints={hints} borderTop borderBottom />
+          <Description id={descriptionId} rule={rule} lang={lang} />
+        </>
+      );
+    }
+    return (
+      <Description id={descriptionId} rule={rule} lang={lang} />
+    );
+  };
+
   return (
-    <RuleInfo rule={rule} lang={lang} content={content} />
+    <>
+      <div
+        className={
+          classNames(
+            styles.borderLeft,
+            {
+              [styles.otherContent]: !hasGroupHeader
+            }
+          )
+        }
+      >
+        {hasTitle && (
+          <div
+            id={titleId}
+            className={
+              classNames(
+                'ds-heading-xs',
+                'ds-px-sm',
+                {
+                  [styles.courseUnitsTitle]: hasCourseUnitsTitle
+                }
+              )
+            }
+            role="heading"
+            aria-level={hlevel}
+          >
+            {hasCourseUnitsTitle ? t('courseUnit') : t('module')}
+          </div>
+        )}
+        {renderComponents()}
+      </div>
+      {content}
+    </>
   );
 };
 
 CompositeRule.defaultProps = {
-  insideAccordion: false,
-  canBeAccordion: false
+  hints: []
 };
 
 CompositeRule.propTypes = {
   rule: shape({}).isRequired,
   hlevel: number.isRequired,
-  closestTitleId: string.isRequired,
-  insideAccordion: bool,
-  canBeAccordion: bool
+  hints: hintsType
 };
 
 export default CompositeRule;

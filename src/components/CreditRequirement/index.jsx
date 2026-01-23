@@ -14,25 +14,72 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react';
-import { shape } from 'prop-types';
+import React, { useCallback } from 'react';
+import { shape, string } from 'prop-types';
+
 import styles from '../RootModule/rootModule.css';
-import { requiredCoursesToString } from '../../utils';
+import {
+  getOrdinalRangeString,
+  getRules,
+  hasCreditRequirement,
+  isInRange,
+  requiredCoursesToString
+} from '../../utils';
 import useTranslation from '../../hooks/useTranslation';
+import { hintsType } from '../../types';
 
-const CreditRequirement = ({ rule }) => {
-  const { t } = useTranslation();
-  const { require, allMandatory } = rule;
+const CreditRequirement = ({ id, rule, hints }) => {
+  const { t, lang } = useTranslation();
+  const rules = getRules(rule);
 
-  const hasRequiredCoursesRange = require && (require.max || require.min > 0);
-  if (!allMandatory && hasRequiredCoursesRange) {
-    return (<div className={styles.creditRequirement}>{t('select')} {requiredCoursesToString(require)}</div>);
+  const getRangeString = useCallback(() => {
+    if (!rule) return '';
+    const requiredCoursesString = requiredCoursesToString(rule.require);
+    const requiredCoursesNumber = Number(requiredCoursesString);
+    if (!Number.isNaN(requiredCoursesNumber) && isInRange(requiredCoursesNumber, 1, 9)) {
+      return t(`number.${requiredCoursesNumber}`);
+    }
+    return requiredCoursesString;
+  }, [rule, t]);
+
+  const getTextParts = useCallback(() => {
+    switch (lang) {
+      case 'fi':
+        return [
+          t('creditRequirement.select'),
+          getRangeString(),
+          t('creditRequirement.options'),
+          getOrdinalRangeString(hints, rules.length),
+          t('creditRequirement.between')
+        ];
+      case 'sv':
+      case 'en':
+      default:
+        return [
+          t('creditRequirement.select'),
+          getRangeString(),
+          t('creditRequirement.options'),
+          t('creditRequirement.between'),
+          getOrdinalRangeString(hints, rules.length)
+        ];
+    }
+  }, [lang]);
+
+  if (!hasCreditRequirement(rule)) {
+    return null;
   }
-  return null;
+
+  return (
+    <div id={id} className={`ds-bodytext-md ds-px-sm ${styles.creditRequirement} ${styles.semibold}`}>
+      {getTextParts().filter(Boolean).join(' ')}:
+    </div>
+  );
 };
 
 CreditRequirement.propTypes = {
-  rule: shape({}).isRequired
+  id: string.isRequired,
+  rule: shape({}).isRequired,
+  hints: hintsType.isRequired
 };
 
 export default CreditRequirement;

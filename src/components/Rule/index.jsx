@@ -15,66 +15,77 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Fragment } from 'react';
-import {
-  bool, shape, number, string
-} from 'prop-types';
+import React from 'react';
+import { shape, number } from 'prop-types';
 
 import { ruleTypes } from '../../constants';
-import {
-  creditsToString
-} from '../../utils';
-
 import Course from '../Course';
-
-import styles from '../RootModule/rootModule.css';
 // eslint-disable-next-line import/no-cycle
 import ModuleRule from '../ModuleRule';
 // eslint-disable-next-line import/no-cycle
 import CompositeRule from '../CompositeRule';
 import useTranslation from '../../hooks/useTranslation';
+import AnyCourse from '../AnyCourse';
+import { extrasType, hintsType } from '../../types';
+import WithHints from './WithHints';
+// eslint-disable-next-line import/no-cycle
+import CreditsRule from '../CreditsRule';
 
 const Rule = ({
   rule,
-  insideAccordion,
-  atFirstDegreeProgramme,
-  closestTitleId,
-  canBeAccordion,
-  hlevel
+  hlevel,
+  hints,
+  extras
 }) => {
   const { t } = useTranslation();
 
   if (!rule) {
     return null;
   }
+
   switch (rule.type) {
     case ruleTypes.COMPOSITE_RULE:
       return (
-        <CompositeRule
-          key={rule.localId}
-          rule={rule}
-          insideAccordion={insideAccordion}
-          hlevel={hlevel}
-          canBeAccordion={canBeAccordion}
-          closestTitleId={closestTitleId}
-        />
+        <WithHints hints={hints} rule={rule} extras={extras}>
+          {(newHints) => (
+            <CompositeRule
+              key={rule.localId}
+              rule={rule}
+              hlevel={hlevel}
+              hints={newHints}
+            />
+          )}
+        </WithHints>
       );
     case ruleTypes.MODULE_RULE:
       return (
-        <ModuleRule
-          key={rule.localId}
-          rule={rule}
-          insideAccordion={insideAccordion}
-          atFirstDegreeProgramme={atFirstDegreeProgramme}
-          hlevel={hlevel}
-          canBeAccordion={canBeAccordion}
-          closestTitleId={closestTitleId}
-        />
+        <WithHints hints={hints} rule={rule} extras={extras}>
+          {(newHints) => (
+            <ModuleRule
+              key={rule.localId}
+              rule={rule}
+              hlevel={hlevel}
+              hints={newHints}
+            />
+          )}
+        </WithHints>
       );
     case ruleTypes.ANY_COURSE_UNIT_RULE:
-      return <li key={rule.localId}>{t('anyModule')}</li>;
+      return (
+        <WithHints hints={hints} rule={rule} extras={extras}>
+          {(newHints) => (
+            <AnyCourse hints={newHints} key={rule.localId}>{t('anyCourseUnit')}</AnyCourse>
+          )}
+        </WithHints>
+      );
     case ruleTypes.ANY_MODULE_RULE:
-      return <li key={rule.localId}>{t('anyModule')}</li>;
+      return (
+        <WithHints hints={hints} rule={rule} extras={extras}>
+          {(newHints) => (
+            <AnyCourse hints={newHints} key={rule.localId}>{t('anyModule')}</AnyCourse>
+          )}
+        </WithHints>
+      );
     case ruleTypes.COURSE_UNIT_RULE: {
       const {
         id, code, name, credits
@@ -86,53 +97,46 @@ const Rule = ({
       }
 
       return (
-        <Course
-          key={rule.localId}
-          id={id}
-          code={code}
-          name={name}
-          credits={credits}
+        <WithHints hints={hints} rule={rule} extras={extras}>
+          {(newHints) => (
+            <Course
+              key={rule.localId}
+              id={id}
+              code={code}
+              name={name}
+              credits={credits}
+              hints={newHints}
+            />
+          )}
+        </WithHints>
+      );
+    }
+    case ruleTypes.CREDITS_RULE:
+      return (
+        <CreditsRule
+          rule={rule}
+          hlevel={hlevel}
+          hints={hints}
+          extras={extras}
         />
       );
-    }
-    case ruleTypes.CREDITS_RULE: {
-      const r = rule.rule;
-      return (
-        <Fragment key={rule.localId}>
-          <div className={styles.creditsRule}>{t('total')} {creditsToString(rule.credits, t)}</div>
-          {r && (
-          <Rule
-            key={r.localId}
-            rule={r}
-            insideAccordion={insideAccordion}
-            atFirstDegreeProgramme={atFirstDegreeProgramme}
-            hlevel={hlevel}
-            canBeAccordion={canBeAccordion}
-            closestTitleId={closestTitleId}
-          />
-          )}
-        </Fragment>
-      );
-    }
     default:
       return null;
   }
 };
 
 Rule.defaultProps = {
-  insideAccordion: false,
-  atFirstDegreeProgramme: false,
-  canBeAccordion: false,
-  closestTitleId: undefined
+  hints: [],
+  extras: {
+    index: 0
+  }
 };
 
 Rule.propTypes = {
   rule: shape({}).isRequired,
   hlevel: number.isRequired,
-  insideAccordion: bool,
-  atFirstDegreeProgramme: bool,
-  canBeAccordion: bool,
-  closestTitleId: string
+  hints: hintsType,
+  extras: extrasType
 };
 
 export default Rule;

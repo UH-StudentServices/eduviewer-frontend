@@ -21,6 +21,10 @@ To install the dependencies run:
 The command starts `webpack-dev-server` on port 8080.
 Development build uses public Eduviewer api `https://od.helsinki.fi/eduviewer/` as backend.
 
+#### Using mock data
+
+Run `cp .env--example .env` and set `USE_MOCKS=true` to use mock data. If false, app calls the production backend.
+
 ### Building
 
 `npm run dist`
@@ -46,11 +50,12 @@ All attributes are optional.
   * Example `acedemic-year` exact values: `hy-lv-68`, `hy-lv-69`.
 * If `module-code` or `degree-program-id` is set, embedded app won't show select for Degree Program
 * If `module-code` or `degree-program-id` is set `only-selected-academic-year` determines visibility of academic year dropdown
-  * `hide-selections` hides the whole selection section, including academic year dropdown and select all switch
-  * `only-selected-academic-year` hides academic year dropdown if exists and is not explicitly set to false
-  * `selected-academic-year-only` is a fallback value for React-components
-  * `hide-accordion` hides the root module accordion, showing only the accordion content
-  * `internal-course-links` sets course links as internal, removing the arrow marking an external link
+  * `hide-selections` — hides the whole selection section, including academic year dropdown and select all switch
+  * `hide-selected-academic-year` — hides academic year title but not the select all switch
+  * `only-selected-academic-year` (DEPRECATED), `selected-academic-year-only` — if either attribute is set to `true`, hides academic year dropdown if it exists and is not explicitly set to false
+      * **IMPORTANT**: use `selected-academic-year-only` in React components, as React treats attributes starting with `on` as event handler attributes.
+  * `hide-accordion` (DEPRECATED), `skip-title` — if either attribute is set to `true`, hides the root module title, showing only the module content
+  * `internal-course-links` — sets course links as internal, removing the arrow marking an external link
 * `module-code` or `degree-program-id` is the code of degree program set in Sisu. Valid examples: `KH10_001`, `MH30_004`
 * If `header` isn't set, Eduviewer page won't have a h2 header on top of selects
 

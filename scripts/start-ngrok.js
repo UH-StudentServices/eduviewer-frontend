@@ -14,7 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
+import 'dotenv/config';
+import ngrok from '@ngrok/ngrok'; // eslint-disable-line import/no-extraneous-dependencies
 
-.toggleContainer {
-  position: relative;
-}
+// Gets endpoint online
+const startNgrok = async () => {
+  const listener = await ngrok.forward({
+    addr: 8080,
+    authtoken_from_env: true,
+    basic_auth: [`${process.env.NGROK_USERNAME}:${process.env.NGROK_PASSWORD}`]
+  });
+  console.log(`Ingress established at: ${listener.url()}`);
+};
+
+// Delay is added to "ensure" the dev server is running
+setTimeout(() => {
+  startNgrok();
+}, 3000);
+
+process.stdin.resume();

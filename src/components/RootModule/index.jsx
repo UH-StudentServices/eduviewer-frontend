@@ -15,24 +15,24 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   bool, number, string
 } from 'prop-types';
-import { rootModuleType } from '../../types';
 
+import { rootModuleType } from '../../types';
 import styles from './rootModule.css';
 import { ruleTypes } from '../../constants';
 import ModuleRule from '../ModuleRule';
-import { countPotentialAccordions, isDegreeProgramme } from '../../utils';
 import OptionContext from '../../context/OptionContext';
 import useTranslation from '../../hooks/useTranslation';
+import WithHints from '../Rule/WithHints';
 
 const RootModule = ({
   showAll,
   showContent,
   module,
-  hideAccordion,
+  skipTitle,
   internalCourseLink,
   rootLevel,
   academicYear
@@ -41,6 +41,29 @@ const RootModule = ({
   const options = useMemo(() => ({
     showAll, academicYear, internalLinks: internalCourseLink, lang
   }), [showAll, academicYear, internalCourseLink, lang]);
+
+  /**
+   * Adds a border-bottom to the last child element inside the entire structure.
+   */
+  const addBorderBottomToLastChild = () => {
+    const rootModuleElement = document.querySelector(`.${styles.rootModule}`);
+
+    /**
+     * Descendant elements that can be the last child
+     *
+     * NOTE: `DocumentFragment.querySelectorAll` uses depth-first pre-order traversal,
+     * so the last element in the returned NodeList will be the last child
+     *
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment/querySelectorAll}
+     */
+    const allElements = rootModuleElement?.querySelectorAll(`.${styles.anyCourse}, .${styles.course}, .${styles.otherContent}`);
+    if (allElements?.length > 0) {
+      allElements[allElements.length - 1].classList.add(styles.forceBorderBottom);
+    }
+  };
+
+  useEffect(addBorderBottomToLastChild, [module]);
+
   if (!showContent) {
     return null;
   }
@@ -55,21 +78,23 @@ const RootModule = ({
       value={options}
     >
       <div className={styles.rootModule}>
-        <ModuleRule
-          key={rootRule.localId}
-          rule={rootRule}
-          hlevel={rootLevel}
-          skipTitle={hideAccordion}
-          canBeAccordion={countPotentialAccordions(module.rules || [module.rule]) > 1}
-          atFirstDegreeProgramme={isDegreeProgramme(module)}
-        />
+        <WithHints hints={[]} rule={rootRule} extras={{ index: 1 }}>
+          {(rootHints) => (
+            <ModuleRule
+              key={rootRule.localId}
+              rule={rootRule}
+              hlevel={rootLevel}
+              skipTitle={skipTitle}
+              hints={rootHints}
+            />
+          )}
+        </WithHints>
       </div>
     </OptionContext.Provider>
   );
 };
 
 RootModule.defaultProps = {
-  rootLevel: 3,
   academicYear: ''
 };
 
@@ -77,9 +102,9 @@ RootModule.propTypes = {
   module: rootModuleType.isRequired,
   showAll: bool.isRequired,
   showContent: bool.isRequired,
-  hideAccordion: bool.isRequired,
+  skipTitle: bool.isRequired,
   internalCourseLink: bool.isRequired,
-  rootLevel: number,
+  rootLevel: number.isRequired,
   academicYear: string
 };
 

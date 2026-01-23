@@ -17,23 +17,26 @@
 
 import React from 'react';
 import {
-  bool, number, string, shape
+  bool, number, string, shape,
+  oneOf
 } from 'prop-types';
+
 import Heading from '../Heading';
 import Link from '../Link';
 import {
+  getRuleHints,
   getDegreeProgrammeUrl,
-  getStudyModuleUrl,
-  isDegreeProgramme
+  getLangAttribute,
+  getStudyModuleUrl
 } from '../../utils';
-
 import styles from '../RootModule/rootModule.css';
+import { hintsType } from '../../types';
 
 const ModuleTitle = ({
+  hints,
   name,
+  nameLangCode,
   hlevel,
-  accordion,
-  skipTitle,
   showAsLink,
   moduleCode,
   moduleCredits,
@@ -42,51 +45,53 @@ const ModuleTitle = ({
   academicYear,
   internalLinks
 }) => {
-  if (name && !accordion && !skipTitle) {
-    if (showAsLink) {
-      return (
-        <Heading
-          level={hlevel}
-          className={styles.moduleTitle}
-          id={`title-${rule.localId}`}
-        >
-          <Link
-            href={
-              isDegreeProgramme(rule.dataNode)
-                ? getDegreeProgrammeUrl(rule.dataNode.id, lang, academicYear)
-                : getStudyModuleUrl(rule.dataNode.id, lang, academicYear)
-            }
-            external={!internalLinks}
-          >
-            <span>{moduleCode} </span>
-            {name}
-          </Link>
-          {moduleCredits && (
-            <span className={styles.moduleCredits}>{moduleCredits}</span>
-          )}
-        </Heading>
-      );
-    }
+  const ruleHints = getRuleHints(hints);
+  const nameLang = getLangAttribute(lang, nameLangCode);
+
+  if (!name) {
+    return null;
+  }
+
+  if (showAsLink) {
     return (
       <Heading
         level={hlevel}
-        className={styles.moduleTitle}
         id={`title-${rule.localId}`}
+        className={`${styles.moduleTitle} ${styles.borderLeft} ds-px-sm ds-pt-xs ds-pb-sm`}
       >
-        {name}
-        {moduleCredits && (
-          <span className={styles.moduleCredits}>{moduleCredits}</span>
-        )}
+        <Link
+          href={ruleHints.get('isDegreeProgramme')
+            ? getDegreeProgrammeUrl(rule.dataNode.id, lang, academicYear)
+            : getStudyModuleUrl(rule.dataNode.id, lang, academicYear)}
+          external={!internalLinks}
+          lang={nameLang}
+          dsText={name}
+          dsWeight="semibold"
+        >
+          <span slot="prefix">{moduleCode}&nbsp;</span>
+        </Link>
+        {moduleCredits
+          && <span className={styles.moduleCredits}>{moduleCredits}</span>}
       </Heading>
     );
   }
-  return null;
+
+  return (
+    <Heading
+      level={hlevel}
+      id={`title-${rule.localId}`}
+      className={`${styles.moduleTitle} ${styles.borderLeft} ds-px-sm ds-pb-sm`}
+    >
+      <span lang={nameLang}>
+        {name}
+      </span>
+      {moduleCredits
+        && <span className={styles.moduleCredits}>{moduleCredits}</span>}
+    </Heading>
+  );
 };
 
 ModuleTitle.defaultProps = {
-  name: '',
-  accordion: false,
-  skipTitle: false,
   showAsLink: false,
   moduleCode: '',
   moduleCredits: '',
@@ -94,10 +99,10 @@ ModuleTitle.defaultProps = {
 };
 
 ModuleTitle.propTypes = {
-  name: string,
+  hints: hintsType.isRequired,
+  name: string.isRequired,
+  nameLangCode: oneOf(['fi', 'sv', 'en', undefined]).isRequired,
   hlevel: number.isRequired,
-  accordion: bool,
-  skipTitle: bool,
   showAsLink: bool,
   moduleCode: string,
   moduleCredits: string,

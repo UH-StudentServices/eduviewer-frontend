@@ -30,13 +30,23 @@ import InitializeLang from './components/InititializeLang';
 
 const EDUVIEWER_ROOT_ID = 'eduviewer-root';
 const LANGUAGE_ATTR_NAME = 'lang';
-// this is deprecated but supported for legacy reasons, same as module-code but meaning has changed
+/**
+ * @deprecated use `MODULE_ATTR_NAME` instead
+ */
 const DEGREE_PROGRAM_ATTR_NAME = 'degree-program-id';
 const MODULE_ATTR_NAME = 'module-code';
 const ACADEMIC_YEAR_ATTR_NAME = 'academic-year';
-const HIDE_SELECTIONS = 'hide-selections';
-const HIDE_ACCORDION = 'hide-accordion';
-const INTERNAL_COURSE_LINK = 'internal-course-links';
+const HIDE_SELECTIONS_ATTR_NAME = 'hide-selections';
+const HIDE_SELECTED_ACADEMIC_YEAR_ATTR_NAME = 'hide-selected-academic-year';
+/**
+ * @deprecated use `SKIP_TITLE_ATTR_NAME` instead
+ */
+const HIDE_ACCORDION_ATTR_NAME = 'hide-accordion';
+const SKIP_TITLE_ATTR_NAME = 'skip-title';
+const INTERNAL_COURSE_LINK_ATTR_NAME = 'internal-course-links';
+/**
+ * @deprecated use `SELECTED_YEAR__ONLY_ATTR_NAME` instead
+ */
 const ONLY_SELECTED_YEAR_ATTR_NAME = 'only-selected-academic-year';
 // Alternate value for ONLY_SELECTED_YEAR_ATTR_NAME for use with React
 // Unknown values starting with "on" are not allowed in React
@@ -49,19 +59,39 @@ const getRootAttribute = (attributeName) => {
   return root ? root.getAttribute(attributeName) : null;
 };
 
+/**
+ * Parses a string attribute value to boolean.
+ *
+ * Any value other than `null` or `'false'` (case insensitive) is considered true.
+ *
+ * @example
+ * parseBooleanAttribute(null) => false
+ * parseBooleanAttribute('false') => false
+ * parseBooleanAttribute('FALSE') => false
+ * parseBooleanAttribute('true') => true
+ * parseBooleanAttribute('anything else') => true
+ *
+ * @param {*} valueString - The attribute value as string
+ * @returns {boolean}
+ */
+const parseBooleanAttribute = (valueString) => valueString !== null && valueString.toLocaleLowerCase() !== 'false';
+
 // eslint-disable-next-line import/prefer-default-export
 export const render = () => {
-  const code = getRootAttribute(DEGREE_PROGRAM_ATTR_NAME) || getRootAttribute(MODULE_ATTR_NAME) || '';
+  const code = getRootAttribute(MODULE_ATTR_NAME) || getRootAttribute(DEGREE_PROGRAM_ATTR_NAME) || '';
   const academicYearCode = getRootAttribute(ACADEMIC_YEAR_ATTR_NAME) || calculateCurrentLV();
-  const hideSelectionsString = getRootAttribute(HIDE_SELECTIONS);
-  const hideSelections = hideSelectionsString !== null && hideSelectionsString.toLocaleLowerCase() !== 'false';
-  const hideAccordionString = getRootAttribute(HIDE_ACCORDION);
-  const hideAccordion = hideAccordionString !== null && hideAccordionString.toLocaleLowerCase() !== 'false';
-  const internalCourseLinkString = getRootAttribute(INTERNAL_COURSE_LINK);
-  const internalCourseLink = internalCourseLinkString !== null && internalCourseLinkString.toLocaleLowerCase() !== 'false';
-  const onlySelectedAYValue = getRootAttribute(ONLY_SELECTED_YEAR_ATTR_NAME)
-    || getRootAttribute(SELECTED_YEAR__ONLY_ATTR_NAME);
-  const showOnlySelectedAcademicYear = onlySelectedAYValue !== null && onlySelectedAYValue.toLowerCase() !== 'false';
+  const hideSelectionsString = getRootAttribute(HIDE_SELECTIONS_ATTR_NAME);
+  const hideSelections = parseBooleanAttribute(hideSelectionsString);
+  const hideSelectedAcademicYearString = getRootAttribute(HIDE_SELECTED_ACADEMIC_YEAR_ATTR_NAME);
+  const hideSelectedAcademicYear = parseBooleanAttribute(hideSelectedAcademicYearString);
+  const skipTitleString = getRootAttribute(SKIP_TITLE_ATTR_NAME)
+    || getRootAttribute(HIDE_ACCORDION_ATTR_NAME);
+  const skipTitle = parseBooleanAttribute(skipTitleString);
+  const internalCourseLinkString = getRootAttribute(INTERNAL_COURSE_LINK_ATTR_NAME);
+  const internalCourseLink = parseBooleanAttribute(internalCourseLinkString);
+  const onlySelectedAcademicYearString = getRootAttribute(SELECTED_YEAR__ONLY_ATTR_NAME)
+    || getRootAttribute(ONLY_SELECTED_YEAR_ATTR_NAME);
+  const showOnlySelectedAcademicYear = parseBooleanAttribute(onlySelectedAcademicYearString);
   const lang = getRootAttribute(LANGUAGE_ATTR_NAME) || availableLanguages.FI;
   const header = getRootAttribute(HEADER_ATTR_NAME) || '';
   createRoot(getRoot()).render(
@@ -71,9 +101,10 @@ export const render = () => {
           code={code}
           academicYearCode={academicYearCode}
           hideSelections={hideSelections}
-          hideAccordion={hideAccordion}
+          skipTitle={skipTitle}
           internalCourseLink={internalCourseLink}
           onlySelectedAcademicYear={showOnlySelectedAcademicYear}
+          hideSelectedAcademicYear={hideSelectedAcademicYear}
           lang={lang}
           header={header}
         />

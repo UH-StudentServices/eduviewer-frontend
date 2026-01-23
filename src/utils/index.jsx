@@ -17,7 +17,10 @@
 import {
   STUDIES_HOST_BASE_URL, studiesCourseUnits, studiesStudyModules, studiesDegreeProgrammes
 } from '../config';
-import { LIST_ITEM_RULES, ruleTypes } from '../constants';
+import {
+  LIST_ITEM_RULES,
+  ruleTypes
+} from '../constants';
 
 const { COURSE_UNIT_RULE } = ruleTypes;
 
@@ -31,7 +34,11 @@ const getMinMaxString = (min, max, minLabel) => {
   return `${min}–${max}`;
 };
 
-const isModuleEducation = (module) => module.type === 'Education';
+export const isEducation = (module) => module.type === 'Education';
+
+export const isStudyModule = (dataNode) => dataNode?.type === 'StudyModule';
+
+export const isDegreeProgramme = (moduleOrDataNode) => moduleOrDataNode?.type === 'DegreeProgramme';
 
 export const creditsToString = (credits, translate, showMinSPRequirement = false) => {
   if (!credits) {
@@ -51,9 +58,29 @@ export const requiredCoursesToString = (requiredCourses) => {
   return getMinMaxString(min, max);
 };
 
-export const getLocalizedText = (field, lang) => field[lang] || field.fi || field.en || field.sv;
+export const hasCreditRequirement = (rule) => {
+  const { require, allMandatory } = rule;
+  return !allMandatory && require && (require.max || require.min > 0);
+};
 
-export const getName = (rule, lang) => (rule.dataNode?.name ? getLocalizedText(rule.dataNode.name, lang) : '');
+export const getLocalizedTextWithLangCode = (field, lang) => {
+  const key = [lang, 'fi', 'en', 'sv'].find((k) => field[k]);
+  return key ? [field[key], key] : [undefined, undefined];
+};
+
+export const getLocalizedText = (field, lang) => getLocalizedTextWithLangCode(field, lang)[0];
+
+export const hasName = (dataNode) =>
+  dataNode?.name
+  && Object.values(dataNode.name).some((name) => !!name);
+
+export const getNameWithLangCode = (rule, lang) => (
+  hasName(rule.dataNode)
+    ? getLocalizedTextWithLangCode(rule.dataNode.name, lang)
+    : [undefined, undefined]
+);
+
+export const getName = (rule, lang) => (hasName(rule.dataNode) ? getLocalizedText(rule.dataNode.name, lang) : '');
 
 const compareCodes = (rule1, rule2) => {
   const getCode = (rule) => rule.dataNode.code || '';
@@ -105,39 +132,8 @@ export const calculateCurrentLV = () => {
   return `hy-lv-${lvYearCode}`;
 };
 
-export const getCode = (module) => (isModuleEducation(module)
+export const getCode = (module) => (isEducation(module)
   && module.dataNode?.code) || module.code;
-
-export const sortAndRenderRules = (rules, renderRule) => {
-  const sortedSubrules = rules?.sort(compareSubRules) || [];
-  const listContent = sortedSubrules
-    .filter((r) => LIST_ITEM_RULES.includes(r.type)).map(renderRule);
-  const otherContent = sortedSubrules
-    .filter((r) => !LIST_ITEM_RULES.includes(r.type)).map(renderRule);
-  return [listContent, otherContent];
-};
-
-export const ariaLabelForTitle = (code, title, credits) => {
-  const ariaCode = code ? `${code}: ` : '';
-  const ariaCredits = credits ? `, ${credits}.` : '';
-  return ariaCode + title + ariaCredits;
-};
-
-const studyYearParam = (studyYear) => (studyYear ? `?cpId=${studyYear}` : '');
-
-export const getCourseUnitUrl = (id, lang, studyYear) =>
-  STUDIES_HOST_BASE_URL + (studiesCourseUnits[lang] || studiesCourseUnits.fi) + id
-  + studyYearParam(studyYear);
-
-export const getStudyModuleUrl = (id, lang, studyYear) =>
-  STUDIES_HOST_BASE_URL + (studiesStudyModules[lang] || studiesStudyModules.fi) + id
-  + studyYearParam(studyYear);
-
-export const getDegreeProgrammeUrl = (id, lang, studyYear) =>
-  STUDIES_HOST_BASE_URL + (studiesDegreeProgrammes[lang] || studiesDegreeProgrammes.fi) + id
-  + studyYearParam(studyYear);
-
-export const isDegreeProgramme = (moduleOrDataNode) => moduleOrDataNode?.type === 'DegreeProgramme';
 
 export const getSubRules = (rule) => {
   const { dataNode } = rule;
@@ -154,15 +150,149 @@ export const getRules = (rule) => {
   return rule.rules ?? [];
 };
 
-export const countPotentialAccordions = (rules, stop = false) => rules.reduce((count, rule) => {
-  if (rule.type === ruleTypes.MODULE_RULE && rule.dataNode?.id) {
-    return count + 1;
+const partition = (array, predicate) =>
+  array.reduce((acc, item) => {
+    acc[predicate(item) ? 0 : 1].push(item);
+    return acc;
+  }, [[], []]);
+
+export const sortAndRenderRules = (rule, renderRule) => {
+  const rules = getRules(rule);
+  const sortedSubrules = rules?.sort(compareSubRules) || [];
+  const [listContent, otherContent] = partition(
+    sortedSubrules,
+    (r) =>
+      LIST_ITEM_RULES.includes(r.type)
+      || (rule.type === ruleTypes.COMPOSITE_RULE && r.type === ruleTypes.MODULE_RULE)
+  );
+  return [listContent.map(renderRule({ isListItem: true })), otherContent.map(renderRule())];
+};
+
+const studyYearParam = (studyYear) => (studyYear ? `?cpId=${studyYear}` : '');
+
+export const getCourseUnitUrl = (id, lang, studyYear) =>
+  STUDIES_HOST_BASE_URL + (studiesCourseUnits[lang] || studiesCourseUnits.fi) + id
+  + studyYearParam(studyYear);
+
+export const getStudyModuleUrl = (id, lang, studyYear) =>
+  STUDIES_HOST_BASE_URL + (studiesStudyModules[lang] || studiesStudyModules.fi) + id
+  + studyYearParam(studyYear);
+
+export const getDegreeProgrammeUrl = (id, lang, studyYear) =>
+  STUDIES_HOST_BASE_URL + (studiesDegreeProgrammes[lang] || studiesDegreeProgrammes.fi) + id
+  + studyYearParam(studyYear);
+
+export const hasCreditsRule = (dataNode) => dataNode?.rule?.type === ruleTypes.CREDITS_RULE;
+
+export const hasGradeScaleId = (dataNode) => !!dataNode?.gradeScaleId;
+
+export const isAccordion = (parentHints, rule) => (
+  rule.type === ruleTypes.MODULE_RULE
+  && hasName(rule.dataNode)
+  && (
+    parentHints?.get('hasCourseUnits')
+    || (parentHints?.get('ruleType') === ruleTypes.COMPOSITE_RULE && parentHints?.get('rulesCount') > 1)
+  )
+);
+
+export const getRuleHintsByIndex = (atIndex) => (hints) => {
+  if (!hints || hints.length < Math.abs(atIndex)) return null;
+  return hints.at(atIndex);
+};
+export const getParentRuleHints = getRuleHintsByIndex(-2);
+export const getRuleHints = getRuleHintsByIndex(-1);
+
+export const getPreviousHintGroupByRuleType = (ruleType) => (hints, startIndex) => {
+  let index = startIndex;
+  while (index >= -hints.length) {
+    const hintGroup = hints.at(index);
+    if (hintGroup?.get('ruleType') === ruleType) {
+      return hintGroup;
+    }
+    index -= 1;
   }
-  if (rule.type === ruleTypes.CREDITS_RULE) {
-    return count + countPotentialAccordions([rule.rule]);
+  return null;
+};
+export const getPreviousModuleRuleHints = getPreviousHintGroupByRuleType(ruleTypes.MODULE_RULE);
+export const getPreviousCompositeRuleHints = getPreviousHintGroupByRuleType(
+  ruleTypes.COMPOSITE_RULE
+);
+
+export const getOrdinals = (hints) => {
+  const ordinals = [];
+  // eslint-disable-next-line no-restricted-syntax
+  for (const hintGroup of hints) {
+    if (hintGroup?.has('ordinal')) {
+      ordinals.push(hintGroup.get('ordinal'));
+    }
   }
-  if (rule.type === ruleTypes.COMPOSITE_RULE && !stop) {
-    return count + countPotentialAccordions(rule.rules, true);
+  return ordinals;
+};
+
+/**
+ * Converts a number to corresponding letter(s). 1 -> A, 2 -> B, ..., 26 -> Z, 27 -> AA, etc.
+ *
+ * @param {number} n - The number to convert
+ * @returns {string} Corresponding letter(s) for the number
+ */
+export const numberToLetter = (n) => {
+  if (n <= 26) {
+    return String.fromCodePoint(64 + n);
   }
-  return count;
-}, 0);
+
+  // For numbers > 26, use double letters
+  const firstLetter = Math.floor((n - 27) / 26) + 1;
+  const secondLetter = ((n - 27) % 26) + 1;
+
+  return String.fromCodePoint(64 + firstLetter) + String.fromCodePoint(64 + secondLetter);
+};
+
+export const formatOrdinal = (ordinal, index) => (
+  index % 2 === 0
+    ? ordinal
+    : numberToLetter(ordinal)
+);
+
+export const getOrdinalString = (hints) =>
+  getOrdinals(hints).map(formatOrdinal).join('');
+
+export const getOrdinalRangeString = (hints, rulesCount) => {
+  const ordinals = getOrdinals(hints);
+  if (rulesCount === 0) {
+    return '';
+  }
+  const ordinalsCount = ordinals.length;
+  const rangeStart = formatOrdinal(1, ordinalsCount);
+  const rangeEnd = formatOrdinal(rulesCount, ordinalsCount);
+  if (ordinalsCount === 0) {
+    return `${rangeStart}–${rangeEnd}`;
+  }
+  const formattedOrdinals = ordinals.map((ordinal, index) => formatOrdinal(ordinal, index));
+  return `${formattedOrdinals.join('')}${rangeStart}–${formattedOrdinals.join('')}${rangeEnd}`;
+};
+
+export function* idGenerator(id) {
+  let currentId = 1;
+  while (true) {
+    yield `${id}-${currentId}`;
+    currentId += 1;
+  }
+}
+
+export const isInRange = (num, min, max) =>
+  num >= min && (max === null || num <= max);
+
+export const getLangAttribute = (lang, langCode) => (lang === langCode ? null : langCode);
+
+export const getHeadingSizeForLevel = (level) => {
+  const minHeadingSize = 'xxs';
+  const levelToHeadingSizeMap = {
+    1: 'md',
+    2: 'md',
+    3: 'md',
+    4: 'sm',
+    5: 'xs',
+    6: minHeadingSize
+  };
+  return levelToHeadingSizeMap[level] ?? minHeadingSize;
+};

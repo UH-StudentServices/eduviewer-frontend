@@ -10,3 +10,5 @@ npm-debug.log
 
 # Mac metadata
 *.DS_Store
+
+.env

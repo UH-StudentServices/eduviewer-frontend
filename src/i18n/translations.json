@@ -9,50 +9,45 @@
     "Utbildningsprogram",
     "Degree programmes"
   ],
-  "showAll": [
-    "Näytä kaikki",
-    "Visa allt ",
-    "Show all"
+  "loadingStructure": [
+    "Ladataan rakennetta...",
+    "Laddar struktur...",
+    "Loading structure..."
   ],
-  "hide": [
-    "Piilota",
-    "Dölj",
-    "Hide"
+  "openStructure": [
+    "Avaa koko rakenne",
+    "Öppna hela strukturen",
+    "Open full structure"
+  ],
+  "closeStructure": [
+    "Sulje koko rakenne",
+    "Stäng hela strukturen",
+    "Close full structure"
   ],
   "noDegreeProgramToShow": [
-    "Ei näytettävää koulutusohjelmaa",
-    "Inget utbildningsprogram att visa",
-    "No degree programme to show"
+    "Ei näytettävää koulutusohjelmaa.",
+    "Inget utbildningsprogram att visa.",
+    "No degree programme to show."
   ],
   "dataFetchError": [
     "Virhe tietojen hakemisessa",
     "Fel att ladda data",
     "Error loading data"
   ],
-  "select": [
-    "Valitse",
-    "Välj",
-    "Select"
+  "option": [
+    "Vaihtoehto",
+    "Alternativ",
+    "Option"
   ],
-  "oneOfFollowing": [
-    "Jokin seuraavista",
-    "En av följande",
-    "One of the following"
+  "courseUnit": [
+    "Opintojakso",
+    "Kurs",
+    "Course"
   ],
-  "oneOfFollowingCourses": [
-    "Jokin seuraavista opintojaksoista",
-    "En av följande kurser",
-    "One of the following courses"
-  ],
-  "oneOfFollowingModules": [
-    "Jokin seuraavista kokonaisuuksista",
-    "En av följande studiehelhet",
-    "One of the following modules"
-  ],
-  "total": [
-    "Yhteensä",
-    "Sammanlagt",
-    "Total"
+  "module": [
+    "Opintokokonaisuus",
+    "Studiehelhet",
+    "Study module"
   ],
   "anyCourseUnit": [
     "Mikä tahansa opintojakso",
@@ -64,25 +59,15 @@
     "Valfri studiehelhet",
     "Optional study module"
   ],
-  "noContent": [
-    "Ei sisältöä",
-    "Inget innehåll",
-    "No content"
-  ],
   "atLeast": [
-    "Vähintään",
-    "Åtminstone",
-    "At least"
+    "väh.",
+    "min.",
+    "min."
   ],
   "creditLabel": [
     "op",
     "sp",
     "cr"
-  ],
-  "noChoice": [
-    "ei valintaa",
-    "inget val",
-    "no choice"
   ],
   "chooseStudyTrack": [
     "Valitse opintosuunta",
@@ -93,5 +78,76 @@
     "Valitse suuntautuminen",
     "Välj inriktning",
     "Choose specialisation"
-  ]
+  ],
+  "creditsRule": {
+    "select": [
+      "Valittava",
+      "Att välja",
+      "To select"
+    ]
+  },
+  "creditRequirement": {
+    "select": [
+      "Valitse",
+      "Välj",
+      "Select"
+    ],
+    "options": [
+      "vaihtoehtojen",
+      "alternativ",
+      "options"
+    ],
+    "between": [
+      "välillä",
+      "mellan",
+      "between"
+    ]
+  },
+  "number": {
+    "1": [
+      "yksi",
+      "ett",
+      "one"
+    ],
+    "2": [
+      "kaksi",
+      "två",
+      "two"
+    ],
+    "3": [
+      "kolme",
+      "tre",
+      "three"
+    ],
+    "4": [
+      "neljä",
+      "fyra",
+      "four"
+    ],
+    "5": [
+      "viisi",
+      "fem",
+      "five"
+    ],
+    "6": [
+      "kuusi",
+      "sex",
+      "six"
+    ],
+    "7": [
+      "seitsemän",
+      "sju",
+      "seven"
+    ],
+    "8": [
+      "kahdeksan",
+      "åtta",
+      "eight"
+    ],
+    "9": [
+      "yhdeksän",
+      "nio",
+      "nine"
+    ]
+  }
 }

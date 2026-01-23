@@ -28,17 +28,14 @@ import {
   getAcademicYearsByCode,
   getModuleHierarchy
 } from '../../api';
-
 import RootModule from '../RootModule';
-import LoaderDropdown from '../LoaderDropdown';
-
 import styles from './main.css';
-import ToggleSelect from '../ToggleSelect';
+import ToggleAllButton from '../ToggleAllButton';
 import {
-  availableLanguages, NO_DEGREE_PROGRAM_CODE, NO_MODULE_HIERARCHY
+  availableLanguages, NO_DEGREE_PROGRAM_CODE, NO_MODULE_HIERARCHY,
+  rootLevel
 } from '../../constants';
 import ErrorMessage from '../ErrorMessage';
-import Loader from '../Loader';
 import { getCode, getLocalizedText } from '../../utils';
 import { trackEvent, trackingCategories, trackPageView } from '../../tracking';
 import useTranslation from '../../hooks/useTranslation';
@@ -50,13 +47,16 @@ const fetchModuleHierarchy = async (code, academicYear) => {
   return NO_MODULE_HIERARCHY;
 };
 
+const EDUCATION_VALUE_SEPARATOR = '|';
+
 const Main = ({
   code,
   academicYearCode,
   lang,
   onlySelectedAcademicYear,
   hideSelections,
-  hideAccordion,
+  hideSelectedAcademicYear,
+  skipTitle,
   internalCourseLink,
   header
 }) => {
@@ -99,6 +99,8 @@ const Main = ({
         );
         setHierarchyLoading(false);
       })();
+    } else {
+      setModuleHierarchy(NO_MODULE_HIERARCHY);
     }
   }, [moduleAndYear.code, moduleAndYear.academicYear]);
 
@@ -119,18 +121,8 @@ const Main = ({
     setAcademicYearNames(await getAcademicYearNames());
   };
 
-  const initAllSelects = async () => {
-    try {
-      const newEducations = await getEducations();
-      const { degreeProgrammeCode: firstCode } = newEducations[0];
-      const newAcademicYears = await getAcademicYearsByCode(firstCode);
-      const newAcademicYear = getAcademicYear(newAcademicYears);
-      setEducations(newEducations);
-      setAcademicYears(newAcademicYears);
-      setModuleAndYear({ code: firstCode, academicYear: newAcademicYear });
-    } catch (error) {
-      handleError(error);
-    }
+  const initEducations = async () => {
+    setEducations(await getEducations());
   };
 
   const initAcademicYearsForPropModule = async () => {
@@ -149,7 +141,7 @@ const Main = ({
       if (!onlySelectedAcademicYear && !hideSelections && !code) {
         setOptionsLoading(true);
         await initAcademicYearNames();
-        await initAllSelects();
+        await initEducations();
         setOptionsLoading(false);
       } else if (code) {
         setOptionsLoading(true);
@@ -185,14 +177,19 @@ const Main = ({
     setShowAll(!showAll);
   };
 
-  const onAcademicYearsChange = async (event) => changeAcademicYear(event.target.value);
+  const onEducationChange = async (value) => {
+    if (!value) {
+      // Use initial state
+      setModuleAndYear({ code, academicYear: academicYearCode });
+      return;
+    }
 
-  const onEducationChange = async (event) => {
     setOptionsLoading(true);
     setErrorMessage('');
-    const newCode = event.target.value;
+
     try {
-      trackEvent(trackingCategories.SELECT_EDUCATION_HIERARCHY, newCode);
+      const newCode = value.split(EDUCATION_VALUE_SEPARATOR).at(1);
+      trackEvent(trackingCategories.SELECT_EDUCATION_HIERARCHY, value);
       const newAcademicYears = await getAcademicYearsByCode(newCode);
       const newAcademicYear = getAcademicYear(newAcademicYears);
       setAcademicYears(newAcademicYears);
@@ -218,50 +215,66 @@ const Main = ({
 
     const academicYearsLabel = t('academicYear');
     const educationsLabel = t('degreeProgrammes');
-    const toggleSelectLabel = t(showAll ? 'hide' : 'showAll');
+    const moduleCode = getCode(moduleHierarchy);
 
     return (
-      <div className={styles.selectContainer}>
+      <div className={styles.controlsContainer}>
         {
           !code
             && (
-              <LoaderDropdown
-                id={EDUCATIONS_ID}
-                value={getCode(moduleHierarchy)}
-                onChange={onEducationChange}
-                options={educationOptions}
-                label={educationsLabel}
-                isLoading={optionsLoading}
-              />
+              <eduviewer-ds-combobox
+                dsId={EDUCATIONS_ID}
+                dsLabel={educationsLabel}
+                dsValue={moduleCode}
+                dsLoading={optionsLoading}
+                dsOptionsError={!optionsLoading && educationOptions.length === 0}
+                ondsChange={(event) => onEducationChange(event.detail)}
+              >
+                {educationOptions.map((option) => (
+                  <eduviewer-ds-option key={option.id} dsValue={`${option.id}${EDUCATION_VALUE_SEPARATOR}${option.value}`}>{option.text}</eduviewer-ds-option>
+                ))}
+              </eduviewer-ds-combobox>
             )
         }
         {
-          (code && onlySelectedAcademicYear)
-            ? (
-              <div className={styles.academicYearContainer}>
-                <div className={styles.academicYearLabel}>
-                  {t('academicYear')}{' '}
-                  <span className={styles.academicYearText}>
-                    {academicYearNames[moduleAndYear.academicYear]}
-                  </span>
-                </div>
+          (code && onlySelectedAcademicYear && !hideSelectedAcademicYear) && (
+            <div className="ds-mt-sm">
+              <div className="ds-heading-lg">
+                {t('academicYear')}{' '}
+                <span>
+                  {academicYearNames[moduleAndYear.academicYear]}
+                </span>
               </div>
-            )
-            : (
-              <LoaderDropdown
-                id={ACADEMIC_YEARS_ID}
-                value={moduleAndYear.academicYear}
-                onChange={onAcademicYearsChange}
-                options={academicYearOptions}
-                label={academicYearsLabel}
-                isLoading={optionsLoading}
-              />
-            )
+            </div>
+          )
         }
-        <ToggleSelect
+        {
+          (!onlySelectedAcademicYear) && (
+            <eduviewer-ds-select
+              dsId={ACADEMIC_YEARS_ID}
+              dsLabel={academicYearsLabel}
+              dsValue={moduleCode ? moduleAndYear.academicYear : ''}
+              dsLoading={optionsLoading}
+              dsOptionsError={!optionsLoading && academicYearOptions.length === 0}
+              dsFullWidth
+              dsClearable={false}
+              dsDisabled={!moduleCode}
+              ondsChange={(event) => changeAcademicYear(event.detail)}
+            >
+              {academicYearOptions.map((option) => (
+                <eduviewer-ds-option
+                  key={option.id}
+                  dsValue={option.value}
+                >
+                  {option.text}
+                </eduviewer-ds-option>
+              ))}
+            </eduviewer-ds-select>
+          )
+        }
+        <ToggleAllButton
           onChange={onShowAll}
-          checked={showAll}
-          label={toggleSelectLabel}
+          showAll={showAll}
         />
       </div>
     );
@@ -276,16 +289,17 @@ const Main = ({
         module={module}
         showAll={showAll}
         showContent={!errorMessage}
-        hideAccordion={hideAccordion}
+        skipTitle={skipTitle}
         internalCourseLink={internalCourseLink}
         academicYear={moduleAndYear.academicYear}
+        rootLevel={rootLevel}
       />
     );
   };
 
   const renderContent = () => {
     if (hierarchyLoading) {
-      return <Loader />;
+      return <eduviewer-ds-spinner dsSize="2xLarge" dsText={t('loadingStructure')} />;
     }
 
     const hasContent = !hierarchyLoading
@@ -294,12 +308,12 @@ const Main = ({
       && moduleAndYear.code;
 
     return (
-      <div>
-        {errorMessage && <ErrorMessage errorMessage={errorMessage} /> }
+      <div className={styles.content}>
+        {(errorMessage) && <ErrorMessage hlevel={rootLevel + 1} errorMessage={errorMessage} /> }
         {
           hasContent
             ? renderRootModule()
-            : <div className={styles.noContent}>{t('noDegreeProgramToShow')}</div>
+            : <div className="ds-mb-xs ds-ml-xxs ds-bodytext-lg">{t('noDegreeProgramToShow')}</div>
         }
       </div>
     );
@@ -308,7 +322,7 @@ const Main = ({
   return (
     <div>
       <main className={styles.mainContainer}>
-        { header && <h2 className={styles.mainHeader}>{header}</h2> }
+        { header && <h2 className={`${styles.mainHeader} ds-heading-lg`}>{header}</h2> }
         { renderSelections() }
         { renderContent() }
       </main>
@@ -320,9 +334,10 @@ Main.propTypes = {
   academicYearCode: string.isRequired,
   code: string.isRequired,
   hideSelections: bool.isRequired,
-  hideAccordion: bool.isRequired,
+  skipTitle: bool.isRequired,
   internalCourseLink: bool.isRequired,
   onlySelectedAcademicYear: bool.isRequired,
+  hideSelectedAcademicYear: bool.isRequired,
   lang: oneOf(Object.values(availableLanguages)).isRequired,
   header: string.isRequired
 };

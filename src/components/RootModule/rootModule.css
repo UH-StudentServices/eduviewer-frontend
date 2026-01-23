@@ -14,352 +14,234 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
-@design-tokens url('../../styles/variables/variables.json') format('style-dictionary3');
 
 .rootModule {
-  padding-bottom: 2rem;
+  --border: var(--ds-borderWidth-hairline) solid var(--ds-borderColor-light);
 
-  & .icon {
-    transform: rotate(-45deg) translateY(-0.2em);
+  position: relative;
+  border-top: var(--border);
+  border-right: var(--border);
+  
+  .tmp {
+    outline: 10px solid red;
+  }
+
+  eduviewer-ds-accordion {
     position: relative;
-    top: 0.3em;
-    height: 1rem;
+    display: block;
+    z-index: 2;
+  }
+  
+  /* TODO: Remove once fixed in https://jira.it.helsinki.fi/browse/DS-589 */
+  eduviewer-ds-accordion div[role="region"] {
+    /*
+      NOTE: The colour should not be white (but transparent).
+      This is fine as a workaround as long as eduviewer is embedded onto a white background.
+    */
+    background-color: var(--ds-bgColor-white);
   }
 
-  & a.link {
-    color: design-token("color.blue");
-
-    & .icon {
-      fill: design-token("color.blue");
-    }
-
-    &:hover,
-    &:focus {
-      color: design-token("color.darkBlue");
-
-      & .icon {
-        fill: design-token("color.darkBlue");
-      }
-    }
-  }
-
-  & .h1 {
-    font-size: 2.75em;
-  }
-
-  & .h2 {
-    font-size: 2.5em;
-  }
-
-  & .h3 {
-    font-size: 2em;
-  }
-
-  & .h4 {
-    font-size: 1.5em;
-  }
-
-  & .h5 {
-    font-size: 1.4em;
-  }
-
-  & .h6,
-  & .h7,
-  & .h8,
-  & .h9,
-  & .h10,
-  & .h11 {
-    font-size: 1em;
-  }
-
-  & .accordionTitle {
-    padding: 0 !important;
-  }
-
-  & .accordionTitle > button {
-    display: flex;
-    flex-direction: column;
-    font-weight: normal;
-    font-size: 0.9375rem !important;
-    align-items: start !important;
-    gap: 0.5em;
-    color: design-token("color.black") !important;
-    padding: 0.8rem 1.25rem 0.8rem 1rem !important;
+  /* TODO: Remove once fixed in https://jira.it.helsinki.fi/browse/DS-588 */
+  eduviewer-ds-accordion span:has(> div[slot="header"]) {
     width: 100%;
   }
 
-  & .rootModuleTitle {
-    letter-spacing: unset;
-    line-height: unset;
-  }
-
-  & .module {
-    margin-bottom: 0.5rem;
-  }
-
-  & .module > ul,
-  & .accordionRegion > ul,
-  & .oneOfFollowingContent > ul {
-    list-style-type: none;
-    border: 0.025em solid design-token("color.silver");
-    margin: 0 0.8rem 1rem;
-
-    & li {
-      &:nth-child(odd) {
-        background-color: design-token("color.silver");
-      }
-
-      background-color: design-token("color.lightSilver");
-      color: design-token("color.black");
-      padding: 0.5rem;
-      margin: 0;
-    }
+  & a.link {
+    all: unset;
+    cursor: pointer;
   }
 
   & .moduleTitle {
-    color: design-token("color.black");
-    font-weight: bold;
-    padding: 2.4em 0 1em 0.8rem;
     display: flex;
-    gap: 0.5em;
-  }
+    flex-wrap: wrap;
+    gap: var(--ds-spacing-small);
+    line-height: var(--ds-lineHeight-large);
+    justify-content: space-between;
 
-  & a .moduleTitle:hover {
-    color: design-token("color.darkBlue");
+    &:first-child {
+      padding-block-start: var(--ds-spacing-small);
+    }    
   }
 
   & .module:first-of-type > .moduleTitle {
-    padding-top: 0.5em;
+    padding-top: var(--ds-spacing-xSmall);
   }
 
   & .moduleTitle > .moduleCredits {
-    margin-left: auto;
-    margin-right: 1.5rem;
     white-space: nowrap;
+    line-height: var(--ds-lineHeight-large);
   }
 
-  & .oneOfFollowing {
-    margin: 0.8rem;
+  & .course,
+  & .anyCourse {
+    position: relative;
+    display: block;
   }
 
-  & .oneOfFollowingContent {
-    border-left: 0.025em dotted design-token("color.darkGray");
-    border-bottom: 0.025em dotted design-token("color.darkGray");
+  & ul > li > .course {
+    margin-bottom: calc(-1 * var(--ds-borderWidth-hairline));
   }
 
-  & .oneOfFollowingContent:has(.module > .accordionContainer) {
-    border: 0;
+  & ul:not(:has(+ .otherContent:not(:empty))) > li:last-child > .course {
+    margin-bottom: 0;
+    border-bottom: none;
   }
 
-  & .oneOfFollowingTitle {
-    display: inline-block;
-    text-transform: uppercase;
-    padding-bottom: 1rem;
-    font-size: 0.8em;
-    font-weight: bold;
-  }
-
-  & .groupingModule {
-    margin-top: 0.5rem;
-  }
-
-  & .compositeRuleCourseAmounts {
+  & .courseContent,
+  & .anyCourseContent {
     display: flex;
-    padding: 1rem 1rem 0.5rem;
-  }
-
-  & .courseItem {
-    display: flow-root;
+    flex-direction: row;
+    align-items: center;
     justify-content: space-between;
+    gap: var(--ds-spacing-small);
+    padding-block: 0.1875rem;
+
+    @media (width >= 60rem) {
+      /* stylelint-disable-next-line number-max-precision */
+      padding-block: 0.09375rem;
+    }
   }
 
-  & .credits {
-    font-weight: 500;
-    margin-right: 1.25rem;
-    white-space: nowrap;
-    float: right;
+  & .courseContent > small,
+  & .anyCourseContent > small {
+    flex-shrink: 0;
   }
 
-  & .iconContainer {
-    display: inline-block;
-    margin-left: 0.5rem;
+  & .semibold {
+    font-weight: var(--ds-fontWeight-semibold);
   }
 
-  & > section > .creditsRule {
-    margin-bottom: 1rem;
+  & .borderTop {
+    border-top: var(--border);
+  }
+  
+  & .borderRight {
+    border-right: var(--border);
   }
 
-  & .creditRequirement,
-  & .module div .creditsRule {
-    margin-top: 1rem;
-    margin-left: 1rem;
+  & .borderBottom {
+    border-bottom: var(--border);
+  }
+
+  /* NOTE: This class is used to forcefully add a border bottom to the last structure element */
+  & .forceBorderBottom {
+    border-bottom: var(--border) !important;
+  }
+
+  & .borderLeft {
+    border-left: var(--border);
+  }
+
+  & .accordion {
+    --ds-accordion-content-padding: 0;
+
+    margin-bottom: calc(-1 * var(--ds-borderWidth-hairline));
+  }
+
+  & ul > li:last-child > section > .accordion {
+    margin-bottom: 0;
+  }
+
+  & .accordionHeader {
+    padding: var(--ds-spacing-xSmall) var(--ds-spacing-small);
+  }
+
+  & .accordionHeaderContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ds-spacing-small);
+    font-weight: var(--ds-fontWeight-semibold);
+    padding-block: 0.1875rem;
+
+    @media (width >= 60rem) {
+      /* stylelint-disable-next-line number-max-precision */
+      padding-block: 0.09375rem;
+    }
+  }
+
+  & .accordionHeaderContentCompact {
+    font-weight: var(--ds-fontWeight-regular);
+
+    @media (width >= 60rem) {
+      padding-block: 0;
+    }
+  }
+
+  & .accordionHeaderContent > small {
+    flex-shrink: 0;
+  }
+  
+  & .creditsRule {
+    display: block;
+  }
+
+  & .otherContent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-spacing-small);
+    padding-block-end: var(--ds-spacing-small);
+
+    ul + &,
+    &:not(.otherContent:not(:empty) ~ .otherContent, .creditsRule ~ &) {
+      padding-block-start: var(--ds-spacing-small);
+    }
+    
+    /*
+      NOTE: Only scenario where a border-top is required is when the previous sibling
+      is a list and the last item is an open accordion.
+    */
+    /* stylelint-disable-next-line no-descending-specificity */
+    ul:has(li:last-child eduviewer-ds-accordion[data-state="open"]) + & {
+      border-top: var(--border);
+    }
+
+    /* NOTE: Prevents rendering of empty elements and line breaks from Sisu */
+    /* stylelint-disable-next-line no-descending-specificity */
+    &:empty,
+    & div:empty,
+    & p:empty,
+    & br {
+      display: none;
+    }
+  }
+
+  & .courseUnitsTitle {
+    margin-top: calc(-1 * var(--ds-spacing-3xSmall));
+    margin-bottom: calc(-1 * var(--ds-spacing-3xSmall));
+  }
+
+  & .groupHeader {
+    position: relative;
+    z-index: 2;
+    background-color: var(--ds-bgColor-neutral);
+    padding: var(--ds-spacing-4xSmall) var(--ds-spacing-small);
+    margin-top: calc(-1 * var(--ds-borderWidth-hairline));
+  }
+
+  & .description {
+    display: block;
+    max-width: 650px;
+  }
+ 
+  & .description > :first-child {
+    margin-top: 0;
+  }
+
+  & .description > :last-child {
+    margin-bottom: 0;
+  }
+
+  & .groupHeader + .description {
+    padding-block: var(--ds-spacing-small);
+  }
+
+  & .creditRequirement {
+    position: relative;
   }
 
   & > section {
     padding-left: 0;
   }
-
-  & .accordionContainer {
-    border: 0.025em solid design-token("color.mediumSilver");
-    background-color: design-token("color.lightSilver");
-    margin: 0 0 1em;
-    display: flex;
-    flex-direction: column;
-  }
-
-  & .internalAccordionContainer {
-    border: 0.025em solid design-token("color.mediumSilver");
-    background-color: design-token("color.white");
-    margin: 0 0.5rem 0.5rem;
-    display: flex;
-    flex-direction: column;
-  }
-
-  & .titleRow {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-  }
-
-  & .accordionNameParts {
-    font-size: 1.125em;
-    flex: 5 1 auto;
-    text-align: left;
-  }
-
-  & .accordionName {
-    font-weight: 700;
-  }
-}
-
-@media (width <= 48em) {
-  .rootModule {
-    & .moduleTitle {
-      flex-direction: column;
-    }
-  }
-}
-
-.caretIcon {
-  text-align: right;
-  flex: 1 0 60px;
-  /* stylelint-disable-next-line declaration-property-value-no-unknown */
-  -webkit-text-stroke-width: medium;
-}
-
-.icon--caret-down::after {
-  display: inline-block;
-  font-family: hy-icons, emoji, sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  vertical-align: bottom;
-  content: "";
-}
-
-.icon--caret-up::after {
-  display: inline-block;
-  font-family: hy-icons, emoji, sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  vertical-align: bottom;
-  content: "";
-}
-
-.button--action {
-  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
-  font-size: 0.9375rem;
-  border: none;
-  cursor: pointer;
-  transition-duration: 0.1s;
-  transition-property: all;
-  user-select: none;
-  font-weight: 600;
-  position: relative;
-}
-
-.button--action:focus,
-.button--action:hover {
-  background-color: #005479;
-  color: #FFF;
-}
-
-.button--action:active {
-  background-color: #003146;
-}
-
-.button--action::before,
-.button--action::after {
-  transition-duration: 0.1s;
-  transition-property: all;
-}
-
-.theme-transparent.button--action {
-  background-color: transparent;
-  color: #0098d0;
-}
-
-.theme-transparent.button--action:hover {
-  background-color: #0098d0;
-}
-
-.theme-transparent.button--action a:hover,
-.theme-transparent.button--action:hover {
-  color: #FFF;
-}
-
-.button--action::after {
-  -ms-flex-align: center;
-  align-items: center;
-  background-color: #0882B3;
-  color: #FFF;
-  display: flex;
-  height: 100%;
-  -ms-flex-pack: center;
-  justify-content: center;
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 3rem;
-}
-
-.button--action:focus::after,
-.button--action:active::after {
-  background: #003146;
-}
-
-
-.button--action:hover::after {
-  background: #003146;
-}
-
-.button--action.theme-transparent {
-  -ms-flex-align: center;
-  align-items: center;
-  display: flex;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.button--action.theme-transparent::after {
-  background: none;
-  color: #0098d0;
-  margin-left: 15px;
-  line-height: 0;
-  position: static;
-  width: auto;
-}
-
-.button--action.theme-transparent:hover,
-.button--action.theme-transparent::before {
-  background-color: transparent;
-}
-
-.button--action.theme-transparent a:hover,
-.button--action.theme-transparent:hover,
-.button--action.theme-transparent:hover::after {
-  color: #005479;
 }
