@@ -18,24 +18,28 @@
 import React from 'react';
 import { string } from 'prop-types';
 
-import styles from './errorMessage.css';
 import useTranslation from '../../hooks/useTranslation';
 
-const ErrorMessage = ({ errorMessage }) => {
+const ErrorMessage = ({ hlevel, errorMessage }) => {
   const { t } = useTranslation();
+
+  if (!errorMessage) {
+    return null;
+  }
+
   return (
-    <div className={`${styles.messages} ${styles.error} ${styles.errorContainer}`}>
-      <span className={`${styles.iconWarning} ${styles.iconContainer}`} />
-      <div className={styles.message}>
-        <div className={styles.messageTitle}>{t('dataFetchError')}:</div>
-        <div>{errorMessage}</div>
-      </div>
-    </div>
+    <eduviewer-ds-notification
+      ds-description={errorMessage}
+      ds-variant="danger"
+      ds-heading={t('dataFetchError')}
+      ds-heading-level={hlevel}
+    />
   );
 };
 
 ErrorMessage.propTypes = {
-  errorMessage: string.isRequired
+  errorMessage: string.isRequired,
+  hlevel: string.isRequired
 };
 
 export default ErrorMessage;

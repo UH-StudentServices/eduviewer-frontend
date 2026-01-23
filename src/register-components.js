@@ -18,14 +18,8 @@ import { defineCustomElements } from '@uh-design-system/component-library/dist/l
 
 const TAG_NAME_PREFIX = 'eduviewer-';
 
-const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-
 defineCustomElements(globalThis, {
-  transformTagName: (tagName) => `${TAG_NAME_PREFIX}${tagName}`,
-  ce: (eventName, opts) => {
-    const renamedEvent = eventName.startsWith('ds') ? capitalize(eventName) : eventName;
-    return new CustomEvent(renamedEvent, opts);
-  }
+  transformTagName: (tagName) => `${TAG_NAME_PREFIX}${tagName}`
 });
 
 export default TAG_NAME_PREFIX;

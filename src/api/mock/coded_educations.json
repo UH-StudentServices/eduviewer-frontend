@@ -1,0 +1,29 @@
+[
+  {
+    "educationId": "hy-EDU-114256325-2017",
+    "name": {
+      "en": "Bachelor's Programme in Computer Science and Master's Programme (3 years + 2 years)",
+      "fi": "Tietojenkäsittelytieteen kandiohjelma ja maisteriohjelma (3v + 2v)",
+      "sv": "Kandidatprogrammet i datavetenskap och magisterprogram (3 år + 2 år)"
+    },
+    "degreeProgrammeCode": "KH50_005"
+  },
+  {
+    "educationId": "otm-4de23787-f4f1-4cf2-abe2-a91994171018",
+    "name":{
+      "en":"Bachelor's Programme in Cultural Studies and Master's Programme (3 years + 2 years)",
+      "fi":"Kulttuurien tutkimuksen kandiohjelma ja maisteriohjelma (3v + 2v)",
+      "sv":"Kandidatprogrammet i kulturforskning och magisterprogram (3 år + 2 år)"
+    },
+    "degreeProgrammeCode": "KH40_005"
+  },
+  {
+    "educationId": "hy-EDU-114256097-2017",
+    "name":{
+      "en":"Bachelor's Programme in History and Master's Programme (3 years + 2 years)",
+      "fi":"Historian kandiohjelma ja maisteriohjelma (3v + 2v)",
+      "sv":"Kandidatprogrammet i historia och magisterprogram (3 år + 2 år)"
+    },
+    "degreeProgrammeCode": "KH40_006"
+  }
+]

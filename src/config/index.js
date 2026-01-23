@@ -58,6 +58,12 @@ const studiesDegreeProgrammes = {
   sv: 'examensstruktur/utbildningsprogram/'
 };
 
+// TODO: Remove when ngrok is no longer used for testing.
+const isNgrok = () => {
+  const { hostname } = globalThis.location;
+  return hostname.endsWith('.ngrok-free.app');
+};
+
 const isQA = () => {
   const { hostname } = globalThis.location;
   return hostname.toLowerCase().includes('-qa');
@@ -65,7 +71,8 @@ const isQA = () => {
 
 const isNonProd = () => {
   const { hostname } = globalThis.location;
-  return hostname === eduviewerHostnames.LOCAL || isQA();
+  // TODO: Remove when ngrok is no longer used for testing.
+  return hostname === eduviewerHostnames.LOCAL || isNgrok() || isQA();
 };
 
 const getNonProdStyleUrl = () => {
@@ -94,7 +101,8 @@ const isLocal = () => [eduviewerHostnames.LOCAL, 'local.'].some((hostNamePattern
   globalThis.location.hostname.includes(hostNamePattern));
 
 const getEnv = () => {
-  if (isLocal()) {
+  // TODO: Remove when ngrok is no longer used for testing.
+  if (isLocal() || isNgrok()) {
     return 'local';
   }
   if (isQA()) {
@@ -103,7 +111,18 @@ const getEnv = () => {
   return 'production';
 };
 
-const SENTRY_ENABLED = !isLocal();
+// TODO: Remove when ngrok is no longer used for testing.
+const SENTRY_ENABLED = !(isLocal() || isNgrok());
+
+/**
+ * @typedef {object} env
+ * @property {boolean} USE_MOCKS
+ */
+
+/** @type {env} */
+const env = {
+  USE_MOCKS: globalThis.USE_MOCKS
+};
 
 module.exports = {
   DEFAULT_BASE_URL: getBaseUrl(eduviewerBaseUrls),
@@ -114,5 +133,6 @@ module.exports = {
   SENTRY_ENABLED,
   studiesCourseUnits,
   studiesStudyModules,
-  studiesDegreeProgrammes
+  studiesDegreeProgrammes,
+  env
 };

@@ -15,98 +15,148 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useContext, useState } from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import {
   arrayOf, bool, node, number, oneOfType, string
 } from 'prop-types';
+import classNames from 'classnames';
 
-import { oneOfRulesType } from '../../types';
+import { hintsType, oneOfRulesType } from '../../types';
 import {
-  ariaLabelForTitle,
   creditsToString,
-  getName,
+  getRuleHints,
+  getLangAttribute,
+  getNameWithLangCode,
+  getPreviousCompositeRuleHints,
   getStudyModuleUrl
 } from '../../utils';
 import styles from '../RootModule/rootModule.css';
-import Heading from '../Heading';
 import Link from '../Link';
 import OptionContext from '../../context/OptionContext';
 import useTranslation from '../../hooks/useTranslation';
 
 const Accordion = ({
   rule,
-  internalAccordion,
-  startOpen,
   hlevel = 3,
+  isCompact,
+  hints,
   children
 }) => {
-  const [open, setOpen] = useState(startOpen);
-  const { lang, academicYear, internalLinks } = useContext(OptionContext);
+  const [isOpen, setIsOpen] = useState(false);
+  const accordionRef = useRef(null);
+  const {
+    lang,
+    academicYear,
+    internalLinks,
+    showAll
+  } = useContext(OptionContext);
   const { t } = useTranslation();
-  const title = getName(rule, lang);
-  const myCredits = creditsToString(rule.dataNode?.targetCredits, t);
+
+  useEffect(() => {
+    accordionRef.current?.setIsExpanded(showAll);
+    setIsOpen(showAll);
+  }, [showAll]);
+
+  const myCredits = creditsToString(rule.dataNode?.targetCredits, t, true);
   const { code, id, gradeScaleId } = rule.dataNode;
-  const showAsLink = !!gradeScaleId;
-  const titlePart = showAsLink ? (
-    <Link
-      href={getStudyModuleUrl(id, lang, academicYear)}
-      external={!internalLinks}
-      ariaLabel={ariaLabelForTitle(code, title, myCredits)}
-    >
-      <div className={styles.accordionNameParts}>{code}&nbsp;
-        <span className={styles.accordionName}>{title}</span>
-        <div>{myCredits}</div>
-      </div>
-    </Link>
+  const ruleHints = getRuleHints(hints);
+  const prevCompositeHintGroup = getPreviousCompositeRuleHints(hints, -2);
+  const isLink = !!gradeScaleId;
+  const isIconButton = isLink || prevCompositeHintGroup?.get('hasStudyModules');
+  const [title, titleLangCode] = getNameWithLangCode(rule, lang);
+  const titleLang = getLangAttribute(lang, titleLangCode);
+
+  const titlePart = isLink ? (
+    <>
+      <span>
+        {code}&nbsp;
+        <Link
+          href={getStudyModuleUrl(id, lang, academicYear)}
+          external={!internalLinks}
+          lang={titleLang}
+          dsText={title}
+          dsWeight={isCompact ? 'regular' : 'semibold'}
+        />
+      </span>
+      <small className="ds-bodytext-md">{myCredits}</small>
+    </>
   ) : (
-    <div className={styles.accordionNameParts}>
-      <span className={styles.accordionName}>{title}</span>
-      <div>{myCredits}</div>
-    </div>
+    <>
+      <span lang={titleLang}>{title}</span>
+      <small className="ds-bodytext-md">{myCredits}</small>
+    </>
   );
 
-  return (
-    <div className={internalAccordion
-      ? styles.internalAccordionContainer : styles.accordionContainer}
-    >
-      <Heading level={hlevel} className={styles.accordionTitle}>
-        <button
-          type="button"
-          id={`ac-${rule.localId}`}
-          className={`${styles['button--action']} ${styles['theme-transparent']}`}
-          onClick={() => setOpen(!open)}
-          aria-expanded={open}
-          aria-controls={`region-${rule.localId}`}
-        >
-          <div className={styles.titleRow}>
-            {titlePart}
-            <span className={`${styles.caretIcon} ${open ? styles['icon--caret-up'] : styles['icon--caret-down']}`} />
-          </div>
-        </button>
-      </Heading>
-      <section
-        id={`region-${rule.localId}`}
-        aria-labelledby={`ac-${rule.localId}`}
-        hidden={!open}
-        className={styles.accordionRegion}
+  const accordionHeader = isIconButton ? (
+    <div className={styles.accordionHeader}>
+      <span
+        id={`ac-${rule.localId}-title`}
+        aria-level={hlevel}
+        role="heading"
+        className={
+          classNames(
+            styles.accordionHeaderContent,
+            isCompact ? `ds-bodytext-md ${styles.accordionHeaderContentCompact}` : 'ds-bodytext-lg'
+          )
+        }
       >
-        {open && children}
-      </section>
+        {titlePart}
+      </span>
     </div>
+  ) : (
+    <span className={styles.accordionHeaderContent}>
+      {titlePart}
+    </span>
+  );
+
+  const handleDsToggle = (event) => {
+    event.stopPropagation();
+    setIsOpen(event.detail);
+  };
+
+  return (
+    <eduviewer-ds-accordion
+      ref={accordionRef}
+      className={styles.accordion}
+      dsVariant={isCompact ? 'compact' : 'default'}
+      dsHeadingLevel={hlevel}
+      dsHeadingVariant={isIconButton ? 'icon-button' : 'button'}
+      dsContentHasBackground
+      dsHideContentBorders
+      dsHideLeftBorder={false}
+      dsHideRightBorder
+      dsHideTopBorder={!!ruleHints?.get('hideAccordionTopBorder')}
+      dsHideBottomBorder={false}
+      dsAriaLabelledBy={`ac-${rule.localId}-title`}
+      ondsToggle={handleDsToggle}
+      data-state={isOpen ? 'open' : 'closed'}
+    >
+      <div slot="header">
+        {accordionHeader}
+      </div>
+      <div slot="content" className="ds-ml-sm">
+        {children}
+      </div>
+    </eduviewer-ds-accordion>
   );
 };
 
 Accordion.defaultProps = {
-  internalAccordion: false,
-  startOpen: false,
-  hlevel: 3
+  hlevel: 3,
+  isCompact: false,
+  hints: []
 };
 
 Accordion.propTypes = {
   rule: oneOfRulesType.isRequired,
-  internalAccordion: bool,
-  startOpen: bool,
   hlevel: number,
+  isCompact: bool,
+  hints: hintsType,
   children: oneOfType([node, arrayOf(node), string]).isRequired
 };
 

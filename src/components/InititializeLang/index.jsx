@@ -14,10 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import React, { useContext, useEffect, useState } from 'react';
 import { node, string } from 'prop-types';
+
 import { DEFAULT_LANG } from '../../constants';
 import LangContext from '../../context/LangContext';
+
 /**
  * InitializeLang Component
  *
@@ -40,7 +43,16 @@ const InitializeLang = ({ children, currentLang }) => {
     }
   }, [langInitialized, lang, setLang]);
 
-  return <>{langInitialized ? children : null}</>;
+  if (!langInitialized) {
+    return null;
+  }
+
+  return (
+    <>
+      <eduviewer-ds-store dsLanguage={lang} />
+      {children}
+    </>
+  );
 };
 
 InitializeLang.propTypes = {

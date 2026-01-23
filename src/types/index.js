@@ -59,3 +59,36 @@ export const selectOptionsType = arrayOf(shape({
   value: oneOfType([string, number]).isRequired,
   text: string
 }));
+
+const hintTypeProperties = {
+  ruleType: string,
+  rulesCount: number,
+  isAccordion: bool,
+  isInAccordion: bool,
+  isDegreeProgramme: bool,
+  isStudyModule: bool,
+  isInStudyModule: bool,
+  hasCreditsRule: bool,
+  hasHeading: bool,
+  hasDescription: bool,
+  hasStudyModules: bool,
+  hasCourseUnits: bool,
+  hasCourseUnitHeader: bool,
+  hasStudyModuleHeader: bool,
+  hasTextContent: bool,
+  requireMin: number,
+  ordinal: number,
+  index: number,
+  hideAccordionTopBorder: bool
+};
+
+const hintType = shape({
+  ...hintTypeProperties,
+  prevModuleRule: hintTypeProperties
+});
+
+export const hintsType = arrayOf(hintType);
+
+export const extrasType = shape({
+  index: number
+});

@@ -14,148 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
-@design-tokens url('../../styles/variables/variables.json') format('style-dictionary3');
 
 .mainContainer {
-  margin: 1em;
-  padding: 0.5em 1em 1em;
-  border: 0.0125em solid design-token("color.mediumSilver");
-  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-medium);
   box-sizing: border-box;
-  font-size: 14px;
-  color: #555;
+  font-family: var(--ds-fontFamily-body);
+  font-size: var(--ds-fontSize-14);
 
   & *::before,
   & *::after {
     box-sizing: inherit;
   }
 
-  & a {
-    color: #0098d0;
-    text-decoration: none;
-  }
-
-  & h1,
-  & h2,
-  & h3,
-  & h4,
-  & h5,
-  & h6 {
-    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
-    color: #222;
-    letter-spacing: -0.05em;
-    line-height: 1.2em;
-    margin: 0;
-    padding-bottom: 0.4em;
-    overflow-wrap: break-word;
-  }
-
-  & h1 a,
-  & h2 a,
-  & h3 a,
-  & h4 a,
-  & h5 a,
-  & h6 a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  & a:hover {
-    color: #005479;
-  }
-
-  & h1 a:hover,
-  & h2 a:hover,
-  & h3 a:hover,
-  & h4 a:hover,
-  & h5 a:hover,
-  & h6 a:hover {
-    color: inherit;
-    cursor: pointer;
-  }
-
-  & h1 {
-    font-size: 3.125rem;
-    letter-spacing: -2px;
-    line-height: 1.15em;
-    text-transform: uppercase;
-  }
-
-  & h2 {
-    font-size: 2.5rem;
-    text-transform: uppercase;
-  }
-
-  & h3 {
-    font-size: 1.875rem;
-  }
-
-  & h4 {
-    font-size: 1.25rem;
-  }
-
-  & h5 {
-    font-size: 1rem;
-  }
-
-  & h6 {
-    font-size: 0.875rem;
-  }
-
   & p {
-    font-size: 1rem;
-    margin: 0 0 24px;
-    letter-spacing: 0;
-    line-height: 1.7em;
-  }
-
-  & button,
-  & select {
-    color: inherit;
-    appearance: none;
-    font-family: inherit;
-    font-size: 100%;
-    margin: 0;
-    vertical-align: baseline;
-  }
-
-  & label {
-    font-size: 1.125rem;
-    color: #555;
-    font-weight: 300;
-    line-height: 2.4em;
-    padding: 0;
-    margin: 0;
-  }
-
-  & select {
-    font-size: 1rem;
-    background: #FFF;
-    border-radius: 0;
-    border: 1px solid #979797;
-    color: #555;
-    outline: rgb(0 152 208 / 0%) solid 2px;
-    outline-offset: -2px;
-    padding: 10px;
-    transition-duration: 0.2s;
-    transition-property: all;
-    width: 100%;
-  }
-
-  & select:focus {
-    border-color: transparent;
-    outline-color: #0098d0;
-  }
-
-  & select[disabled],
-  & select[disabled]:active,
-  & select[disabled]:focus,
-  & select[disabled]:hover {
-    background-color: #F8F8F8;
-  }
-
-  & select::-ms-clear {
-    display: none;
+    margin-block: var(--ds-spacing-small);
   }
 
   & dl,
@@ -165,76 +40,61 @@
     margin: 0;
     padding: 0;
   }
-}
 
-@media (width >= 48em) {
-  .mainContainer {
-    font-size: 16px;
+  & a {
+    letter-spacing: var(--ds-letterSpacing-wide);
+    line-height: var(--ds-lineHeight-large);
+  }
+
+  & a,
+  & u:has(> a) {
+    letter-spacing: var(--ds-letterSpacing-wide);
+    line-height: var(--ds-lineHeight-large);
+    color: var(--ds-textColor-link);
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 7%;
+    text-underline-offset: 12%;
+    text-underline-position: from-font;
+  }
+
+  & a:visited {
+    color: var(--ds-textColor-link-visited);
+  }
+
+  .mainHeader {
+    margin-top: var(--ds-spacing-xSmall);
+    margin-bottom: var(--ds-spacing-small);
+  }
+  
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-spacing-small);
+  }
+
+  & .controlsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-spacing-medium);
+  }
+
+  & .toggleAllButton {
+    position: relative;
+  }
+
+  *:not([class^='ds-'], [class*='ds-']) {
+    &:focus-visible {
+      box-shadow: 0 0 0 var(--ds-borderWidth-thin) var(--ds-borderColor-white);
+      outline: var(--ds-borderWidth-thin) solid var(--ds-borderColor-black);
+      outline-offset: calc(var(--ds-borderWidth-thin) * 1);
+    }
   }
 }
 
-@media (width <= 48em) {
+@media (width >= 60rem) {
   .mainContainer {
-    & h1 {
-      font-size: 2.8571rem;
-    }
-
-    & h2 {
-      font-size: 2.2857rem;
-    }
-
-    & h3 {
-      font-size: 1.8571rem;
-    }
-
-    & h4 {
-      font-size: 1.4286rem;
-    }
-
-    & h5 {
-      font-size: 1.1429rem;
-    }
-
-    & h6 {
-      font-size: 1rem;
-    }
-
-    & p {
-      font-size: 1.1429rem;
-    }
+    font-size: var(--ds-fontSize-16);
   }
-}
-
-.mainHeader {
-  letter-spacing: unset;
-  line-height: unset;
-}
-
-.selectContainer {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 0.05em;
-}
-
-.noContent {
-  margin-bottom: 0.5em;
-  margin-left: 0.25em;
-  font-size: 1.1em;
-  color: design-token("color.black");
-  font-weight: 300;
-}
-
-.academicYearContainer {
-  margin-top: 0.5em;
-  font-size: 1.45em;
-}
-
-.academicYearLabel {
-  color: design-token("color.lightGray");
-  font-weight: 400;
-}
-
-.academicYearText {
-  color: design-token("color.black");
-  font-weight: 600;
 }

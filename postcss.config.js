@@ -16,13 +16,11 @@
  */
 
 const postCssPresetEnvPlugin = require('postcss-preset-env'); // eslint-disable-line import/no-extraneous-dependencies
-const postcssDesignTokens = require('@csstools/postcss-design-tokens'); // eslint-disable-line import/no-extraneous-dependencies
 
 module.exports = {
   plugins: [
     postCssPresetEnvPlugin({
       stage: 3
-    }),
-    postcssDesignTokens()
+    })
   ]
 };

@@ -15,6 +15,4 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import './variables/colors';
-import './fonts.css';
 import './ds';

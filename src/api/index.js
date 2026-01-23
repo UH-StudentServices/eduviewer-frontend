@@ -15,18 +15,21 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DEFAULT_BASE_URL } from '../config';
+import { DEFAULT_BASE_URL, env } from '../config';
+import mockGetJson from './mock';
 
-const getJson = (path) => fetch(`${DEFAULT_BASE_URL}${path}`, {
-  headers: {
-    Accept: 'application/json'
-  }
-}).then((response) => {
-  if (!response.ok) {
-    throw new Error(`${response.url} ${response.status}`);
-  }
-  return response.json();
-});
+const getJson = env.USE_MOCKS
+  ? mockGetJson
+  : (path) => fetch(`${DEFAULT_BASE_URL}${path}`, {
+    headers: {
+      Accept: 'application/json'
+    }
+  }).then((response) => {
+    if (!response.ok) {
+      throw new Error(`${response.url} ${response.status}`);
+    }
+    return response.json();
+  });
 
 export const getEducations = () => getJson('/coded_educations');
 

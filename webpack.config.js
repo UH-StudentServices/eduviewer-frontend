@@ -20,8 +20,24 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ESLintWebpackPlugin = require('eslint-webpack-plugin');
+const { DefinePlugin } = require('webpack');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const defaultTarget = 'var';
+
+const parseBooleanEnv = (envVar) => {
+  if (!envVar) return false;
+  switch (envVar.toLowerCase()) {
+    case '1':
+    case 'true':
+    case 'yes':
+      return true;
+    default:
+      return false;
+  }
+};
 
 const getHtmlFileName = (target, lang) => {
   const isDefaultTarget = target === defaultTarget;
@@ -53,7 +69,9 @@ const miniCssExtractPlugin = new MiniCssExtractPlugin({
 const cleanWebPackPlugin = new CleanWebpackPlugin('dist', [{}]);
 
 const devServerConfig = {
-  port: 8080
+  port: 8080,
+  // TODO: Remove when ngrok is no longer used for testing.
+  allowedHosts: ['.ngrok-free.app']
 };
 
 const createConfig = (options) => ({
@@ -113,7 +131,6 @@ const createConfig = (options) => ({
         include: /\/fonts\//,
         use: 'file-loader?name=fonts/[name]-[hash].[ext]'
       },
-
       {
         test: /\.(jpe?g|png|gif|svg)$/,
         exclude: /\/fonts?\//,
@@ -134,7 +151,10 @@ const createConfig = (options) => ({
     getHtmlPlugin(options.target, 'sv'),
     miniCssExtractPlugin,
     cleanWebPackPlugin,
-    new ESLintWebpackPlugin()
+    new ESLintWebpackPlugin(),
+    new DefinePlugin({
+      'globalThis.USE_MOCKS': JSON.stringify(parseBooleanEnv(process.env.USE_MOCKS))
+    })
   ],
   devServer: devServerConfig
   // devtool: 'eval-source-map'
@@ -145,6 +165,7 @@ module.exports = (env, argv) => {
   const variants = isDevelopment ? [defaultTarget] : [defaultTarget, 'commonjs2', 'umd', 'amd'];
   const variantConfigs = [];
 
+  // eslint-disable-next-line no-restricted-syntax
   for (const variant of variants) {
     const options = { target: variant };
     variantConfigs.push(createConfig(options));
