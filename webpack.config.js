@@ -84,10 +84,16 @@ const createConfig = (options) => ({
     publicPath: '',
     filename: `eduviewer.${options.target}.js`,
     libraryTarget: options.target,
-    library: `eduviewer_${options.target}`
+    library: `eduviewer_${options.target}`,
+    chunkFormat: false
   },
   resolve: {
     extensions: ['.js', '.jsx']
+  },
+  optimization: {
+    splitChunks: false,
+    runtimeChunk: false,
+    minimize: options.target === defaultTarget
   },
   module: {
     rules: [
