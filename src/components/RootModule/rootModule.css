@@ -78,8 +78,8 @@
     display: block;
   }
 
-  & ul > li > .course {
-    margin-bottom: calc(-1 * var(--ds-borderWidth-hairline));
+  & ul > li {
+    margin-top: calc(-1 * var(--ds-borderWidth-hairline)); 
   }
 
   & ul:not(:has(+ .otherContent:not(:empty))) > li:last-child > .course {

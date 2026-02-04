@@ -16,12 +16,12 @@
  */
 
 import React, { Fragment, useContext } from 'react';
-import { shape, number } from 'prop-types';
+import {
+  shape, number
+} from 'prop-types';
 import classNames from 'classnames';
 
 import {
-  getRuleHints,
-  getParentRuleHints,
   hasCreditRequirement,
   idGenerator,
   sortAndRenderRules
@@ -31,7 +31,7 @@ import Rule from '../Rule';
 import OptionContext from '../../context/OptionContext';
 import Description from '../Description';
 import styles from '../RootModule/rootModule.css';
-import { hintsType } from '../../types';
+import { hintType } from '../../types';
 import GroupHeader from '../GroupHeader';
 import CreditRequirement from '../CreditRequirement';
 import useTranslation from '../../hooks/useTranslation';
@@ -50,20 +50,19 @@ const CompositeRule = ({
     return null;
   }
 
-  const ruleHints = getRuleHints(hints);
-  const parentHints = getParentRuleHints(hints);
-
-  const hasCourseUnitsTitle = ruleHints?.get('hasCourseUnits') && ruleHints?.get('isInStudyModule') && !parentHints?.get('hasCourseUnitHeader');
+  const hasCourseUnitsTitle = hints.hasCourseUnits
+    && hints.isInStudyModule
+    && !hints.parent?.hasCourseUnitHeader;
   const hasTitle = (
     hasCourseUnitsTitle
-    || (ruleHints?.get('hasStudyModules') && !parentHints?.get('hasStudyModuleHeader'))
+    || (hints.hasStudyModules && !hints.parent?.hasStudyModuleHeader)
   );
   const titleId = hasTitle ? `${ruleId}-title` : undefined;
   const hasCreditRequirementHeader = hasCreditRequirement(rule);
   const creditRequirementId = hasCreditRequirementHeader ? `${ruleId}-credit-requirement` : undefined;
-  const hasGroupHeader = ruleHints.has('ordinal');
+  const hasGroupHeader = hints.ordinal;
   const groupHeaderId = hasGroupHeader ? `${ruleId}-group-header` : undefined;
-  const descriptionId = rule.description ? `${ruleId}-description` : undefined;
+  const descriptionId = hints.hasDescription ? `${ruleId}-description` : undefined;
 
   const renderRule = (opts) => (r, index) => {
     const Tag = opts?.isListItem ? 'li' : Fragment;
@@ -74,8 +73,8 @@ const CompositeRule = ({
           key={localId}
           rule={r}
           hlevel={hasTitle ? hlevel + 1 : hlevel}
-          hints={hints}
-          extras={{ index }}
+          parent={hints}
+          index={index}
         />
       </Tag>
     );
@@ -155,14 +154,10 @@ const CompositeRule = ({
   );
 };
 
-CompositeRule.defaultProps = {
-  hints: []
-};
-
 CompositeRule.propTypes = {
   rule: shape({}).isRequired,
   hlevel: number.isRequired,
-  hints: hintsType
+  hints: hintType.isRequired
 };
 
 export default CompositeRule;

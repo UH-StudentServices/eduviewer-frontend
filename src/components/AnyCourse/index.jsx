@@ -24,38 +24,30 @@ import {
 import classNames from 'classnames';
 
 import styles from '../RootModule/rootModule.css';
-import { hintsType } from '../../types';
-import { getParentRuleHints } from '../../utils';
+import { hintType } from '../../types';
 
-const AnyCourse = ({ hints, children }) => {
-  const parentHints = getParentRuleHints(hints);
-  return (
-    <div
-      className={
+const AnyCourse = ({ hints, children }) => (
+  <div
+    className={
         classNames(
           styles.anyCourse,
           'ds-px-sm',
           {
-            [`${styles.borderTop} ${styles.borderLeft} ds-py-xs`]: parentHints?.get('hasCourseUnits'),
-            [`${styles.borderLeft} ds-pb-xs`]: !parentHints?.get('hasCourseUnits'),
-            'ds-pt-xs': !parentHints?.get('hasCourseUnits') && !parentHints?.get('hasTextContent')
+            [`${styles.borderTop} ${styles.borderLeft} ds-py-xs`]: hints.hasCourseUnits,
+            [`${styles.borderLeft} ds-pb-xs ds-pl-sm`]: !hints.hasCourseUnits,
+            'ds-pt-xs': !hints.hasCourseUnits && !hints.hasTextContent
           }
         )
       }
-    >
-      <div className={`ds-bodytext-md ${styles.anyCourseContent}`}>
-        {children}
-      </div>
+  >
+    <div className={`ds-bodytext-md ${styles.anyCourseContent}`}>
+      {children}
     </div>
-  );
-};
-
-AnyCourse.defaultProps = {
-  hints: []
-};
+  </div>
+);
 
 AnyCourse.propTypes = {
-  hints: hintsType,
+  hints: hintType.isRequired,
   children: oneOfType([node, arrayOf(node), string]).isRequired
 };
 

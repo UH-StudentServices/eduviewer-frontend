@@ -19,14 +19,12 @@ import React, { useContext } from 'react';
 import { string } from 'prop-types';
 import classNames from 'classnames';
 
-import { creditsType, hintsType, localizedTextType } from '../../types';
+import { creditsType, hintType, localizedTextType } from '../../types';
 import {
   creditsToString,
   getCourseUnitUrl,
-  getRuleHints,
   getLangAttribute,
-  getLocalizedTextWithLangCode,
-  getParentRuleHints
+  getLocalizedTextWithLangCode
 } from '../../utils';
 import styles from '../RootModule/rootModule.css';
 import OptionContext from '../../context/OptionContext';
@@ -43,15 +41,12 @@ const Course = ({
   const [courseName, courseNameLangCode] = getLocalizedTextWithLangCode(name, lang);
   const myCredits = creditsToString(credits, t, true);
 
-  const ruleHints = getRuleHints(hints);
-  const parentHints = getParentRuleHints(hints);
-
   const hasBorderTop = !(
-    parentHints?.get('ruleType') === ruleTypes.COMPOSITE_RULE
-    && ruleHints.get('index') === 0
+    hints.parent?.ruleType === ruleTypes.COMPOSITE_RULE
+    && hints.index === 0
     && (
-      (parentHints.has('ordinal') && !parentHints.get('hasDescription'))
-      || !parentHints.get('hasTextContent')
+      (hints.parent?.ordinal && !hints.parent?.hasDescription)
+      || !hints.parent?.hasTextContent
     )
   );
 
@@ -87,16 +82,12 @@ const Course = ({
   );
 };
 
-Course.defaultProps = {
-  hints: []
-};
-
 Course.propTypes = {
   id: string.isRequired,
   code: string.isRequired,
   name: localizedTextType.isRequired,
   credits: creditsType.isRequired,
-  hints: hintsType
+  hints: hintType.isRequired
 };
 
 export default Course;

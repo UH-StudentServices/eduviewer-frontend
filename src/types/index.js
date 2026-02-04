@@ -55,40 +55,29 @@ export const rootModuleType = shape({
   rule: oneOfRulesType.isRequired
 });
 
-export const selectOptionsType = arrayOf(shape({
-  value: oneOfType([string, number]).isRequired,
-  text: string
-}));
-
-const hintTypeProperties = {
-  ruleType: string,
-  rulesCount: number,
-  isAccordion: bool,
-  isInAccordion: bool,
-  isDegreeProgramme: bool,
-  isStudyModule: bool,
-  isInStudyModule: bool,
-  hasCreditsRule: bool,
-  hasHeading: bool,
-  hasDescription: bool,
-  hasStudyModules: bool,
-  hasCourseUnits: bool,
-  hasCourseUnitHeader: bool,
-  hasStudyModuleHeader: bool,
-  hasTextContent: bool,
+const hintShape = {
+  index: number,
+  ruleType: string.isRequired,
+  rulesCount: number.isRequired,
+  isAccordion: bool.isRequired,
+  isInAccordion: bool.isRequired,
+  isDegreeProgramme: bool.isRequired,
+  isStudyModule: bool.isRequired,
+  isInStudyModule: bool.isRequired,
+  hasCreditsRule: bool.isRequired,
+  hasDescription: bool.isRequired,
+  hasStudyModules: bool.isRequired,
+  hasCourseUnits: bool.isRequired,
   requireMin: number,
   ordinal: number,
-  index: number,
-  hideAccordionTopBorder: bool
+  hasHeading: bool.isRequired,
+  hasCourseUnitHeader: bool.isRequired,
+  hasStudyModuleHeader: bool.isRequired,
+  hasTextContent: bool.isRequired
 };
 
-const hintType = shape({
-  ...hintTypeProperties,
-  prevModuleRule: hintTypeProperties
-});
+hintShape.parent = shape(hintShape);
+hintShape.closestModule = shape(hintShape);
+hintShape.closestCompositeRule = shape(hintShape);
 
-export const hintsType = arrayOf(hintType);
-
-export const extrasType = shape({
-  index: number
-});
+export const hintType = shape(hintShape);

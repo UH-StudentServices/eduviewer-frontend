@@ -24,13 +24,12 @@ import {
 import Heading from '../Heading';
 import Link from '../Link';
 import {
-  getRuleHints,
   getDegreeProgrammeUrl,
   getLangAttribute,
   getStudyModuleUrl
 } from '../../utils';
 import styles from '../RootModule/rootModule.css';
-import { hintsType } from '../../types';
+import { hintType } from '../../types';
 
 const ModuleTitle = ({
   hints,
@@ -45,38 +44,29 @@ const ModuleTitle = ({
   academicYear,
   internalLinks
 }) => {
-  const ruleHints = getRuleHints(hints);
   const nameLang = getLangAttribute(lang, nameLangCode);
 
-  if (!name) {
-    return null;
-  }
-
-  if (showAsLink) {
-    return (
-      <Heading
-        level={hlevel}
-        id={`title-${rule.localId}`}
-        className={`${styles.moduleTitle} ${styles.borderLeft} ds-px-sm ds-pt-xs ds-pb-sm`}
+  return showAsLink ? (
+    <Heading
+      level={hlevel}
+      id={`title-${rule.localId}`}
+      className={`${styles.moduleTitle} ${styles.borderLeft} ds-px-sm ds-pt-xs ds-pb-sm`}
+    >
+      <Link
+        href={hints.isDegreeProgramme
+          ? getDegreeProgrammeUrl(rule.dataNode.id, lang, academicYear)
+          : getStudyModuleUrl(rule.dataNode.id, lang, academicYear)}
+        external={!internalLinks}
+        lang={nameLang}
+        dsText={name}
+        dsWeight="semibold"
       >
-        <Link
-          href={ruleHints.get('isDegreeProgramme')
-            ? getDegreeProgrammeUrl(rule.dataNode.id, lang, academicYear)
-            : getStudyModuleUrl(rule.dataNode.id, lang, academicYear)}
-          external={!internalLinks}
-          lang={nameLang}
-          dsText={name}
-          dsWeight="semibold"
-        >
-          <span slot="prefix">{moduleCode}&nbsp;</span>
-        </Link>
-        {moduleCredits
+        <span slot="prefix">{moduleCode}&nbsp;</span>
+      </Link>
+      {moduleCredits
           && <span className={styles.moduleCredits}>{moduleCredits}</span>}
-      </Heading>
-    );
-  }
-
-  return (
+    </Heading>
+  ) : (
     <Heading
       level={hlevel}
       id={`title-${rule.localId}`}
@@ -99,7 +89,7 @@ ModuleTitle.defaultProps = {
 };
 
 ModuleTitle.propTypes = {
-  hints: hintsType.isRequired,
+  hints: hintType.isRequired,
   name: string.isRequired,
   nameLangCode: oneOf(['fi', 'sv', 'en', undefined]).isRequired,
   hlevel: number.isRequired,
