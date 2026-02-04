@@ -26,7 +26,7 @@ import {
   requiredCoursesToString
 } from '../../utils';
 import useTranslation from '../../hooks/useTranslation';
-import { hintsType } from '../../types';
+import { hintType } from '../../types';
 
 const CreditRequirement = ({ id, rule, hints }) => {
   const { t, lang } = useTranslation();
@@ -79,7 +79,7 @@ const CreditRequirement = ({ id, rule, hints }) => {
 CreditRequirement.propTypes = {
   id: string.isRequired,
   rule: shape({}).isRequired,
-  hints: hintsType.isRequired
+  hints: hintType.isRequired
 };
 
 export default CreditRequirement;

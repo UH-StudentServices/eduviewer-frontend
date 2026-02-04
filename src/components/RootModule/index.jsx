@@ -26,7 +26,7 @@ import { ruleTypes } from '../../constants';
 import ModuleRule from '../ModuleRule';
 import OptionContext from '../../context/OptionContext';
 import useTranslation from '../../hooks/useTranslation';
-import WithHints from '../Rule/WithHints';
+import { getHints } from '../Rule';
 
 const RootModule = ({
   showAll,
@@ -72,23 +72,20 @@ const RootModule = ({
     localId: 'rootRule',
     dataNode: module
   };
+  const hints = getHints(null, rootRule, 1);
 
   return (
     <OptionContext.Provider
       value={options}
     >
       <div className={styles.rootModule}>
-        <WithHints hints={[]} rule={rootRule} extras={{ index: 1 }}>
-          {(rootHints) => (
-            <ModuleRule
-              key={rootRule.localId}
-              rule={rootRule}
-              hlevel={rootLevel}
-              skipTitle={skipTitle}
-              hints={rootHints}
-            />
-          )}
-        </WithHints>
+        <ModuleRule
+          key={rootRule.localId}
+          rule={rootRule}
+          hlevel={rootLevel}
+          skipTitle={skipTitle}
+          hints={hints}
+        />
       </div>
     </OptionContext.Provider>
   );

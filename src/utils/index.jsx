@@ -186,47 +186,25 @@ export const hasCreditsRule = (dataNode) => dataNode?.rule?.type === ruleTypes.C
 
 export const hasGradeScaleId = (dataNode) => !!dataNode?.gradeScaleId;
 
-export const isAccordion = (parentHints, rule) => (
+export const isAccordion = (parent, rule) => (
   rule.type === ruleTypes.MODULE_RULE
   && hasName(rule.dataNode)
   && (
-    parentHints?.get('hasCourseUnits')
-    || (parentHints?.get('ruleType') === ruleTypes.COMPOSITE_RULE && parentHints?.get('rulesCount') > 1)
+    parent?.hasCourseUnits
+  || (parent?.ruleType === ruleTypes.COMPOSITE_RULE && parent?.rulesCount > 1)
   )
-);
-
-export const getRuleHintsByIndex = (atIndex) => (hints) => {
-  if (!hints || hints.length < Math.abs(atIndex)) return null;
-  return hints.at(atIndex);
-};
-export const getParentRuleHints = getRuleHintsByIndex(-2);
-export const getRuleHints = getRuleHintsByIndex(-1);
-
-export const getPreviousHintGroupByRuleType = (ruleType) => (hints, startIndex) => {
-  let index = startIndex;
-  while (index >= -hints.length) {
-    const hintGroup = hints.at(index);
-    if (hintGroup?.get('ruleType') === ruleType) {
-      return hintGroup;
-    }
-    index -= 1;
-  }
-  return null;
-};
-export const getPreviousModuleRuleHints = getPreviousHintGroupByRuleType(ruleTypes.MODULE_RULE);
-export const getPreviousCompositeRuleHints = getPreviousHintGroupByRuleType(
-  ruleTypes.COMPOSITE_RULE
 );
 
 export const getOrdinals = (hints) => {
   const ordinals = [];
-  // eslint-disable-next-line no-restricted-syntax
-  for (const hintGroup of hints) {
-    if (hintGroup?.has('ordinal')) {
-      ordinals.push(hintGroup.get('ordinal'));
+  let current = hints;
+  while (current) {
+    if (current.ordinal) {
+      ordinals.push(current.ordinal);
     }
+    current = current.parent;
   }
-  return ordinals;
+  return ordinals.reverse();
 };
 
 /**

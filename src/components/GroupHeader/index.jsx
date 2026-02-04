@@ -19,8 +19,8 @@ import React from 'react';
 import { bool, string } from 'prop-types';
 import classNames from 'classnames';
 
-import { getRuleHints, getOrdinalString } from '../../utils';
-import { hintsType } from '../../types';
+import { getOrdinalString } from '../../utils';
+import { hintType } from '../../types';
 import styles from '../RootModule/rootModule.css';
 import useTranslation from '../../hooks/useTranslation';
 
@@ -32,9 +32,8 @@ const GroupHeader = ({
   borderLeft
 }) => {
   const { t } = useTranslation();
-  const ruleHints = getRuleHints(hints);
 
-  if (!ruleHints.has('ordinal')) {
+  if (!hints.ordinal) {
     return null;
   }
 
@@ -63,7 +62,7 @@ const GroupHeader = ({
 
 GroupHeader.propTypes = {
   id: string.isRequired,
-  hints: hintsType.isRequired,
+  hints: hintType.isRequired,
   borderTop: bool,
   borderBottom: bool,
   borderLeft: bool

@@ -22,10 +22,8 @@ import {
 
 import {
   creditsToString,
-  getRuleHints,
-  getNameWithLangCode,
-  sortAndRenderRules,
-  hasGradeScaleId
+  getNameWithLangCode, hasGradeScaleId,
+  sortAndRenderRules
 } from '../../utils';
 
 import Accordion from '../Accordion';
@@ -40,7 +38,7 @@ import {
 import OptionContext from '../../context/OptionContext';
 import useTranslation from '../../hooks/useTranslation';
 import GroupHeader from '../GroupHeader';
-import { hintsType } from '../../types';
+import { hintType } from '../../types';
 import ModuleTitle from '../ModuleTitle';
 
 const ModuleRule = ({
@@ -73,14 +71,12 @@ const ModuleRule = ({
     // is ready and approved by the PO.
   }
 
-  const ruleHints = getRuleHints(hints);
-
   const moduleCredits = creditsToString(rule.dataNode.targetCredits, t, true);
   const moduleCode = rule.dataNode.code;
-  const showAsLink = hasGradeScaleId(rule.dataNode) || ruleHints.get('isDegreeProgramme');
+  const showAsLink = hasGradeScaleId(rule.dataNode) || hints.isDegreeProgramme;
 
-  const hasTitle = name && !ruleHints?.get('isAccordion') && !skipTitle;
-  const renderRule = (opts) => (r, index) => {
+  const hasTitle = name && !hints.isAccordion && !skipTitle;
+  const renderRule = (opts) => (r, rIndex) => {
     const Tag = opts?.isListItem ? 'li' : Fragment;
     const { localId } = r;
     return (
@@ -89,9 +85,9 @@ const ModuleRule = ({
           key={localId}
           rule={r}
           showAll={showAll}
-          hlevel={hasTitle || ruleHints?.get('isAccordion') ? hlevel + 1 : hlevel}
-          hints={hints}
-          extras={{ index }}
+          hlevel={hasTitle || hints.isAccordion ? hlevel + 1 : hlevel}
+          parent={hints}
+          index={rIndex}
         />
       </Tag>
     );
@@ -113,12 +109,12 @@ const ModuleRule = ({
     ), ...otherContent];
   }
 
-  if (ruleHints?.get('isAccordion')) {
+  if (hints.isAccordion) {
     content = (
       <Accordion
         rule={rule}
         hlevel={hlevel}
-        isCompact={ruleHints?.get('isInAccordion')}
+        isCompact={hints.isInAccordion}
         hints={hints}
       >
         {content}
@@ -157,15 +153,14 @@ const ModuleRule = ({
 };
 
 ModuleRule.defaultProps = {
-  skipTitle: false,
-  hints: []
+  skipTitle: false
 };
 
 ModuleRule.propTypes = {
   rule: shape({}).isRequired,
   hlevel: number.isRequired,
   skipTitle: bool,
-  hints: hintsType
+  hints: hintType.isRequired
 };
 
 export default ModuleRule;

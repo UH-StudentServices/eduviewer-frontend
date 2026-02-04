@@ -18,8 +18,7 @@
 import React from 'react';
 import { number, shape } from 'prop-types';
 
-import { extrasType, hintsType } from '../../types';
-import WithHints from '../Rule/WithHints';
+import { hintType } from '../../types';
 import { creditsToString } from '../../utils';
 import useTranslation from '../../hooks/useTranslation';
 import styles from '../RootModule/rootModule.css';
@@ -30,43 +29,36 @@ const CreditsRule = ({
   rule,
   hlevel,
   hints,
-  extras
+  index
 }) => {
   const { t } = useTranslation();
   const r = rule.rule;
   const tagText = `${t('creditsRule.select')} ${creditsToString(rule.credits, t)}`;
-
   return (
     <div key={rule.localId}>
       <eduviewer-ds-tag className={`${styles.creditsRule} ${styles.borderLeft} ds-py-sm ds-px-sm`} dsText={tagText} />
       {r && (
-        <WithHints hints={hints} rule={rule} extras={extras}>
-          {(newHints) => (
-            <Rule
-              key={r.localId}
-              rule={r}
-              hlevel={hlevel}
-              hints={newHints}
-              extras={extras}
-            />
-          )}
-        </WithHints>
+        <Rule
+          key={r.localId}
+          rule={r}
+          hlevel={hlevel}
+          parent={hints}
+          index={index}
+        />
       )}
     </div>
   );
 };
 
 CreditsRule.defaultProps = {
-  extras: {
-    index: 0
-  }
+  index: 0
 };
 
 CreditsRule.propTypes = {
   rule: shape({}).isRequired,
   hlevel: number.isRequired,
-  hints: hintsType.isRequired,
-  extras: extrasType
+  hints: hintType.isRequired,
+  index: number
 };
 
 export default CreditsRule;

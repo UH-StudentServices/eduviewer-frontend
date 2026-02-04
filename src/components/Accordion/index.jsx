@@ -26,13 +26,11 @@ import {
 } from 'prop-types';
 import classNames from 'classnames';
 
-import { hintsType, oneOfRulesType } from '../../types';
+import { hintType, oneOfRulesType } from '../../types';
 import {
   creditsToString,
-  getRuleHints,
   getLangAttribute,
   getNameWithLangCode,
-  getPreviousCompositeRuleHints,
   getStudyModuleUrl
 } from '../../utils';
 import styles from '../RootModule/rootModule.css';
@@ -64,10 +62,9 @@ const Accordion = ({
 
   const myCredits = creditsToString(rule.dataNode?.targetCredits, t, true);
   const { code, id, gradeScaleId } = rule.dataNode;
-  const ruleHints = getRuleHints(hints);
-  const prevCompositeHintGroup = getPreviousCompositeRuleHints(hints, -2);
+  const prevCompositeHintGroup = hints.parent?.closestCompositeRule;
   const isLink = !!gradeScaleId;
-  const isIconButton = isLink || prevCompositeHintGroup?.get('hasStudyModules');
+  const isIconButton = isLink || prevCompositeHintGroup?.hasStudyModules;
   const [title, titleLangCode] = getNameWithLangCode(rule, lang);
   const titleLang = getLangAttribute(lang, titleLangCode);
 
@@ -130,7 +127,7 @@ const Accordion = ({
       dsHideContentBorders
       dsHideLeftBorder={false}
       dsHideRightBorder
-      dsHideTopBorder={!!ruleHints?.get('hideAccordionTopBorder')}
+      dsHideTopBorder={false}
       dsHideBottomBorder={false}
       dsAriaLabelledBy={`ac-${rule.localId}-title`}
       ondsToggle={handleDsToggle}
@@ -148,15 +145,14 @@ const Accordion = ({
 
 Accordion.defaultProps = {
   hlevel: 3,
-  isCompact: false,
-  hints: []
+  isCompact: false
 };
 
 Accordion.propTypes = {
+  hints: hintType.isRequired,
   rule: oneOfRulesType.isRequired,
   hlevel: number,
   isCompact: bool,
-  hints: hintsType,
   children: oneOfType([node, arrayOf(node), string]).isRequired
 };
 
