@@ -71,7 +71,14 @@ const cleanWebPackPlugin = new CleanWebpackPlugin('dist', [{}]);
 const devServerConfig = {
   port: 8080,
   // TODO: Remove when ngrok is no longer used for testing.
-  allowedHosts: ['.ngrok-free.app']
+  allowedHosts: ['.ngrok-free.app'],
+  proxy: [
+    {
+      context: ['/api'],
+      target: 'https://eduviewer-qa.it.helsinki.fi',
+      changeOrigin: true
+    }
+  ]
 };
 
 const createConfig = (options) => ({
