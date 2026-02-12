@@ -15,9 +15,7 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DEFAULT_BASE_URL } from '../config';
-
-const getJson = (path) => fetch(`${DEFAULT_BASE_URL}${path}`, {
+const getJson = (path) => fetch(`/api${path}`, {
   headers: {
     Accept: 'application/json'
   }

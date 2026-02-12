@@ -53,7 +53,14 @@ const miniCssExtractPlugin = new MiniCssExtractPlugin({
 const cleanWebPackPlugin = new CleanWebpackPlugin('dist', [{}]);
 
 const devServerConfig = {
-  port: 8080
+  port: 8080,
+  proxy: [
+    {
+      context: ['/api'],
+      target: 'https://eduviewer.it.helsinki.fi',
+      changeOrigin: true
+    }
+  ]
 };
 
 const createConfig = (options) => ({
@@ -64,7 +71,7 @@ const createConfig = (options) => ({
   ],
   output: {
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '',
+    publicPath: 'auto',
     filename: `eduviewer.${options.target}.js`,
     libraryTarget: options.target,
     library: `eduviewer_${options.target}`
@@ -146,6 +153,7 @@ module.exports = (env, argv) => {
   const variants = isDevelopment ? [defaultTarget] : [defaultTarget, 'commonjs2', 'umd', 'amd'];
   const variantConfigs = [];
 
+  // eslint-disable-next-line no-restricted-syntax
   for (const variant of variants) {
     const options = { target: variant };
     variantConfigs.push(createConfig(options));
