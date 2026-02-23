@@ -33,5 +33,13 @@
     "react",
     "header",
     "react-hooks"
+  ],
+  "overrides": [
+    {
+      "files": ["**/*.test.js", "**/*.test.jsx"],
+      "env": {
+        "jest": true
+      }
+    }
   ]
 }
