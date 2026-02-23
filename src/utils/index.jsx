@@ -159,13 +159,17 @@ const partition = (array, predicate) =>
 export const sortAndRenderRules = (rule, renderRule) => {
   const rules = getRules(rule);
   const sortedSubrules = rules?.sort(compareSubRules) || [];
+  const isListItemRule = (r) =>
+    LIST_ITEM_RULES.includes(r.type)
+    || (rule.type === ruleTypes.COMPOSITE_RULE && r.type === ruleTypes.MODULE_RULE);
   const [listContent, otherContent] = partition(
-    sortedSubrules,
-    (r) =>
-      LIST_ITEM_RULES.includes(r.type)
-      || (rule.type === ruleTypes.COMPOSITE_RULE && r.type === ruleTypes.MODULE_RULE)
+    sortedSubrules.map((r, i) => [r, i]),
+    ([r]) => isListItemRule(r)
   );
-  return [listContent.map(renderRule({ isListItem: true })), otherContent.map(renderRule())];
+  return [
+    listContent.map(([r, i]) => renderRule({ isListItem: true })(r, i)),
+    otherContent.map(([r, i]) => renderRule()(r, i))
+  ];
 };
 
 const studyYearParam = (studyYear) => (studyYear ? `?cpId=${studyYear}` : '');
