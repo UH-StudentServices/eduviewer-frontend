@@ -11,12 +11,15 @@ stages:
   - build-sonar
 
 test_and_build:
-  image: node:18
+  image: node:24
   stage: test_and_build
   script:
     - npm ci
     - npm run test
     - npm run dist
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH
   artifacts:
     paths:
       - dist/
