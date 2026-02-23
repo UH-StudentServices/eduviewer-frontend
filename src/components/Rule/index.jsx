@@ -61,10 +61,10 @@ export const getHints = (parent, rule, index = 0) => {
     hasDescription: !!rule.description,
     hasStudyModules: rules?.some((r) => isStudyModule(r.dataNode)),
     hasCourseUnits: rules?.some((r) => r.type === ruleTypes.COURSE_UNIT_RULE),
-    requireMin: (rule.require?.min && rules.length > 1) ? rule.require.min : undefined,
+    requireMin: (hasCreditRequirement(rule) && rules.length > 1) ? rule.require.min : undefined,
     ordinal:
-      (parent?.requireMin && parent.rulesCount > 1 && parent.requireMin !== parent.rulesCount)
-        ? index + 1 : undefined
+      (parent?.requireMin != null && parent.rulesCount > 1
+        && parent.requireMin !== parent.rulesCount) ? index + 1 : undefined
   };
   hints.hasHeading = rule.type === ruleTypes.MODULE_RULE
     && !!rule.dataNode?.name && !hints.isAccordion;
