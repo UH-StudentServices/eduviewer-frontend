@@ -65,7 +65,7 @@ push_master_to_github:
     - export IMAGE_TAG=${IMAGE_TAG_PREFIX}-${CI_COMMIT_SHA}
     - oc login --server=$OC_SERVER --token=$OC_SA_TOKEN
     - echo "getting tls cert"
-    - oc get secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CERTIFICATE}' | base64 -d
+    - oc get --namespace eduviewer secret $OC_TLS_SECRET -o jsonpath='{.data.TLS_CERTIFICATE}' | base64 -d
     - >-
       oc process -f ./openshift
       -p STAGE=$OC_STAGE
@@ -76,8 +76,8 @@ push_master_to_github:
       -p CERT_ISSUER=$OC_CERT_ISSUER
       | oc apply -f -
     - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
-    - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:${CI_COMMIT_SHA}
-    - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:latest
+    - oc tag --namespace eduviewer ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:${CI_COMMIT_SHA}
+    - oc tag --namespace eduviewer ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:latest
   when: manual
 
 provision_openshift_stack_qa:
@@ -142,8 +142,8 @@ build_image_openshift_prod:
   - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
   - export IMAGE_TAG=${IMAGE_TAG_PREFIX}-${CI_COMMIT_SHA}
   - oc login --server=$OC_SERVER --token=$OC_SA_TOKEN
-  - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:${CI_COMMIT_SHA}
-  - oc tag ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:latest
+  - oc tag --namespace eduviewer ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:${CI_COMMIT_SHA}
+  - oc tag --namespace eduviewer ${IMAGE_REPOSITORY}:${IMAGE_TAG} ${OC_IMAGE_STREAM}:latest
 
 deploy_image_openshift_qa:
   extends: .openshift_image
