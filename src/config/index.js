@@ -32,7 +32,7 @@ const eduviewerHostnames = {
 
 const eduviewerBaseUrls = {
   QA: 'https://eduviewer-qa.it.helsinki.fi/api',
-  PROD: 'https://eduviewer.it.helsinki.fi/api'
+  PROD: 'https://od.helsinki.fi/eduviewer'
 };
 
 const studiesHostBaseUrls = {
