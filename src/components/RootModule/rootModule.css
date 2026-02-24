@@ -19,12 +19,6 @@
   --border: var(--ds-borderWidth-hairline) solid var(--ds-borderColor-light);
 
   position: relative;
-  border-top: var(--border);
-  border-right: var(--border);
-  
-  .tmp {
-    outline: 10px solid red;
-  }
 
   eduviewer-ds-accordion {
     position: relative;
@@ -208,8 +202,13 @@
   }
 
   & .courseUnitsTitle {
-    margin-top: calc(-1 * var(--ds-spacing-3xSmall));
-    margin-bottom: calc(-1 * var(--ds-spacing-3xSmall));
+    margin-top: calc(-2 * var(--ds-spacing-3xSmall));
+    margin-bottom: calc(-2 * var(--ds-spacing-3xSmall));
+    
+    @media (width >= 60rem) {
+      margin-top: calc(-1.5 * var(--ds-spacing-3xSmall));
+      margin-bottom: calc(-1.5 * var(--ds-spacing-3xSmall));
+    }
   }
 
   & .groupHeader {

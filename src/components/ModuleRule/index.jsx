@@ -76,6 +76,7 @@ const ModuleRule = ({
   const showAsLink = hasGradeScaleId(rule.dataNode) || hints.isDegreeProgramme;
 
   const hasTitle = name && !hints.isAccordion && !skipTitle;
+  // eslint-disable-next-line react/no-unstable-nested-components
   const renderRule = (opts) => (r, rIndex) => {
     const Tag = opts?.isListItem ? 'li' : Fragment;
     const { localId } = r;

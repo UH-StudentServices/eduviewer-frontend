@@ -28,6 +28,7 @@ import {
 } from '../../utils';
 import styles from '../RootModule/rootModule.css';
 import OptionContext from '../../context/OptionContext';
+import ViewportContext from '../../context/ViewportContext';
 import useTranslation from '../../hooks/useTranslation';
 import GroupHeader from '../GroupHeader';
 import Link from '../Link';
@@ -38,6 +39,7 @@ const Course = ({
 }) => {
   const { t } = useTranslation();
   const { lang, academicYear, internalLinks } = useContext(OptionContext);
+  const { isXSmallOrSmaller } = useContext(ViewportContext);
   const [courseName, courseNameLangCode] = getLocalizedTextWithLangCode(name, lang);
   const myCredits = creditsToString(credits, t, true);
 
@@ -55,16 +57,26 @@ const Course = ({
       className={
         classNames(
           styles.course,
-          styles.borderLeft,
           styles.borderBottom,
           {
+            [styles.borderLeft]: hints.isInAccordion,
             [styles.borderTop]: hasBorderTop
           }
         )
       }
     >
       <GroupHeader hints={hints} borderTop borderBottom />
-      <div className="ds-py-xs ds-px-sm">
+      <div
+        className={
+          classNames(
+            'ds-py-xs',
+            'ds-pr-sm',
+            {
+              'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller
+            }
+          )
+        }
+      >
         <div className={`ds-bodytext-md ${styles.courseContent}`}>
           <span>
             {code}&nbsp;

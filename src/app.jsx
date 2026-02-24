@@ -25,6 +25,7 @@ import Main from './components/Main';
 import './styles';
 import { availableLanguages } from './constants';
 import { calculateCurrentLV } from './utils';
+import ViewportContextProvider from './context/ViewportContext/ViewportContextProvider';
 import LangContextProvider from './context/LangContext/LangContextProvider';
 import InitializeLang from './components/InititializeLang';
 
@@ -95,21 +96,23 @@ export const render = () => {
   const lang = getRootAttribute(LANGUAGE_ATTR_NAME) || availableLanguages.FI;
   const header = getRootAttribute(HEADER_ATTR_NAME) || '';
   createRoot(getRoot()).render(
-    <LangContextProvider>
-      <InitializeLang currentLang={lang}>
-        <Main
-          code={code}
-          academicYearCode={academicYearCode}
-          hideSelections={hideSelections}
-          skipTitle={skipTitle}
-          internalCourseLink={internalCourseLink}
-          onlySelectedAcademicYear={showOnlySelectedAcademicYear}
-          hideSelectedAcademicYear={hideSelectedAcademicYear}
-          lang={lang}
-          header={header}
-        />
-      </InitializeLang>
-    </LangContextProvider>
+    <ViewportContextProvider>
+      <LangContextProvider>
+        <InitializeLang currentLang={lang}>
+          <Main
+            code={code}
+            academicYearCode={academicYearCode}
+            hideSelections={hideSelections}
+            skipTitle={skipTitle}
+            internalCourseLink={internalCourseLink}
+            onlySelectedAcademicYear={showOnlySelectedAcademicYear}
+            hideSelectedAcademicYear={hideSelectedAcademicYear}
+            lang={lang}
+            header={header}
+          />
+        </InitializeLang>
+      </LangContextProvider>
+    </ViewportContextProvider>
   );
 };
 

@@ -14,32 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
+import React, { useMemo } from 'react';
+import {
+  element
+} from 'prop-types';
 
-import React from 'react';
-import { func, bool } from 'prop-types';
+import ViewportContext from '.';
+import useMediaQuery from '../../hooks/useMediaQuery';
 
-import styles from '../Main/main.css';
-import useTranslation from '../../hooks/useTranslation';
+const ViewportContextProvider = ({ children }) => {
+  /**
+   * Uses DS naming convention for breakpoints
+   *
+   * @see {@link https://designsystem.helsinki.fi/2de013a32/p/3363c5-grid-and-breakpoints/t/16e7507136}
+   */
+  const isXSmallOrSmaller = useMediaQuery('(width < 480px)');
 
-const ToggleAllButton = ({ onChange, showAll }) => {
-  const { t } = useTranslation();
-
+  const value = useMemo(() => ({ isXSmallOrSmaller }), [isXSmallOrSmaller]);
   return (
-    <div className={styles.toggleAllButton}>
-      <eduviewer-ds-button
-        dsVariant="supplementary"
-        dsText={t(showAll ? 'closeStructure' : 'openStructure')}
-        dsIcon={showAll ? 'unfold_less' : 'unfold_more'}
-        dsAriaPressed={showAll}
-        onClick={onChange}
-      />
-    </div>
+    <ViewportContext.Provider value={value}>
+      { children }
+    </ViewportContext.Provider>
   );
 };
 
-ToggleAllButton.propTypes = {
-  onChange: func.isRequired,
-  showAll: bool.isRequired
+ViewportContextProvider.propTypes = {
+  children: element.isRequired
 };
 
-export default ToggleAllButton;
+export default ViewportContextProvider;

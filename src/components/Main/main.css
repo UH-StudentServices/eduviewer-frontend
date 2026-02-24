@@ -30,6 +30,7 @@
   }
 
   & p {
+    font-size: unset;
     margin-block: var(--ds-spacing-small);
   }
 

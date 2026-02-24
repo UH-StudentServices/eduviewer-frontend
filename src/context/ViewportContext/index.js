@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
+import React from 'react';
 
-import '@uh-design-system/component-library/dist/component-library/component-library.css';
-import '@uh-design-system/component-library/dist/styles/variables.css';
-import '@uh-design-system/component-library/dist/styles/helpers.css';
-import '@uh-design-system/component-library/dist/fonts/fonts.css';
+const ViewportContext = React.createContext();
+
+export default ViewportContext;

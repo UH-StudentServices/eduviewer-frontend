@@ -29,6 +29,7 @@ import {
 // eslint-disable-next-line import/no-cycle
 import Rule from '../Rule';
 import OptionContext from '../../context/OptionContext';
+import ViewportContext from '../../context/ViewportContext';
 import Description from '../Description';
 import styles from '../RootModule/rootModule.css';
 import { hintType } from '../../types';
@@ -46,6 +47,7 @@ const CompositeRule = ({
   const ruleId = ruleGenerator.next().value;
   const { t } = useTranslation();
   const { lang } = useContext(OptionContext);
+  const { isXSmallOrSmaller } = useContext(ViewportContext);
   if (!rule) {
     return null;
   }
@@ -64,6 +66,7 @@ const CompositeRule = ({
   const groupHeaderId = hasGroupHeader ? `${ruleId}-group-header` : undefined;
   const descriptionId = hints.hasDescription ? `${ruleId}-description` : undefined;
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   const renderRule = (opts) => (r, index) => {
     const Tag = opts?.isListItem ? 'li' : Fragment;
     const { localId } = r;
@@ -98,7 +101,7 @@ const CompositeRule = ({
     if (hasCreditRequirementHeader) {
       return (
         <>
-          <Description id={descriptionId} rule={rule} lang={lang} />
+          <Description id={descriptionId} rule={rule} lang={lang} hints={hints} />
           <CreditRequirement id={creditRequirementId} rule={rule} hints={hints} />
           <GroupHeader id={groupHeaderId} hints={hints} borderTop borderBottom />
         </>
@@ -108,12 +111,12 @@ const CompositeRule = ({
       return (
         <>
           <GroupHeader id={groupHeaderId} hints={hints} borderTop borderBottom />
-          <Description id={descriptionId} rule={rule} lang={lang} />
+          <Description id={descriptionId} rule={rule} lang={lang} hints={hints} />
         </>
       );
     }
     return (
-      <Description id={descriptionId} rule={rule} lang={lang} />
+      <Description id={descriptionId} rule={rule} lang={lang} hints={hints} />
     );
   };
 
@@ -122,8 +125,8 @@ const CompositeRule = ({
       <div
         className={
           classNames(
-            styles.borderLeft,
             {
+              [styles.borderLeft]: hints.isInAccordion,
               [styles.otherContent]: !hasGroupHeader
             }
           )
@@ -135,16 +138,22 @@ const CompositeRule = ({
             className={
               classNames(
                 'ds-heading-xs',
-                'ds-px-sm',
+                'ds-pr-sm',
                 {
+                  'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
+                  // Applies negative margins.
+                  // Use only when there is no other content; otherwise, render normally.
                   [styles.courseUnitsTitle]: hasCourseUnitsTitle
+                    && !hints.hasDescription
+                    && !hasCreditRequirementHeader
+                    && !hasGroupHeader
                 }
               )
             }
             role="heading"
             aria-level={hlevel}
           >
-            {hasCourseUnitsTitle ? t('courseUnit') : t('module')}
+            {hasCourseUnitsTitle ? t('courseUnits') : t('modules')}
           </div>
         )}
         {renderComponents()}

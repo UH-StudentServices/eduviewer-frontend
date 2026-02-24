@@ -26,7 +26,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
     "@sentry/react": "^10.32.1",
-    "@uh-design-system/component-library": "^1.2.0-rc.2",
+    "@uh-design-system/component-library": "1.3.0-rc.1",
     "classnames": "^2.5.1",
     "core-js": "^3.47.0",
     "dotenv": "^17.2.3",
@@ -48,7 +48,7 @@
     "concurrently": "^5.3.0",
     "css-loader": "^3.6.0",
     "eslint": "^7.21.0",
-    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb": "19.0.4",
     "eslint-plugin-header": "^3.1.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",

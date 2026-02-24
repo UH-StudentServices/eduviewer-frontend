@@ -37,6 +37,7 @@ import styles from '../RootModule/rootModule.css';
 import Link from '../Link';
 import OptionContext from '../../context/OptionContext';
 import useTranslation from '../../hooks/useTranslation';
+import { STUDY_TRACK_DROPDOWN_MODULES } from '../../constants';
 
 const Accordion = ({
   rule,
@@ -64,9 +65,13 @@ const Accordion = ({
   const { code, id, gradeScaleId } = rule.dataNode;
   const prevCompositeHintGroup = hints.parent?.closestCompositeRule;
   const isLink = !!gradeScaleId;
-  const isIconButton = isLink || prevCompositeHintGroup?.hasStudyModules;
-  const [title, titleLangCode] = getNameWithLangCode(rule, lang);
-  const titleLang = getLangAttribute(lang, titleLangCode);
+  const isIconButton = isLink || prevCompositeHintGroup?.hasStudyModules || !hints.isInAccordion;
+  const [name, nameLangCode] = getNameWithLangCode(rule, lang);
+  const nameLang = getLangAttribute(lang, nameLangCode);
+
+  // See: https://jira.it.helsinki.fi/browse/EDVWR-194
+  const isStudyTrack = STUDY_TRACK_DROPDOWN_MODULES.includes(name.toLowerCase());
+  const title = isStudyTrack ? t('studyTracks') : name;
 
   const titlePart = isLink ? (
     <>
@@ -75,7 +80,7 @@ const Accordion = ({
         <Link
           href={getStudyModuleUrl(id, lang, academicYear)}
           external={!internalLinks}
-          lang={titleLang}
+          lang={nameLang}
           dsText={title}
           dsWeight={isCompact ? 'regular' : 'semibold'}
         />
@@ -84,7 +89,7 @@ const Accordion = ({
     </>
   ) : (
     <>
-      <span lang={titleLang}>{title}</span>
+      <span lang={nameLang}>{title}</span>
       <small className="ds-bodytext-md">{myCredits}</small>
     </>
   );
