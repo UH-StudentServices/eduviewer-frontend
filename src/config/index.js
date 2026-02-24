@@ -31,7 +31,7 @@ const eduviewerHostnames = {
 };
 
 const eduviewerBaseUrls = {
-  QA: 'https://od.helsinki.fi/eduviewer-qa',
+  QA: 'https://eduviewer-qa.it.helsinki.fi/api',
   PROD: 'https://od.helsinki.fi/eduviewer'
 };
 
