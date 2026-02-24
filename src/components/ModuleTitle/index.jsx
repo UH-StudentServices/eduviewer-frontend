@@ -15,11 +15,12 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   bool, number, string, shape,
   oneOf
 } from 'prop-types';
+import classNames from 'classnames';
 
 import Heading from '../Heading';
 import Link from '../Link';
@@ -30,6 +31,7 @@ import {
 } from '../../utils';
 import styles from '../RootModule/rootModule.css';
 import { hintType } from '../../types';
+import ViewportContext from '../../context/ViewportContext';
 
 const ModuleTitle = ({
   hints,
@@ -44,13 +46,25 @@ const ModuleTitle = ({
   academicYear,
   internalLinks
 }) => {
+  const { isXSmallOrSmaller } = useContext(ViewportContext);
   const nameLang = getLangAttribute(lang, nameLangCode);
 
   return showAsLink ? (
     <Heading
       level={hlevel}
       id={`title-${rule.localId}`}
-      className={`${styles.moduleTitle} ${styles.borderLeft} ds-px-sm ds-pt-xs ds-pb-sm`}
+      className={
+        classNames(
+          styles.moduleTitle,
+          'ds-pt-xs',
+          'ds-pb-sm',
+          'ds-pr-sm',
+          {
+            'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
+            [styles.borderLeft]: hints.isInAccordion
+          }
+        )
+      }
     >
       <Link
         href={hints.isDegreeProgramme
@@ -70,7 +84,17 @@ const ModuleTitle = ({
     <Heading
       level={hlevel}
       id={`title-${rule.localId}`}
-      className={`${styles.moduleTitle} ${styles.borderLeft} ds-px-sm ds-pb-sm`}
+      className={
+        classNames(
+          styles.moduleTitle,
+          'ds-pb-sm',
+          'ds-pr-sm',
+          {
+            'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
+            [styles.borderLeft]: hints.isInAccordion
+          }
+        )
+      }
     >
       <span lang={nameLang}>
         {name}

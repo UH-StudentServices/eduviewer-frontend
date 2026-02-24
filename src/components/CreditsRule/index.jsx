@@ -15,9 +15,11 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { number, shape } from 'prop-types';
+import classNames from 'classnames';
 
+import ViewportContext from '../../context/ViewportContext';
 import { hintType } from '../../types';
 import { creditsToString } from '../../utils';
 import useTranslation from '../../hooks/useTranslation';
@@ -31,12 +33,26 @@ const CreditsRule = ({
   hints,
   index
 }) => {
+  const { isXSmallOrSmaller } = useContext(ViewportContext);
   const { t } = useTranslation();
   const r = rule.rule;
   const tagText = `${t('creditsRule.select')} ${creditsToString(rule.credits, t)}`;
   return (
     <div key={rule.localId}>
-      <eduviewer-ds-tag className={`${styles.creditsRule} ${styles.borderLeft} ds-py-sm ds-px-sm`} dsText={tagText} />
+      <eduviewer-ds-tag
+        className={
+          classNames(
+            styles.creditsRule,
+            'ds-py-sm',
+            'ds-pr-sm',
+            {
+              'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
+              [styles.borderLeft]: hints.isInAccordion
+            }
+          )
+        }
+        dsText={tagText}
+      />
       {r && (
         <Rule
           key={r.localId}

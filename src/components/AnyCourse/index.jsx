@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   arrayOf,
   node,
@@ -23,28 +23,35 @@ import {
 } from 'prop-types';
 import classNames from 'classnames';
 
+import ViewportContext from '../../context/ViewportContext';
 import styles from '../RootModule/rootModule.css';
 import { hintType } from '../../types';
 
-const AnyCourse = ({ hints, children }) => (
-  <div
-    className={
-        classNames(
-          styles.anyCourse,
-          'ds-px-sm',
-          {
-            [`${styles.borderTop} ${styles.borderLeft} ds-py-xs`]: hints.hasCourseUnits,
-            [`${styles.borderLeft} ds-pb-xs ds-pl-sm`]: !hints.hasCourseUnits,
-            'ds-pt-xs': !hints.hasCourseUnits && !hints.hasTextContent
-          }
-        )
-      }
-  >
-    <div className={`ds-bodytext-md ${styles.anyCourseContent}`}>
-      {children}
+const AnyCourse = ({ hints, children }) => {
+  const { isXSmallOrSmaller } = useContext(ViewportContext);
+
+  return (
+    <div
+      className={
+          classNames(
+            styles.anyCourse,
+            'ds-pr-sm',
+            {
+              'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
+              [styles.borderLeft]: hints.isInAccordion,
+              [`${styles.borderTop} ds-py-xs`]: hints.hasCourseUnits,
+              'ds-pb-xs ds-pl-sm': !hints.hasCourseUnits,
+              'ds-pt-xs': !hints.hasCourseUnits && !hints.hasTextContent
+            }
+          )
+        }
+    >
+      <div className={`ds-bodytext-md ${styles.anyCourseContent}`}>
+        {children}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 AnyCourse.propTypes = {
   hints: hintType.isRequired,

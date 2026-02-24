@@ -15,17 +15,22 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { shape, string } from 'prop-types';
+import classNames from 'classnames';
 
+import ViewportContext from '../../context/ViewportContext';
 import styles from '../RootModule/rootModule.css';
 import { getLangAttribute, getLocalizedTextWithLangCode } from '../../utils';
+import { hintType } from '../../types';
 
 const Description = ({
   id,
   rule,
-  lang
+  lang,
+  hints
 }) => {
+  const { isXSmallOrSmaller } = useContext(ViewportContext);
   const { description } = rule;
 
   if (!description) {
@@ -41,7 +46,16 @@ const Description = ({
     // eslint-disable-next-line react/self-closing-comp
     <div
       id={id}
-      className={`${styles.description} ds-bodytext-md ds-px-sm`}
+      className={
+        classNames(
+          styles.description,
+          'ds-bodytext-md',
+          'ds-pr-sm',
+          {
+            'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller
+          }
+        )
+      }
       lang={getLangAttribute(lang, langCode)}
       // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{ __html: content?.trim() }}
@@ -53,7 +67,8 @@ const Description = ({
 Description.propTypes = {
   id: string.isRequired,
   rule: shape({}).isRequired,
-  lang: string.isRequired
+  lang: string.isRequired,
+  hints: hintType.isRequired
 };
 
 export default Description;

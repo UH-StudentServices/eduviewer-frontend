@@ -15,12 +15,13 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   string,
   bool,
   oneOf
 } from 'prop-types';
+import classNames from 'classnames';
 
 import {
   getEducations,
@@ -39,6 +40,7 @@ import ErrorMessage from '../ErrorMessage';
 import { getCode, getLocalizedText } from '../../utils';
 import { trackEvent, trackingCategories, trackPageView } from '../../tracking';
 import useTranslation from '../../hooks/useTranslation';
+import ViewportContext from '../../context/ViewportContext';
 
 const fetchModuleHierarchy = async (code, academicYear) => {
   if (academicYear) {
@@ -69,6 +71,7 @@ const Main = ({
   const [moduleAndYear, setModuleAndYear] = useState({ code, academicYear: academicYearCode });
   const [errorMessage, setErrorMessage] = useState('');
   const [showAll, setShowAll] = useState(false);
+  const { isXSmallOrSmaller } = useContext(ViewportContext);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -218,7 +221,16 @@ const Main = ({
     const moduleCode = getCode(moduleHierarchy);
 
     return (
-      <div className={styles.controlsContainer}>
+      <div
+        className={
+          classNames(
+            styles.controlsContainer,
+            {
+              'ds-mx-sm': isXSmallOrSmaller
+            }
+          )
+        }
+      >
         {
           !code
             && (
@@ -227,6 +239,7 @@ const Main = ({
                 dsLabel={educationsLabel}
                 dsValue={moduleCode}
                 dsLoading={optionsLoading}
+                dsFullWidth
                 dsOptionsError={!optionsLoading && educationOptions.length === 0}
                 ondsChange={(event) => onEducationChange(event.detail)}
               >
@@ -313,7 +326,21 @@ const Main = ({
         {
           hasContent
             ? renderRootModule()
-            : <div className="ds-mb-xs ds-ml-xxs ds-bodytext-lg">{t('noDegreeProgramToShow')}</div>
+            : (
+              <div
+                className={
+                  classNames(
+                    'ds-mb-xs',
+                    'ds-bodytext-lg',
+                    {
+                      'ds-mx-sm': isXSmallOrSmaller
+                    }
+                  )
+                }
+              >
+                {t('noDegreeProgramToShow')}
+              </div>
+            )
         }
       </div>
     );

@@ -39,15 +39,15 @@
     "Alternativ",
     "Option"
   ],
-  "courseUnit": [
-    "Opintojakso",
-    "Kurs",
-    "Course"
+  "courseUnits": [
+    "Opintojaksot",
+    "Kurser",
+    "Courses"
   ],
-  "module": [
-    "Opintokokonaisuus",
-    "Studiehelhet",
-    "Study module"
+  "modules": [
+    "Opintokokonaisuudet",
+    "Studiehelheter",
+    "Study modules"
   ],
   "anyCourseUnit": [
     "Mikä tahansa opintojakso",
@@ -68,6 +68,11 @@
     "op",
     "sp",
     "cr"
+  ],
+  "studyTracks": [
+    "Opintosuunnat",
+    "Studieinriktningar",
+    "Study tracks"
   ],
   "chooseStudyTrack": [
     "Valitse opintosuunta",

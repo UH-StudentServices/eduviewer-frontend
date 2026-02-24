@@ -14,8 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { useEffect, useState } from 'react';
 
-import '@uh-design-system/component-library/dist/component-library/component-library.css';
-import '@uh-design-system/component-library/dist/styles/variables.css';
-import '@uh-design-system/component-library/dist/styles/helpers.css';
-import '@uh-design-system/component-library/dist/fonts/fonts.css';
+/**
+ * @param {string} query - A media query string, e.g. '(max-width: 600px)'
+ * @returns {boolean} - Whether the media query matches the current viewport
+ */
+const useMediaQuery = (query) => {
+  const [matches, setMatches] = useState(() => globalThis.matchMedia(query).matches);
+
+  useEffect(() => {
+    const mql = globalThis.matchMedia(query);
+    const handler = (e) => setMatches(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, [query]);
+
+  return matches;
+};
+
+export default useMediaQuery;
