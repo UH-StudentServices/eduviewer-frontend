@@ -88,8 +88,8 @@ provision_openshift_stack_qa:
     OC_STAGE: qa
     OC_STACK: qa
     OC_HOST: eduviewer-qa.it.helsinki.fi
-    OC_TLS_SECRET: eduviewer-qa-tls
-    OC_CERT_ISSUER: acme-eduviewer-qa
+    OC_TLS_SECRET: eduviewer-qa-tls-v2
+    OC_CERT_ISSUER: le-prod-dns01
     OC_IMAGE_STREAM: qa-frontend
     OC_ROUTE_TYPE: default
     IMAGE_TAG_PREFIX: qa
@@ -102,8 +102,8 @@ provision_openshift_stack_prod:
     OC_STAGE: prod
     OC_STACK: prod
     OC_HOST: eduviewer.it.helsinki.fi
-    OC_TLS_SECRET: acme-eduviewer-it-helsinki-fi
-    OC_CERT_ISSUER: acme-eduviewer
+    OC_TLS_SECRET: acme-eduviewer-it-helsinki-fi-v2
+    OC_CERT_ISSUER: le-prod-dns01
     OC_IMAGE_STREAM: prod-frontend
     OC_ROUTE_TYPE: external
     IMAGE_TAG_PREFIX: prod
@@ -131,12 +131,13 @@ build_image_openshift_prod:
   extends: .openshift_image
   stage: build_image
   only:
-    - master
+    - prod
   variables:
     SERVER_NAME: eduviewer.it.helsinki.fi
     IMAGE_TAG_PREFIX: prod
   script:
     - *build_push_image_openshift_scripts
+  when: manual
 
 .deploy_image_openshift: &deploy_image_openshift_scripts
   - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
@@ -169,6 +170,8 @@ deploy_image_openshift_prod:
     IMAGE_TAG_PREFIX: prod
   script:
     - *deploy_image_openshift_scripts
+  only:
+    - prod
 
 # Generate an SBOM file and upload it to Dependency Track.
 sbom:
