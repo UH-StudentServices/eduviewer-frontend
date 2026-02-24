@@ -30,6 +30,8 @@ import { hintType } from '../../types';
 const AnyCourse = ({ hints, children }) => {
   const { isXSmallOrSmaller } = useContext(ViewportContext);
 
+  const isListItem = hints.hasCourseUnits || hints.hasStudyModules;
+
   return (
     <div
       className={
@@ -39,9 +41,9 @@ const AnyCourse = ({ hints, children }) => {
             {
               'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
               [styles.borderLeft]: hints.isInAccordion,
-              [`${styles.borderTop} ds-py-xs`]: hints.hasCourseUnits,
-              'ds-pb-xs ds-pl-sm': !hints.hasCourseUnits,
-              'ds-pt-xs': !hints.hasCourseUnits && !hints.hasTextContent
+              [`${styles.borderTop} ds-py-xs`]: isListItem,
+              'ds-pb-xs ds-pl-sm': !isListItem,
+              'ds-pt-xs': !isListItem && !hints.hasTextContent
             }
           )
         }

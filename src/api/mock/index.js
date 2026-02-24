@@ -20,6 +20,7 @@ const codedEducations = require('./coded_educations.json');
 const kh50005 = require('./kh50_005.json');
 const kh40006 = require('./kh40_006.json');
 const kh40005 = require('./kh40_005.json');
+const kh50006 = require('./kh50_006.json');
 
 const getJson = (path) => {
   if (path === '/coded_educations') {
@@ -40,6 +41,8 @@ const getJson = (path) => {
         return Promise.resolve(kh40006);
       case 'KH40_005':
         return Promise.resolve(kh40005);
+      case 'KH50_006':
+        return Promise.resolve(kh50006);
       default:
         return Promise.reject(new Error(`Unknown code: ${code}`));
     }
