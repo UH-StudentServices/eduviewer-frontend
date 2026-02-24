@@ -35,11 +35,6 @@
     background-color: var(--ds-bgColor-white);
   }
 
-  /* TODO: Remove once fixed in https://jira.it.helsinki.fi/browse/DS-588 */
-  eduviewer-ds-accordion span:has(> div[slot="header"]) {
-    width: 100%;
-  }
-
   & a.link {
     all: unset;
     cursor: pointer;
@@ -103,6 +98,16 @@
 
   & .semibold {
     font-weight: var(--ds-fontWeight-semibold);
+  }
+
+  /* NOTE: Make sure to use these utility classes when setting top/bottom borders on elements. */
+  & .borderTop,
+  & .borderBottom {
+    /*
+      Prevents the borders from being overlapped by
+      the content of the next element or a previous accordion.
+    */
+    z-index: 2;
   }
 
   & .borderTop {

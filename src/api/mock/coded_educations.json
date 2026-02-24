@@ -25,5 +25,14 @@
       "sv":"Kandidatprogrammet i historia och magisterprogram (3 år + 2 år)"
     },
     "degreeProgrammeCode": "KH40_006"
+  },
+  {
+    "educationId": "hy-EDU-114256334-2017",
+    "name": {
+      "en": "Bachelor's Programme in Geosciences and Master's Programme (3 years + 2 years)",
+      "fi": "Geotieteiden kandiohjelma ja maisteriohjelma (3v + 2v)",
+      "sv": "Kandidatsprogrammet i geovetenskap och magisterprogram (3 år + 2 år)"
+    },
+    "degreeProgrammeCode": "KH50_006"
   }
 ]
