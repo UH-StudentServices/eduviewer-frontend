@@ -15,7 +15,7 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Fragment, useContext } from 'react';
+import React, { useContext } from 'react';
 import {
   bool, shape, number
 } from 'prop-types';
@@ -23,12 +23,12 @@ import {
 import {
   creditsToString,
   getNameWithLangCode, hasGradeScaleId,
-  sortAndRenderRules
+  sortAndPartitionRules
 } from '../../utils';
 
 import Accordion from '../Accordion';
 // eslint-disable-next-line import/no-cycle
-import Rule from '../Rule';
+import RuleItem from '../RuleItem';
 import {
   STUDY_TRACK_DROPDOWN_MODULES,
   SPECIALISATION_DROPDOWN_MODULES
@@ -76,25 +76,19 @@ const ModuleRule = ({
   const showAsLink = hasGradeScaleId(rule.dataNode) || hints.isDegreeProgramme;
 
   const hasTitle = name && !hints.isAccordion && !skipTitle;
-  // eslint-disable-next-line react/no-unstable-nested-components
-  const renderRule = (opts) => (r, rIndex) => {
-    const Tag = opts?.isListItem ? 'li' : Fragment;
-    const { localId } = r;
-    return (
-      <Tag key={localId}>
-        <Rule
-          key={localId}
-          rule={r}
-          showAll={showAll}
-          hlevel={hasTitle || hints.isAccordion ? hlevel + 1 : hlevel}
-          parent={hints}
-          index={rIndex}
-        />
-      </Tag>
-    );
-  };
-
-  const [listContent, otherContent] = sortAndRenderRules(rule, renderRule);
+  const childHlevel = hasTitle || hints.isAccordion ? hlevel + 1 : hlevel;
+  const [listItems, otherItems] = sortAndPartitionRules(rule);
+  const renderItem = (item) => (
+    <RuleItem
+      key={item.rule.localId}
+      rule={item.rule}
+      hlevel={childHlevel}
+      parent={hints}
+      index={item.index}
+      isListItem={item.isListItem}
+    />
+  );
+  const [listContent, otherContent] = [listItems.map(renderItem), otherItems.map(renderItem)];
   let content = otherContent;
 
   if (listContent.length) {

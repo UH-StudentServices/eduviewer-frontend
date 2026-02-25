@@ -15,7 +15,7 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Fragment, useContext } from 'react';
+import React, { useContext } from 'react';
 import {
   shape, number
 } from 'prop-types';
@@ -24,10 +24,10 @@ import classNames from 'classnames';
 import {
   hasCreditRequirement,
   idGenerator,
-  sortAndRenderRules
+  sortAndPartitionRules
 } from '../../utils';
 // eslint-disable-next-line import/no-cycle
-import Rule from '../Rule';
+import RuleItem from '../RuleItem';
 import OptionContext from '../../context/OptionContext';
 import ViewportContext from '../../context/ViewportContext';
 import Description from '../Description';
@@ -66,23 +66,20 @@ const CompositeRule = ({
   const groupHeaderId = hasGroupHeader ? `${ruleId}-group-header` : undefined;
   const descriptionId = hints.hasDescription ? `${ruleId}-description` : undefined;
 
-  // eslint-disable-next-line react/no-unstable-nested-components
-  const renderRule = (opts) => (r, index) => {
-    const Tag = opts?.isListItem ? 'li' : Fragment;
-    const { localId } = r;
-    return (
-      <Tag key={localId}>
-        <Rule
-          key={localId}
-          rule={r}
-          hlevel={hasTitle ? hlevel + 1 : hlevel}
-          parent={hints}
-          index={index}
-        />
-      </Tag>
-    );
-  };
-  const [listContent, otherContent] = sortAndRenderRules(rule, renderRule);
+  const childHlevel = hasTitle ? hlevel + 1 : hlevel;
+  const [listItems, otherItems] = sortAndPartitionRules(rule);
+  const renderItem = (item) => (
+    <RuleItem
+      key={item.rule.localId}
+      rule={item.rule}
+      hlevel={childHlevel}
+      parent={hints}
+      index={item.index}
+      isListItem={item.isListItem}
+    />
+  );
+  const listContent = listItems.map(renderItem);
+  const otherContent = otherItems.map(renderItem);
   let content = otherContent;
 
   if (listContent.length) {
