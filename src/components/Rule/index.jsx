@@ -24,7 +24,6 @@ import { ruleTypes } from '../../constants';
 import Course from '../Course';
 // eslint-disable-next-line import/no-cycle
 import ModuleRule from '../ModuleRule';
-// eslint-disable-next-line import/no-cycle
 import CompositeRule from '../CompositeRule';
 // eslint-disable-next-line import/no-cycle
 import CreditsRule from '../CreditsRule';

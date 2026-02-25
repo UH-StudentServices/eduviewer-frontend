@@ -156,19 +156,19 @@ const partition = (array, predicate) =>
     return acc;
   }, [[], []]);
 
-export const sortAndRenderRules = (rule, renderRule) => {
+export const sortAndPartitionRules = (rule) => {
   const rules = getRules(rule);
   const sortedSubrules = rules?.sort(compareSubRules) || [];
   const isListItemRule = (r) =>
     LIST_ITEM_RULES.includes(r.type)
     || (rule.type === ruleTypes.COMPOSITE_RULE && r.type === ruleTypes.MODULE_RULE);
-  const [listContent, otherContent] = partition(
+  const [listItems, otherItems] = partition(
     sortedSubrules.map((r, i) => [r, i]),
     ([r]) => isListItemRule(r)
   );
   return [
-    listContent.map(([r, i]) => renderRule({ isListItem: true })(r, i)),
-    otherContent.map(([r, i]) => renderRule()(r, i))
+    listItems.map(([r, i]) => ({ rule: r, index: i, isListItem: true })),
+    otherItems.map(([r, i]) => ({ rule: r, index: i, isListItem: false }))
   ];
 };
 

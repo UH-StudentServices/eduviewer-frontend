@@ -19,7 +19,6 @@ const path = require('node:path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ESLintWebpackPlugin = require('eslint-webpack-plugin');
 const { DefinePlugin } = require('webpack');
 const dotenv = require('dotenv');
 
@@ -158,7 +157,6 @@ const createConfig = (options) => ({
     getHtmlPlugin(options.target, 'sv'),
     miniCssExtractPlugin,
     cleanWebPackPlugin,
-    new ESLintWebpackPlugin(),
     new DefinePlugin({
       'globalThis.USE_MOCKS': JSON.stringify(parseBooleanEnv(process.env.USE_MOCKS))
     })

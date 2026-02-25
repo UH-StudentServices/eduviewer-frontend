@@ -21,7 +21,7 @@ import {
   getOrdinals,
   formatOrdinal,
   numberToLetter,
-  sortAndRenderRules
+  sortAndPartitionRules
 } from './index';
 import { ruleTypes } from '../constants';
 
@@ -149,7 +149,7 @@ describe('getOrdinalRangeString', () => {
   });
 });
 
-describe('sortAndRenderRules', () => {
+describe('sortAndPartitionRules', () => {
   it('preserves sorted indices through partition', () => {
     // Rules in mixed order: ModuleRule, then two CourseUnitRules
     const rules = [
@@ -162,19 +162,13 @@ describe('sortAndRenderRules', () => {
       rules
     };
 
-    const calls = [];
-    const renderRule = (opts) => (r, i) => {
-      calls.push({ rule: r, index: i, opts });
-      return `rendered-${r.dataNode.code}-${i}`;
-    };
-
-    sortAndRenderRules(rule, renderRule);
+    const [listItems] = sortAndPartitionRules(rule);
 
     // After sort: CU-A (pos 0), CU-B (pos 1), MOD1 (pos 2)
     // All are list items in a CompositeRule
     // Indices should match sorted position, preserved through partition
-    const indices = calls.map((c) => c.index);
-    const codes = calls.map((c) => c.rule.dataNode.code);
+    const codes = listItems.map((item) => item.rule.dataNode.code);
+    const indices = listItems.map((item) => item.index);
 
     expect(codes).toEqual(['CU-A', 'CU-B', 'MOD1']);
     expect(indices).toEqual([0, 1, 2]);
@@ -190,20 +184,14 @@ describe('sortAndRenderRules', () => {
       rules
     };
 
-    const renderRule = (opts) => (r, i) => ({
-      code: r.dataNode.code,
-      index: i,
-      isListItem: !!opts?.isListItem
-    });
+    const [listItems, otherItems] = sortAndPartitionRules(rule);
 
-    const [listContent, otherContent] = sortAndRenderRules(rule, renderRule);
+    expect(listItems).toHaveLength(1);
+    expect(listItems[0].rule.dataNode.code).toBe('CU1');
+    expect(listItems[0].isListItem).toBe(true);
 
-    expect(listContent).toHaveLength(1);
-    expect(listContent[0].code).toBe('CU1');
-    expect(listContent[0].isListItem).toBe(true);
-
-    expect(otherContent).toHaveLength(1);
-    expect(otherContent[0].code).toBe('CR1');
-    expect(otherContent[0].isListItem).toBe(false);
+    expect(otherItems).toHaveLength(1);
+    expect(otherItems[0].rule.dataNode.code).toBe('CR1');
+    expect(otherItems[0].isListItem).toBe(false);
   });
 });
