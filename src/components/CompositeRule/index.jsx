@@ -117,44 +117,49 @@ const CompositeRule = ({
     );
   };
 
+  const hasWrapperContent = hasTitle || hasCreditRequirementHeader
+    || hasGroupHeader || hints.hasDescription;
+
   return (
     <>
-      <div
-        className={
-          classNames(
-            {
-              [styles.borderLeft]: hints.isInAccordion,
-              [styles.otherContent]: !hasGroupHeader
-            }
-          )
-        }
-      >
-        {hasTitle && (
-          <div
-            id={titleId}
-            className={
-              classNames(
-                'ds-heading-xs',
-                'ds-pr-sm',
-                {
-                  'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
-                  // Applies negative margins.
-                  // Use only when there is no other content; otherwise, render normally.
-                  [styles.courseUnitsTitle]: hasCourseUnitsTitle
-                    && !hints.hasDescription
-                    && !hasCreditRequirementHeader
-                    && !hasGroupHeader
-                }
-              )
-            }
-            role="heading"
-            aria-level={hlevel}
-          >
-            {hasCourseUnitsTitle ? t('courseUnits') : t('modules')}
-          </div>
-        )}
-        {renderComponents()}
-      </div>
+      {hasWrapperContent && (
+        <div
+          className={
+            classNames(
+              {
+                [styles.borderLeft]: hints.isInAccordion,
+                [styles.otherContent]: !hasGroupHeader
+              }
+            )
+          }
+        >
+          {hasTitle && (
+            <div
+              id={titleId}
+              className={
+                classNames(
+                  'ds-heading-xs',
+                  'ds-pr-sm',
+                  {
+                    'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
+                    // Applies negative margins.
+                    // Use only when there is no other content; otherwise, render normally.
+                    [styles.courseUnitsTitle]: hasCourseUnitsTitle
+                      && !hints.hasDescription
+                      && !hasCreditRequirementHeader
+                      && !hasGroupHeader
+                  }
+                )
+              }
+              role="heading"
+              aria-level={hlevel}
+            >
+              {hasCourseUnitsTitle ? t('courseUnits') : t('modules')}
+            </div>
+          )}
+          {renderComponents()}
+        </div>
+      )}
       {content}
     </>
   );
