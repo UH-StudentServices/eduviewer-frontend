@@ -38,7 +38,8 @@ import { hintType } from '../../types';
 const INTERESTING_RULES = new Set([
   ruleTypes.COMPOSITE_RULE,
   ruleTypes.MODULE_RULE,
-  ruleTypes.COURSE_UNIT_RULE
+  ruleTypes.COURSE_UNIT_RULE,
+  ruleTypes.ANY_COURSE_UNIT_RULE
 ]);
 
 export const getHints = (parent, rule, index = 0) => {
