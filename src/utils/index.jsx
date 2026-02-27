@@ -267,14 +267,13 @@ export const isInRange = (num, min, max) =>
 export const getLangAttribute = (lang, langCode) => (lang === langCode ? null : langCode);
 
 export const getHeadingSizeForLevel = (level) => {
-  const minHeadingSize = 'xxs';
+  const minHeadingSize = 'xs';
   const levelToHeadingSizeMap = {
     1: 'md',
     2: 'md',
     3: 'md',
     4: 'sm',
-    5: 'xs',
-    6: minHeadingSize
+    5: minHeadingSize
   };
   return levelToHeadingSizeMap[level] ?? minHeadingSize;
 };
