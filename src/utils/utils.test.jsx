@@ -21,8 +21,9 @@ import {
   getOrdinals,
   formatOrdinal,
   numberToLetter,
-  sortAndPartitionRules
-} from './index';
+  sortAndPartitionRules,
+  hyphenateText
+} from '.';
 import { ruleTypes } from '../constants';
 
 describe('hasCreditRequirement', () => {
@@ -193,5 +194,29 @@ describe('sortAndPartitionRules', () => {
     expect(otherItems).toHaveLength(1);
     expect(otherItems[0].rule.dataNode.code).toBe('CR1');
     expect(otherItems[0].isListItem).toBe(false);
+  });
+});
+
+describe('hyphenateText', () => {
+  it.each([
+    {
+      text: 'tavutuskirjasto',
+      lang: 'fi',
+      expected: 'ta-vu-tus-kir-jas-to'
+    },
+    {
+      text: 'bindestrecksbibliotek',
+      lang: 'sv',
+      expected: 'bin-de-strecks-bib-li-o-tek'
+    },
+    {
+      text: 'hyphenation library',
+      lang: 'en',
+      expected: 'hy-phen-a-tion lib-rary'
+    }
+  ])('hyphenates $lang text', ({ text, lang, expected }) => {
+    const result = hyphenateText(text, lang);
+    // Replace soft-hyphens for test assertion readability
+    expect(result.replaceAll('\u00AD', '-')).toBe(expected);
   });
 });

@@ -31,7 +31,8 @@ import {
   creditsToString,
   getLangAttribute,
   getNameWithLangCode,
-  getStudyModuleUrl
+  getStudyModuleUrl,
+  hyphenateText
 } from '../../utils';
 import styles from '../RootModule/rootModule.css';
 import Link from '../Link';
@@ -81,7 +82,7 @@ const Accordion = ({
           href={getStudyModuleUrl(id, lang, academicYear)}
           external={!internalLinks}
           lang={nameLang}
-          dsText={title}
+          dsText={hyphenateText(title, lang)}
           dsWeight={isCompact ? 'regular' : 'semibold'}
         />
       </span>
@@ -89,7 +90,7 @@ const Accordion = ({
     </>
   ) : (
     <>
-      <span lang={nameLang}>{title}</span>
+      <span lang={nameLang}>{hyphenateText(title, lang)}</span>
       <small className="ds-bodytext-md">{myCredits}</small>
     </>
   );
