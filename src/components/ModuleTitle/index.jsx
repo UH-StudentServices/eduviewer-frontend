@@ -27,7 +27,8 @@ import Link from '../Link';
 import {
   getDegreeProgrammeUrl,
   getLangAttribute,
-  getStudyModuleUrl
+  getStudyModuleUrl,
+  hyphenateText
 } from '../../utils';
 import styles from '../RootModule/rootModule.css';
 import { hintType } from '../../types';
@@ -72,7 +73,7 @@ const ModuleTitle = ({
           : getStudyModuleUrl(rule.dataNode.id, lang, academicYear)}
         external={!internalLinks}
         lang={nameLang}
-        dsText={name}
+        dsText={hyphenateText(name, lang)}
         dsWeight="semibold"
       >
         <span slot="prefix">{moduleCode}&nbsp;</span>
@@ -97,7 +98,7 @@ const ModuleTitle = ({
       }
     >
       <span lang={nameLang}>
-        {name}
+        {hyphenateText(name, lang)}
       </span>
       {moduleCredits
         && <span className={styles.moduleCredits}>{moduleCredits}</span>}

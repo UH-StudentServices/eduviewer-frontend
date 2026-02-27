@@ -24,7 +24,8 @@ import {
   creditsToString,
   getCourseUnitUrl,
   getLangAttribute,
-  getLocalizedTextWithLangCode
+  getLocalizedTextWithLangCode,
+  hyphenateText
 } from '../../utils';
 import styles from '../RootModule/rootModule.css';
 import OptionContext from '../../context/OptionContext';
@@ -84,7 +85,7 @@ const Course = ({
               href={getCourseUnitUrl(id, lang, academicYear)}
               external={!internalLinks}
               lang={getLangAttribute(lang, courseNameLangCode)}
-              dsText={courseName}
+              dsText={hyphenateText(courseName, lang)}
             />
           </span>
           <small className="ds-bodytext-md">{myCredits}</small>

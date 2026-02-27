@@ -14,6 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
+import Hypher from 'hypher';
+import hyphenationFi from 'hyphenation.fi';
+import hyphenationSv from 'hyphenation.sv';
+import hyphenationEn from 'hyphenation.en-gb';
+
 import {
   STUDIES_HOST_BASE_URL, studiesCourseUnits, studiesStudyModules, studiesDegreeProgrammes
 } from '../config';
@@ -276,4 +281,28 @@ export const getHeadingSizeForLevel = (level) => {
     5: minHeadingSize
   };
   return levelToHeadingSizeMap[level] ?? minHeadingSize;
+};
+
+const HYPHENATOR = {
+  fi: new Hypher(hyphenationFi),
+  sv: new Hypher(hyphenationSv),
+  en: new Hypher(hyphenationEn)
+};
+
+/**
+ * @param {string} text - The text to hyphenate
+ * @param {'fi' | 'en' | 'sv'} lang - ISO language code for hyphenation, defaults to 'fi'
+ * @returns {string} hyphenated text if language is supported,
+ *  otherwise original text or empty string
+ */
+export const hyphenateText = (text, lang = 'fi') => {
+  const isString = typeof text === 'string';
+  const isHyphenateable = isString && lang in HYPHENATOR;
+  if (isHyphenateable) {
+    return HYPHENATOR[lang]?.hyphenateText(text);
+  }
+  if (isString) {
+    return text;
+  }
+  return '';
 };
