@@ -26,6 +26,7 @@ import classNames from 'classnames';
 import ViewportContext from '../../context/ViewportContext';
 import styles from '../RootModule/rootModule.css';
 import { hintType } from '../../types';
+import GroupHeader from '../GroupHeader';
 
 const AnyCourse = ({ hints, children }) => {
   const { isXSmallOrSmaller } = useContext(ViewportContext);
@@ -35,21 +36,32 @@ const AnyCourse = ({ hints, children }) => {
   return (
     <div
       className={
-          classNames(
-            styles.anyCourse,
-            'ds-pr-sm',
-            {
-              'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
-              [styles.borderLeft]: hints.isInAccordion,
-              [`${styles.borderTop} ds-py-xs`]: isListItem,
-              'ds-pb-xs ds-pl-sm': !isListItem,
-              'ds-pt-xs': !isListItem && !hints.hasTextContent
-            }
-          )
-        }
+        classNames(
+          styles.anyCourse,
+          {
+            [styles.borderLeft]: hints.isInAccordion,
+            [styles.borderTop]: isListItem
+          }
+        )
+      }
     >
-      <div className={`ds-bodytext-md ${styles.anyCourseContent}`}>
-        {children}
+      <GroupHeader hints={hints} borderTop borderBottom />
+      <div
+        className={
+            classNames(
+              'ds-pr-sm',
+              {
+                'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
+                'ds-py-xs': isListItem,
+                'ds-pb-xs ds-pl-sm': !isListItem,
+                'ds-pt-xs': !isListItem && !hints.hasTextContent
+              }
+            )
+          }
+      >
+        <div className={`ds-bodytext-md ${styles.anyCourseContent}`}>
+          {children}
+        </div>
       </div>
     </div>
   );
