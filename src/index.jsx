@@ -20,7 +20,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import './register-components';
 import { initializeTracker } from './tracking';
-import Main from './components/Main';
+import App from './components/App';
 
 import './styles';
 import { availableLanguages } from './constants';
@@ -99,7 +99,7 @@ export const render = () => {
     <ViewportContextProvider>
       <LangContextProvider>
         <InitializeLang currentLang={lang}>
-          <Main
+          <App
             code={code}
             academicYearCode={academicYearCode}
             hideSelections={hideSelections}
@@ -122,7 +122,7 @@ const initializeApp = () => {
 };
 
 if (module.hot) {
-  module.hot.accept('./components/Main', () => {
+  module.hot.accept('./components/App', () => {
     render();
   });
 }

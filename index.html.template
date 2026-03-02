@@ -19,6 +19,6 @@
        </style>
     </head>
     <body>
-        <div id="eduviewer-root" degree-program-id="" module-code="" academic-year="" only-selected-academic-year="false" lang="<%= lang %>" header=""></div>
+        <main id="eduviewer-root" degree-program-id="" module-code="" academic-year="" only-selected-academic-year="false" lang="<%= lang %>" header=""></main>
     </body>
 </html>

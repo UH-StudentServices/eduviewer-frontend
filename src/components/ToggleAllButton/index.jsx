@@ -18,7 +18,7 @@
 import React from 'react';
 import { func, bool } from 'prop-types';
 
-import styles from '../Main/main.css';
+import styles from '../App/app.css';
 import useTranslation from '../../hooks/useTranslation';
 
 const ToggleAllButton = ({ onChange, showAll }) => {

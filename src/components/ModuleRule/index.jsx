@@ -40,6 +40,7 @@ import useTranslation from '../../hooks/useTranslation';
 import GroupHeader from '../GroupHeader';
 import { hintType } from '../../types';
 import ModuleTitle from '../ModuleTitle';
+import styles from '../RootModule/rootModule.css';
 
 const ModuleRule = ({
   skipTitle,
@@ -137,13 +138,14 @@ const ModuleRule = ({
   }
 
   return (
-    <section
+    <div
       id={rule.localId}
       key={rule.localId}
+      className={styles.moduleRule}
     >
       <GroupHeader hints={hints} borderTop borderLeft />
       {content}
-    </section>
+    </div>
   );
 };
 

@@ -83,7 +83,7 @@ const devServerConfig = {
 const createConfig = (options) => ({
   context: path.join(__dirname, 'src'),
   entry: [
-    './app'
+    './index'
   ],
   output: {
     path: path.resolve(__dirname, 'dist'),
