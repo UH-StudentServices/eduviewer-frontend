@@ -30,7 +30,7 @@ import {
   getModuleHierarchy
 } from '../../api';
 import RootModule from '../RootModule';
-import styles from './main.css';
+import styles from './app.css';
 import ToggleAllButton from '../ToggleAllButton';
 import {
   availableLanguages, NO_DEGREE_PROGRAM_CODE, NO_MODULE_HIERARCHY,
@@ -51,7 +51,7 @@ const fetchModuleHierarchy = async (code, academicYear) => {
 
 const EDUCATION_VALUE_SEPARATOR = '|';
 
-const Main = ({
+const App = ({
   code,
   academicYearCode,
   lang,
@@ -348,16 +348,16 @@ const Main = ({
 
   return (
     <div>
-      <main className={styles.mainContainer}>
+      <div className={styles.mainContainer}>
         { header && <h2 className={`${styles.mainHeader} ds-heading-lg`}>{header}</h2> }
         { renderSelections() }
         { renderContent() }
-      </main>
+      </div>
     </div>
   );
 };
 
-Main.propTypes = {
+App.propTypes = {
   academicYearCode: string.isRequired,
   code: string.isRequired,
   hideSelections: bool.isRequired,
@@ -369,4 +369,4 @@ Main.propTypes = {
   header: string.isRequired
 };
 
-export default Main;
+export default App;

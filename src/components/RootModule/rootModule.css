@@ -132,7 +132,7 @@
     margin-bottom: calc(-1 * var(--ds-borderWidth-hairline));
   }
 
-  & ul > li:last-child > section > .accordion {
+  & ul > li:last-child > .moduleRule > .accordion {
     margin-bottom: 0;
   }
 
@@ -240,7 +240,7 @@
     position: relative;
   }
 
-  & > section {
+  & > .moduleRule {
     padding-left: 0;
   }
 }
