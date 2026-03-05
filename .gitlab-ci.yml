@@ -24,6 +24,22 @@ test_and_build:
     paths:
       - dist/
 
+test_e2e:
+  image: mcr.microsoft.com/playwright:v1.58.2-noble
+  stage: test_and_build
+  script:
+    - npm ci
+    - npx playwright test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH
+  artifacts:
+    when: on_failure
+    paths:
+      - playwright-report/
+      - test-results/
+    expire_in: 7 days
+
 push_master_to_github:
   stage: deploy
   allow_failure: true
