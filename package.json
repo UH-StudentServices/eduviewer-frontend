@@ -17,7 +17,9 @@
     "lint": "concurrently 'npm run lint:js' 'npm run lint:css'",
     "lint:css": "stylelint 'src/**/*.css'",
     "lint:js": "eslint src",
-    "pretest": "npm run lint"
+    "pretest": "npm run lint",
+    "test:e2e": "docker run --rm -v $(pwd):/work/ -w /work/ --ipc=host mcr.microsoft.com/playwright:v1.58.2-noble npx playwright test",
+    "test:e2e:update": "docker run --rm -v $(pwd):/work/ -w /work/ --ipc=host mcr.microsoft.com/playwright:v1.58.2-noble npx playwright test --update-snapshots"
   },
   "engines": {
     "node": ">= 24.11.0",
@@ -40,12 +42,14 @@
     "react-dom": "^19.2.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
     "@babel/preset-react": "^7.28.5",
     "@eslint/compat": "^2.0.2",
     "@eslint/eslintrc": "^3.3.3",
     "@ngrok/ngrok": "^1.7.0",
+    "@playwright/test": "1.58.2",
     "@tony.ganchev/eslint-plugin-header": "^3.2.4",
     "ansi-styles": "^6.2.1",
     "autoprefixer": "^10.4.14",
@@ -80,6 +84,7 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
+    "testPathIgnorePatterns": ["/node_modules/", "/e2e/"],
     "moduleFileExtensions": [
       "js",
       "jsx"
