@@ -33,6 +33,7 @@ import {
 import styles from '../RootModule/rootModule.css';
 import { hintType } from '../../types';
 import ViewportContext from '../../context/ViewportContext';
+import useTranslation from '../../hooks/useTranslation';
 
 const ModuleTitle = ({
   hints,
@@ -48,7 +49,11 @@ const ModuleTitle = ({
   internalLinks
 }) => {
   const { isXSmallOrSmaller } = useContext(ViewportContext);
+  const { t } = useTranslation();
   const nameLang = getLangAttribute(lang, nameLangCode);
+
+  // See: https://jira.it.helsinki.fi/browse/EDVWR-194
+  const title = hints.isStudyTrack ? t('studyTracks') : name;
 
   return showAsLink ? (
     <Heading
@@ -73,7 +78,7 @@ const ModuleTitle = ({
           : getStudyModuleUrl(rule.dataNode.id, lang, academicYear)}
         external={!internalLinks}
         lang={nameLang}
-        dsText={hyphenateText(name, lang)}
+        dsText={hyphenateText(title, lang)}
         dsWeight="semibold"
       >
         <span slot="prefix">{moduleCode}&nbsp;</span>
@@ -98,7 +103,7 @@ const ModuleTitle = ({
       }
     >
       <span lang={nameLang}>
-        {hyphenateText(name, lang)}
+        {hyphenateText(title, lang)}
       </span>
       {moduleCredits
         && <span className={styles.moduleCredits}>{moduleCredits}</span>}

@@ -22,9 +22,111 @@ import {
   formatOrdinal,
   numberToLetter,
   sortAndPartitionRules,
-  hyphenateText
+  hyphenateText,
+  hasName,
+  getLocalizedTextWithLangCode,
+  getLocalizedText,
+  getNameWithLangCode,
+  getName
 } from '.';
 import { ruleTypes } from '../constants';
+
+describe('getLocalizedTextWithLangCode', () => {
+  it('returns tuple [text, langCode] when field has value in any language', () => {
+    const field = {
+      en: 'English',
+      fi: 'Finnish'
+    };
+    const [text, langCode] = getLocalizedTextWithLangCode(field, 'sv');
+    expect(text).toBe('Finnish');
+    expect(langCode).toBe('fi');
+  });
+
+  it('returns tuple [undefined, undefined] when field does not have a value in any language', () => {
+    const field = {
+      en: '',
+      fi: '',
+      sv: ''
+    };
+    const [text, langCode] = getLocalizedTextWithLangCode(field, 'sv');
+    expect(text).toBeUndefined();
+    expect(langCode).toBeUndefined();
+  });
+});
+
+describe('getLocalizedText', () => {
+  it('returns text when field has value in any language', () => {
+    const field = {
+      en: 'English',
+      fi: 'Finnish'
+    };
+    const text = getLocalizedText(field, 'sv');
+    expect(text).toBe('Finnish');
+  });
+
+  it('returns undefined when field does not have a value in any language', () => {
+    const field = {
+      en: '',
+      fi: '',
+      sv: ''
+    };
+    const text = getLocalizedText(field, 'sv');
+    expect(text).toBeUndefined();
+  });
+});
+
+describe('hasName', () => {
+  it('returns true when name exists in any language and is non-empty string', () => {
+    const dataNode = { name: { en: 'Test name' } };
+    expect(hasName(dataNode)).toBeTruthy();
+  });
+
+  it.each([
+    { dataNode: {}, description: 'name is missing' },
+    { dataNode: { name: {} }, description: 'name object is empty' },
+    { dataNode: { name: { en: '' } }, description: 'name is empty string' }
+  ])('returns false when $description', ({ dataNode }) => {
+    expect(hasName(dataNode)).toBeFalsy();
+  });
+});
+
+describe('getNameWithLangCode', () => {
+  it('returns tuple [name, langCode] when name exists in any language', () => {
+    const rule = { dataNode: { name: { en: 'Test name' } } };
+    const [name, langCode] = getNameWithLangCode(rule, 'sv');
+    expect(name).toBe('Test name');
+    expect(langCode).toBe('en');
+  });
+
+  it.each([
+    { dataNode: {}, description: 'name is missing' },
+    { dataNode: { name: {} }, description: 'name object is empty' },
+    { dataNode: { name: { en: '' } }, description: 'name is empty string' }
+  ])('returns tuple [undefined, undefined] when $description', ({ dataNode }) => {
+    const rule = { dataNode };
+    const [name, langCode] = getNameWithLangCode(rule, 'sv');
+    expect(name).toBeUndefined();
+    expect(langCode).toBeUndefined();
+  });
+});
+
+describe('getName', () => {
+  it('returns name when name exists in any language', () => {
+    const rule = { dataNode: { name: { en: 'Test name' } } };
+    const name = getName(rule, 'sv');
+    expect(name).toBe('Test name');
+  });
+
+  it.each([
+    { dataNode: {}, description: 'name is missing' },
+    { dataNode: { name: {} }, description: 'name object is empty' },
+    { dataNode: { name: { en: '' } }, description: 'name is empty string' }
+  ])('returns empty string when $description', ({ dataNode }) => {
+    const rule = { dataNode };
+    const name = getName(rule, 'sv');
+    expect(name).toBe('');
+  });
+});
 
 describe('hasCreditRequirement', () => {
   it('returns true when min=0 and max is truthy', () => {

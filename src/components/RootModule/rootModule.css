@@ -201,13 +201,19 @@
     }
   }
 
-  & .courseUnitsTitle {
-    margin-top: calc(-2 * var(--ds-spacing-3xSmall));
-    margin-bottom: calc(-2 * var(--ds-spacing-3xSmall));
+  & .rootCompositeRuleTitle {
+    padding-block: calc(var(--ds-spacing-2xSmall) - var(--ds-borderWidth-hairline));
+
+    @media (width >= 60rem) {
+      padding-block: calc(var(--ds-spacing-xSmall) - var(--ds-spacing-4xSmall) - var(--ds-borderWidth-hairline));
+    }
+  }
+
+  & .compositeRuleTitle {
+    margin-block: calc(-2 * var(--ds-spacing-3xSmall) - var(--ds-borderWidth-hairline));
     
     @media (width >= 60rem) {
-      margin-top: calc(-1.5 * var(--ds-spacing-3xSmall));
-      margin-bottom: calc(-1.5 * var(--ds-spacing-3xSmall));
+      margin-block: calc(-1.5 * var(--ds-spacing-3xSmall) - var(--ds-borderWidth-hairline));
     }
   }
 

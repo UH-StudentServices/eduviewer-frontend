@@ -24,7 +24,8 @@ import {
 } from '../config';
 import {
   LIST_ITEM_RULES,
-  ruleTypes
+  ruleTypes,
+  STUDY_TRACK_DROPDOWN_MODULES
 } from '../constants';
 
 const { COURSE_UNIT_RULE } = ruleTypes;
@@ -86,6 +87,13 @@ export const getNameWithLangCode = (rule, lang) => (
 );
 
 export const getName = (rule, lang) => (hasName(rule.dataNode) ? getLocalizedText(rule.dataNode.name, lang) : '');
+
+export const isStudyTrack = (rule) => {
+  // language does not matter here, as `getName` checks
+  // and `STUDY_TRACK_DROPDOWN_MODULES` contains all languages
+  const name = getName(rule, 'fi');
+  return STUDY_TRACK_DROPDOWN_MODULES.includes(name?.toLowerCase());
+};
 
 const compareCodes = (rule1, rule2) => {
   const getCode = (rule) => rule.dataNode.code || '';
