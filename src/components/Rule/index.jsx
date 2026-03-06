@@ -31,7 +31,8 @@ import useTranslation from '../../hooks/useTranslation';
 import AnyCourse from '../AnyCourse';
 import {
   getRules, hasCreditRequirement, hasCreditsRule,
-  isAccordion, isDegreeProgramme, isStudyModule
+  isAccordion, isDegreeProgramme, isStudyModule,
+  isStudyTrack
 } from '../../utils';
 import { hintType } from '../../types';
 
@@ -55,6 +56,7 @@ export const getHints = (parent, rule, index = 0) => {
     isAccordion: isAccordion(parent, rule),
     isInAccordion: parent?.isAccordion || parent?.isInAccordion || false,
     isDegreeProgramme: isDegreeProgramme(rule.dataNode),
+    isStudyTrack: isStudyTrack(rule),
     isStudyModule: isStudyModule(rule.dataNode),
     isInStudyModule: parent?.isStudyModule || parent?.isInStudyModule || false,
     hasCreditsRule: hasCreditsRule(rule.dataNode),

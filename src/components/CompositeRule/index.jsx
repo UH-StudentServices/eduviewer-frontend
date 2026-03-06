@@ -15,7 +15,9 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useContext } from 'react';
+import React, {
+  useContext
+} from 'react';
 import {
   shape, number
 } from 'prop-types';
@@ -48,6 +50,7 @@ const CompositeRule = ({
   const { t } = useTranslation();
   const { lang } = useContext(OptionContext);
   const { isXSmallOrSmaller } = useContext(ViewportContext);
+
   if (!rule) {
     return null;
   }
@@ -55,9 +58,13 @@ const CompositeRule = ({
   const hasCourseUnitsTitle = hints.hasCourseUnits
     && hints.isInStudyModule
     && !hints.parent?.hasCourseUnitHeader;
+  const hasStudyModulesTitle = hints.hasStudyModules && !hints.parent?.hasStudyModuleHeader;
   const hasTitle = (
-    hasCourseUnitsTitle
-    || (hints.hasStudyModules && !hints.parent?.hasStudyModuleHeader)
+    !hints.closestModule?.isStudyTrack
+    && (
+      hasCourseUnitsTitle
+      || hasStudyModulesTitle
+    )
   );
   const titleId = hasTitle ? `${ruleId}-title` : undefined;
   const hasCreditRequirementHeader = hasCreditRequirement(rule);
@@ -120,6 +127,13 @@ const CompositeRule = ({
   const hasWrapperContent = hasTitle || hasCreditRequirementHeader
     || hasGroupHeader || hints.hasDescription;
 
+  const hasOnlyTitle = (
+    hasTitle
+    && !hints.hasDescription
+    && !hasCreditRequirementHeader
+    && !hasGroupHeader
+  );
+
   return (
     <>
       {hasWrapperContent && (
@@ -127,8 +141,12 @@ const CompositeRule = ({
           className={
             classNames(
               {
-                [styles.borderLeft]: hints.isInAccordion,
-                [styles.otherContent]: !hasGroupHeader
+                [styles.borderTop]: !hints.isInAccordion && hasOnlyTitle,
+                [styles.borderLeft]: (
+                  hints.isInAccordion
+                  || (!isXSmallOrSmaller && !hints.isInAccordion && hasOnlyTitle)
+                ),
+                [styles.otherContent]: !hasGroupHeader && (hints.isInAccordion || !hasOnlyTitle)
               }
             )
           }
@@ -140,14 +158,16 @@ const CompositeRule = ({
                 classNames(
                   'ds-heading-xs',
                   'ds-pr-sm',
+                  'ds-pl-sm',
                   {
-                    'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
+                    [styles.rootCompositeRuleTitle]: !hints.isInAccordion,
                     // Applies negative margins.
-                    // Use only when there is no other content; otherwise, render normally.
-                    [styles.courseUnitsTitle]: hasCourseUnitsTitle
-                      && !hints.hasDescription
-                      && !hasCreditRequirementHeader
-                      && !hasGroupHeader
+                    // Use only when there is no other sibling content; otherwise, render normally.
+                    [styles.compositeRuleTitle]: (
+                      hints.isInAccordion
+                      && hasOnlyTitle
+                      && !hints.closestModule?.hasCreditsRule
+                    )
                   }
                 )
               }

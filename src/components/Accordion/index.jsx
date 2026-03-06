@@ -38,7 +38,6 @@ import styles from '../RootModule/rootModule.css';
 import Link from '../Link';
 import OptionContext from '../../context/OptionContext';
 import useTranslation from '../../hooks/useTranslation';
-import { STUDY_TRACK_DROPDOWN_MODULES } from '../../constants';
 
 const Accordion = ({
   rule,
@@ -64,15 +63,13 @@ const Accordion = ({
 
   const myCredits = creditsToString(rule.dataNode?.targetCredits, t, true);
   const { code, id, gradeScaleId } = rule.dataNode;
-  const prevCompositeHintGroup = hints.parent?.closestCompositeRule;
   const isLink = !!gradeScaleId;
-  const isIconButton = isLink || prevCompositeHintGroup?.hasStudyModules || !hints.isInAccordion;
+  const isIconButton = isLink || !hints.isInAccordion;
   const [name, nameLangCode] = getNameWithLangCode(rule, lang);
   const nameLang = getLangAttribute(lang, nameLangCode);
 
   // See: https://jira.it.helsinki.fi/browse/EDVWR-194
-  const isStudyTrack = STUDY_TRACK_DROPDOWN_MODULES.includes(name.toLowerCase());
-  const title = isStudyTrack ? t('studyTracks') : name;
+  const title = hints.isStudyTrack ? t('studyTracks') : name;
 
   const titlePart = isLink ? (
     <>
