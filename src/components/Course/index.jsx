@@ -29,7 +29,6 @@ import {
 } from '../../utils';
 import styles from '../RootModule/rootModule.css';
 import OptionContext from '../../context/OptionContext';
-import ViewportContext from '../../context/ViewportContext';
 import useTranslation from '../../hooks/useTranslation';
 import GroupHeader from '../GroupHeader';
 import Link from '../Link';
@@ -40,7 +39,6 @@ const Course = ({
 }) => {
   const { t } = useTranslation();
   const { lang, academicYear, internalLinks } = useContext(OptionContext);
-  const { isXSmallOrSmaller } = useContext(ViewportContext);
   const [courseName, courseNameLangCode] = getLocalizedTextWithLangCode(name, lang);
   const myCredits = creditsToString(credits, t, true);
 
@@ -59,8 +57,8 @@ const Course = ({
         classNames(
           styles.course,
           styles.borderBottom,
+          styles.borderLeft,
           {
-            [styles.borderLeft]: hints.isInAccordion,
             [styles.borderTop]: hasBorderTop
           }
         )
@@ -72,9 +70,7 @@ const Course = ({
           classNames(
             'ds-py-xs',
             'ds-pr-sm',
-            {
-              'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller
-            }
+            'ds-pl-sm'
           )
         }
       >
