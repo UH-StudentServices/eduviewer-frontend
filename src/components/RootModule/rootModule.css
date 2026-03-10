@@ -23,7 +23,6 @@
   eduviewer-ds-accordion {
     position: relative;
     display: block;
-    z-index: 2;
   }
   
   /* TODO: Remove once fixed in https://jira.it.helsinki.fi/browse/DS-589 */
@@ -93,16 +92,6 @@
 
   & .semibold {
     font-weight: var(--ds-fontWeight-semibold);
-  }
-
-  /* NOTE: Make sure to use these utility classes when setting top/bottom borders on elements. */
-  & .borderTop,
-  & .borderBottom {
-    /*
-      Prevents the borders from being overlapped by
-      the content of the next element or a previous accordion.
-    */
-    z-index: 2;
   }
 
   & .borderTop {
@@ -219,7 +208,6 @@
 
   & .groupHeader {
     position: relative;
-    z-index: 2;
     background-color: var(--ds-bgColor-neutral);
     padding: var(--ds-spacing-4xSmall) var(--ds-spacing-small);
     margin-top: calc(-1 * var(--ds-borderWidth-hairline));
