@@ -314,3 +314,15 @@ export const hyphenateText = (text, lang = 'fi') => {
   }
   return '';
 };
+
+/**
+ * Waits for a web component to be ready.
+ *
+ * Imported dynamically because `@uh-design-system/component-library`
+ * wrongly exports types.
+ *
+ * @see {@link https://jira.it.helsinki.fi/browse/DS-649}
+ */
+export const componentOnReady = (...args) =>
+  import('@uh-design-system/component-library/dist/index')
+    .then((lib) => lib.componentOnReady(...args));

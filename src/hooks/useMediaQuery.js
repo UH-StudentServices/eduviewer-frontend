@@ -25,6 +25,7 @@ const useMediaQuery = (query) => {
 
   useEffect(() => {
     const mql = globalThis.matchMedia(query);
+    setMatches(mql.matches); // sync immediately when query changes
     const handler = (e) => setMatches(e.matches);
     mql.addEventListener('change', handler);
     return () => mql.removeEventListener('change', handler);
