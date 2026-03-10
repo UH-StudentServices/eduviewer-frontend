@@ -15,7 +15,10 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useContext } from 'react';
+import React, {
+  useContext,
+  useRef
+} from 'react';
 import { number, shape } from 'prop-types';
 import classNames from 'classnames';
 
@@ -26,6 +29,7 @@ import useTranslation from '../../hooks/useTranslation';
 import styles from '../RootModule/rootModule.css';
 // eslint-disable-next-line import/no-cycle
 import Rule from '../Rule';
+import useWebComponentClassName from '../../hooks/useWebComponentClassName';
 
 const CreditsRule = ({
   rule,
@@ -33,24 +37,36 @@ const CreditsRule = ({
   hints,
   index
 }) => {
+  const dsTagRef = useRef(null);
   const { isXSmallOrSmaller } = useContext(ViewportContext);
   const { t } = useTranslation();
+
+  /**
+   * DS adds some classes to the component after mounting,
+   * so we need to apply our conditionally set classes together with those.
+   *
+   * @see {@link https://jira.it.helsinki.fi/browse/EDVWR-214}
+   */
+  const tagClassName = useWebComponentClassName(
+    dsTagRef,
+    classNames(
+      styles.creditsRule,
+      'ds-py-sm',
+      'ds-pr-sm',
+      {
+        'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
+        [styles.borderLeft]: hints.isInAccordion
+      }
+    )
+  );
+
   const r = rule.rule;
   const tagText = `${t('creditsRule.select')} ${creditsToString(rule.credits, t)}`;
   return (
-    <div key={rule.localId}>
+    <div>
       <eduviewer-ds-tag
-        className={
-          classNames(
-            styles.creditsRule,
-            'ds-py-sm',
-            'ds-pr-sm',
-            {
-              'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
-              [styles.borderLeft]: hints.isInAccordion
-            }
-          )
-        }
+        ref={dsTagRef}
+        className={tagClassName}
         dsText={tagText}
       />
       {r && (
