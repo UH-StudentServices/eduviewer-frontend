@@ -74,6 +74,11 @@ const App = ({
   const { isXSmallOrSmaller } = useContext(ViewportContext);
   const { t } = useTranslation();
 
+  const hasContent = !hierarchyLoading
+    && moduleAndYear.academicYear
+    && moduleHierarchy.name
+    && moduleAndYear.code;
+
   useEffect(() => {
     let cbot;
     if (!document.getElementById('Cookiebot') && !cbot) {
@@ -285,10 +290,12 @@ const App = ({
             </eduviewer-ds-select>
           )
         }
-        <ToggleAllButton
-          onChange={onShowAll}
-          showAll={showAll}
-        />
+        {hasContent && (
+          <ToggleAllButton
+            onChange={onShowAll}
+            showAll={showAll}
+          />
+        )}
       </div>
     );
   };
@@ -314,11 +321,6 @@ const App = ({
     if (hierarchyLoading) {
       return <eduviewer-ds-spinner dsSize="2xLarge" dsText={t('loadingStructure')} />;
     }
-
-    const hasContent = !hierarchyLoading
-      && moduleAndYear.academicYear
-      && moduleHierarchy.name
-      && moduleAndYear.code;
 
     return (
       <div className={styles.content}>

@@ -36,6 +36,15 @@ test.describe('Education structure view', () => {
     expect(initialResults.violations).toEqual([]);
   });
 
+  test('initial page matches screenshot', async ({ page }) => {
+    await page.goto('/');
+
+    const combobox = page.getByRole('combobox', { name: 'Tutkinto-ohjelmat' });
+    await expect(combobox).toBeVisible();
+
+    await expect(page).toHaveScreenshot('initial-page.png', { fullPage: true });
+  });
+
   test('each programme passes accessibility checks and matches screenshot', async ({ page }) => {
     test.slow();
     await page.goto('/');
