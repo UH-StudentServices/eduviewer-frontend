@@ -24,6 +24,16 @@
     "Stäng hela strukturen",
     "Close full structure"
   ],
+  "structureOpened": [
+    "Rakenne avattu",
+    "Strukturen öppnad",
+    "Structure opened"
+  ],
+  "structureClosed": [
+    "Rakenne suljettu",
+    "Strukturen stängd",
+    "Structure closed"
+  ],
   "noDegreeProgramToShow": [
     "Ei näytettävää koulutusohjelmaa.",
     "Inget utbildningsprogram att visa.",

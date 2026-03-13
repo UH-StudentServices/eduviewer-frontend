@@ -30,9 +30,11 @@ const ToggleAllButton = ({ onChange, showAll }) => {
         dsVariant="supplementary"
         dsText={t(showAll ? 'closeStructure' : 'openStructure')}
         dsIcon={showAll ? 'unfold_less' : 'unfold_more'}
-        dsAriaPressed={showAll}
         onClick={onChange}
       />
+      <eduviewer-ds-feedback dsSrOnly>
+        {t(showAll ? 'structureOpened' : 'structureClosed')}
+      </eduviewer-ds-feedback>
     </div>
   );
 };
