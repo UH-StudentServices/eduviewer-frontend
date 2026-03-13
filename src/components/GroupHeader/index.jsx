@@ -54,8 +54,7 @@ const GroupHeader = ({
         )
       }
     >
-      <eduviewer-ds-visually-hidden dsTag="span">{t('option')} {ordinalString}</eduviewer-ds-visually-hidden>
-      <span aria-hidden="true">{ordinalString}</span>
+      <span aria-hidden="true">{t('option')} {ordinalString}</span>
     </div>
   );
 };

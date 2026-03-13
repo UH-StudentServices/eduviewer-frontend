@@ -208,6 +208,7 @@
 
   & .groupHeader {
     position: relative;
+    font-weight: var(--ds-fontWeight-semibold);
     background-color: var(--ds-bgColor-neutral);
     padding: var(--ds-spacing-4xSmall) var(--ds-spacing-small);
     margin-top: calc(-1 * var(--ds-borderWidth-hairline));

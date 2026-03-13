@@ -16,7 +16,7 @@ module.exports = defineConfig({
     timeout: 10000,
     toHaveScreenshot: {
       animations: 'disabled',
-      maxDiffPixelRatio: 0.01
+      maxDiffPixelRatio: 0.0001
     }
   },
   snapshotPathTemplate: '{snapshotDir}/{testFileDir}/{testFileName}-snapshots/{arg}-{projectName}{ext}',
