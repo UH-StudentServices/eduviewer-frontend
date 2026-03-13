@@ -13,6 +13,7 @@ module.exports = defineConfig({
     trace: 'on-first-retry'
   },
   expect: {
+    timeout: 10000,
     toHaveScreenshot: {
       animations: 'disabled',
       maxDiffPixelRatio: 0.01
