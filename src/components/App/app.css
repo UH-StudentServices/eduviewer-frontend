@@ -58,6 +58,7 @@
     text-decoration-thickness: 7%;
     text-underline-offset: 12%;
     text-underline-position: from-font;
+    word-break: break-all;
   }
 
   & a:visited {
