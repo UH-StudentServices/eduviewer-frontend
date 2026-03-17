@@ -18,7 +18,6 @@
 const path = require('node:path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const { DefinePlugin } = require('webpack');
 const dotenv = require('dotenv');
 
@@ -65,8 +64,6 @@ const miniCssExtractPlugin = new MiniCssExtractPlugin({
   filename: 'styles.css'
 });
 
-const cleanWebPackPlugin = new CleanWebpackPlugin('dist', [{}]);
-
 const devServerConfig = {
   port: 8080,
   // TODO: Remove when ngrok is no longer used for testing.
@@ -87,6 +84,7 @@ const createConfig = (options) => ({
   ],
   output: {
     path: path.resolve(__dirname, 'dist'),
+    clean: true,
     publicPath: 'auto',
     filename: `eduviewer.${options.target}.js`,
     libraryTarget: options.target,
@@ -120,7 +118,8 @@ const createConfig = (options) => ({
             loader: 'css-loader',
             options: {
               modules: {
-                localIdentName: '[name]__[local]___[hash:base64:5]'
+                localIdentName: '[name]__[local]___[hash:base64:5]',
+                namedExport: false
               },
               sourceMap: true,
               importLoaders: 1
@@ -135,18 +134,23 @@ const createConfig = (options) => ({
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         include: /\/fonts\//,
-        use: 'file-loader?name=fonts/[name]-[hash].[ext]'
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name]-[hash][ext]'
+        }
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/,
         exclude: /\/fonts?\//,
-        use: {
-          loader: 'url-loader',
-          options: {
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
             // inline images below 16kb
-            limit: 16384,
-            name: 'images/[name]-[hash].[ext]'
+            maxSize: 16384
           }
+        },
+        generator: {
+          filename: 'images/[name]-[hash][ext]'
         }
       }
     ]
@@ -156,7 +160,6 @@ const createConfig = (options) => ({
     getHtmlPlugin(options.target, 'en'),
     getHtmlPlugin(options.target, 'sv'),
     miniCssExtractPlugin,
-    cleanWebPackPlugin,
     new DefinePlugin({
       'globalThis.USE_MOCKS': JSON.stringify(parseBooleanEnv(process.env.USE_MOCKS))
     })
