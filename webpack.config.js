@@ -84,7 +84,6 @@ const createConfig = (options) => ({
   ],
   output: {
     path: path.resolve(__dirname, 'dist'),
-    clean: true,
     publicPath: 'auto',
     filename: `eduviewer.${options.target}.js`,
     libraryTarget: options.target,

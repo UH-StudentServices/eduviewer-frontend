@@ -13,7 +13,7 @@
     "test": "jest",
     "dev": "webpack-dev-server --mode=development",
     "ngrok": "node scripts/start-ngrok.js",
-    "dist": "webpack --mode=production",
+    "dist": "rm -rf dist && webpack --mode=production",
     "lint": "concurrently 'npm run lint:js' 'npm run lint:css'",
     "lint:css": "stylelint 'src/**/*.css'",
     "lint:js": "eslint src",
