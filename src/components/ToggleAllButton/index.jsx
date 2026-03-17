@@ -15,14 +15,27 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { func, bool } from 'prop-types';
 
 import styles from '../App/app.css';
 import useTranslation from '../../hooks/useTranslation';
 
+const FEEDBACK_RESET_TIMEOUT = 3000;
+
 const ToggleAllButton = ({ onChange, showAll }) => {
   const { t } = useTranslation();
+  const [feedback, setFeedback] = useState('');
+
+  useEffect(() => {
+    setFeedback(showAll ? 'structureOpened' : 'structureClosed');
+
+    const resetFeedback = setTimeout(() => {
+      setFeedback('');
+    }, FEEDBACK_RESET_TIMEOUT);
+
+    return () => clearTimeout(resetFeedback);
+  }, [showAll]);
 
   return (
     <div className={styles.toggleAllButton}>
@@ -33,7 +46,7 @@ const ToggleAllButton = ({ onChange, showAll }) => {
         onClick={onChange}
       />
       <eduviewer-ds-feedback dsSrOnly>
-        {t(showAll ? 'structureOpened' : 'structureClosed')}
+        {feedback ? t(feedback) : ''}
       </eduviewer-ds-feedback>
     </div>
   );
