@@ -102,10 +102,20 @@
     ]
   },
   "creditRequirement": {
+    "selectOptionally": [
+      "Valitse halutessasi",
+      "Välj om du vill",
+      "Select optionally"
+    ],
     "select": [
       "Valitse",
       "Välj",
       "Select"
+    ],
+    "option": [
+      "vaihtoehtojen",
+      "alternativ",
+      "option"
     ],
     "options": [
       "vaihtoehtojen",
@@ -119,6 +129,11 @@
     ]
   },
   "number": {
+    "atMost": [
+      "halutessasi",
+      "om du vill",
+      "at most"
+    ],
     "1": [
       "yksi",
       "ett",

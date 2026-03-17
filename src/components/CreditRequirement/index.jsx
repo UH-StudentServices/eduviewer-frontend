@@ -35,23 +35,35 @@ const CreditRequirement = ({ id, rule, hints }) => {
   const { t, lang } = useTranslation();
   const rules = getRules(rule);
 
-  const getRangeString = useCallback(() => {
-    if (!rule) return '';
+  const getRangeInfo = useCallback(() => {
     const requiredCoursesString = requiredCoursesToString(rule.require);
     const requiredCoursesNumber = Number(requiredCoursesString);
+    // Check if not a range and a number between 1 and 9
     if (!Number.isNaN(requiredCoursesNumber) && isInRange(requiredCoursesNumber, 1, 9)) {
-      return t(`number.${requiredCoursesNumber}`);
+      return [t(`number.${requiredCoursesNumber}`), requiredCoursesNumber === 1];
     }
-    return requiredCoursesString;
+    // Check if a range between 0 and n
+    // See: https://jira.it.helsinki.fi/browse/EDVWR-222
+    if (/^0\u2013\d+$/.test(requiredCoursesString)) {
+      const n = Number(requiredCoursesString.split('\u2013')[1]);
+      const nString = isInRange(n, 1, 9) ? t(`number.${n}`) : String(n);
+      return [`${t('number.atMost')} ${nString}`, n === 1];
+    }
+    // A number greater than 9 or a range between 1 and n
+    return [requiredCoursesString, requiredCoursesNumber === 1];
   }, [rule, t]);
 
-  const getTextParts = useCallback(() => {
+  const getSelectionParts = useCallback(() => {
+    const [rangeString, isSingular] = getRangeInfo();
+    return [rangeString, isSingular ? t('creditRequirement.option') : t('creditRequirement.options')];
+  }, [rule, t]);
+
+  const getRangeTextParts = useCallback(() => {
     switch (lang) {
       case 'fi':
         return [
           t('creditRequirement.select'),
-          getRangeString(),
-          t('creditRequirement.options'),
+          ...getSelectionParts(),
           getOrdinalRangeString(hints, rules.length),
           t('creditRequirement.between')
         ];
@@ -60,17 +72,22 @@ const CreditRequirement = ({ id, rule, hints }) => {
       default:
         return [
           t('creditRequirement.select'),
-          getRangeString(),
-          t('creditRequirement.options'),
+          ...getSelectionParts(),
           t('creditRequirement.between'),
           getOrdinalRangeString(hints, rules.length)
         ];
     }
-  }, [lang]);
+  }, [lang, t]);
 
   if (!hasCreditRequirement(rule)) {
     return null;
   }
+
+  const requirementText = (
+    (rules.length === 1 && rule.require.min === 0)
+      ? [t('creditRequirement.selectOptionally')]
+      : getRangeTextParts()
+  ).filter(Boolean).join(' ');
 
   return (
     <div
@@ -87,7 +104,7 @@ const CreditRequirement = ({ id, rule, hints }) => {
         )
       }
     >
-      {getTextParts().filter(Boolean).join(' ')}:
+      {requirementText}:
     </div>
   );
 };
