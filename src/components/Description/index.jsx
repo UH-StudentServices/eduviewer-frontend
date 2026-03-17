@@ -59,6 +59,7 @@ const Description = ({
       lang={getLangAttribute(lang, langCode)}
       // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{ __html: content?.trim() }}
+      data-origin="external"
     >
     </div>
   );

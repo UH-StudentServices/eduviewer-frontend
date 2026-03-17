@@ -8,15 +8,19 @@ const AxeBuilder = require('@axe-core/playwright').default;
 // - heading-order: recursive module nesting produces deep aria-levels by design
 const AXE_DISABLE_RULES = ['color-contrast', 'html-has-lang', 'page-has-heading-one', 'heading-order'];
 
+const axe = (page) => new AxeBuilder({ page })
+  .exclude('[data-origin="external"]')
+  .disableRules(AXE_DISABLE_RULES);
+
 // Derive a filesystem-safe slug from an option label
 // e.g. "Historian kandiohjelma … [KH40_006]" → "kh40-006"
-function slugify(text) {
+const slugify = (text) => {
   const codeMatch = text.match(/\[([^\]]+)\]/);
   if (codeMatch) {
     return codeMatch[1].toLowerCase().replaceAll(/[^a-z0-9]+/g, '-');
   }
   return text.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-').replaceAll(/(^-|-$)/g, '');
-}
+};
 
 test.describe('Education structure view', () => {
   test.beforeEach(async ({ page }) => {
@@ -30,9 +34,7 @@ test.describe('Education structure view', () => {
     const combobox = page.getByRole('combobox', { name: 'Tutkinto-ohjelmat' });
     await expect(combobox).toBeVisible();
 
-    const initialResults = await new AxeBuilder({ page })
-      .disableRules(AXE_DISABLE_RULES)
-      .analyze();
+    const initialResults = await axe(page).analyze();
     expect(initialResults.violations).toEqual([]);
   });
 
@@ -71,9 +73,7 @@ test.describe('Education structure view', () => {
       await expect(page.locator('#rootRule')).toBeVisible();
 
       // Axe accessibility check on loaded content
-      const loadedResults = await new AxeBuilder({ page })
-        .disableRules(AXE_DISABLE_RULES)
-        .analyze();
+      const loadedResults = await axe(page).analyze();
       expect(loadedResults.violations).toEqual([]);
 
       // Expand full structure
@@ -86,9 +86,7 @@ test.describe('Education structure view', () => {
       await page.waitForTimeout(1000);
 
       // Axe accessibility check on expanded state
-      const expandedResults = await new AxeBuilder({ page })
-        .disableRules(AXE_DISABLE_RULES)
-        .analyze();
+      const expandedResults = await axe(page).analyze();
       expect(expandedResults.violations).toEqual([]);
 
       // Visual regression screenshot

@@ -10,19 +10,19 @@
   },
   {
     "educationId": "otm-4de23787-f4f1-4cf2-abe2-a91994171018",
-    "name":{
-      "en":"Bachelor's Programme in Cultural Studies and Master's Programme (3 years + 2 years)",
-      "fi":"Kulttuurien tutkimuksen kandiohjelma ja maisteriohjelma (3v + 2v)",
-      "sv":"Kandidatprogrammet i kulturforskning och magisterprogram (3 år + 2 år)"
+    "name": {
+      "en": "Bachelor's Programme in Cultural Studies and Master's Programme (3 years + 2 years)",
+      "fi": "Kulttuurien tutkimuksen kandiohjelma ja maisteriohjelma (3v + 2v)",
+      "sv": "Kandidatprogrammet i kulturforskning och magisterprogram (3 år + 2 år)"
     },
     "degreeProgrammeCode": "KH40_005"
   },
   {
     "educationId": "hy-EDU-114256097-2017",
-    "name":{
-      "en":"Bachelor's Programme in History and Master's Programme (3 years + 2 years)",
-      "fi":"Historian kandiohjelma ja maisteriohjelma (3v + 2v)",
-      "sv":"Kandidatprogrammet i historia och magisterprogram (3 år + 2 år)"
+    "name": {
+      "en": "Bachelor's Programme in History and Master's Programme (3 years + 2 years)",
+      "fi": "Historian kandiohjelma ja maisteriohjelma (3v + 2v)",
+      "sv": "Kandidatprogrammet i historia och magisterprogram (3 år + 2 år)"
     },
     "degreeProgrammeCode": "KH40_006"
   },
@@ -43,5 +43,14 @@
       "sv": "Kandidatprogrammet i kemi och magisterprogram (3 år + 2 år)"
     },
     "degreeProgrammeCode": "KH50_003"
+  },
+  {
+    "educationId": "hy-EDU-114256174-2017",
+    "name": {
+      "en": "Bachelor's Programme in Mathematical Sciences and Master's Programme (3 years + 2 years)",
+      "fi": "Matemaattisten tieteiden kandiohjelma ja maisteriohjelma (3v + 2v)",
+      "sv": "Kandidatsprogrammet i matematiska vetenskaper och magisterprogram (3 år + 2 år)"
+    },
+    "degreeProgrammeCode": "KH50_001"
   }
 ]

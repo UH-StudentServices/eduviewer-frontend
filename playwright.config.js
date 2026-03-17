@@ -16,7 +16,10 @@ module.exports = defineConfig({
     timeout: 10000,
     toHaveScreenshot: {
       animations: 'disabled',
-      maxDiffPixelRatio: 0.0001
+      // Full-page screenshots vary greatly in height, so a fixed pixel limit would be brittle.
+      // Using ratio instead keeps tolerance proportional across page sizes.
+      // 0.00001 = 0.001% of pixels may differ.
+      maxDiffPixelRatio: 0.00001
     }
   },
   snapshotPathTemplate: '{snapshotDir}/{testFileDir}/{testFileName}-snapshots/{arg}-{projectName}{ext}',
