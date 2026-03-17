@@ -55,38 +55,43 @@
     "autoprefixer": "^10.4.14",
     "babel-jest": "^30.2.0",
     "babel-loader": "^8.0.5",
-    "clean-webpack-plugin": "^1.0.1",
     "concurrently": "^5.3.0",
-    "css-loader": "^3.6.0",
+    "css-loader": "^7.1.4",
     "eslint": "^10.0.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "file-loader": "^6.2.0",
     "globals": "^17.3.0",
     "html-webpack-plugin": "^5.5.0",
     "husky": "^0.14.3",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "postcss": "^8.5.6",
-    "postcss-loader": "^7.3.3",
+    "postcss-loader": "^8.2.1",
     "postcss-preset-env": "^10.4.0",
     "semver": "^7.6.3",
-    "style-loader": "^0.23.1",
+    "style-loader": "^4.0.0",
     "stylelint": "^16.25.0",
     "stylelint-config-standard": "^39.0.1",
-    "url-loader": "^4.1.1",
     "webpack": "^5.102.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2"
   },
   "jest": {
     "testEnvironment": "jsdom",
-    "roots": ["<rootDir>/src", "<rootDir>/jest"],
-    "testPathIgnorePatterns": ["/node_modules/", "/e2e/"],
-    "setupFilesAfterEnv": ["<rootDir>/jest/jest.setup.js"],
+    "roots": [
+      "<rootDir>/src",
+      "<rootDir>/jest"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/e2e/"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest/jest.setup.js"
+    ],
     "moduleFileExtensions": [
       "js",
       "jsx"
