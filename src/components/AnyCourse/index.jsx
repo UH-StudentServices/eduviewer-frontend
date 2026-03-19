@@ -16,9 +16,6 @@
  */
 import React, { useContext } from 'react';
 import {
-  arrayOf,
-  node,
-  oneOfType,
   string
 } from 'prop-types';
 import classNames from 'classnames';
@@ -28,7 +25,9 @@ import styles from '../RootModule/rootModule.css';
 import { hintType } from '../../types';
 import GroupHeader from '../GroupHeader';
 
-const AnyCourse = ({ hints, children }) => {
+const AnyCourse = ({
+  hints, text, linkText, linkUrl
+}) => {
   const { isXSmallOrSmaller } = useContext(ViewportContext);
 
   const isListItem = hints.hasCourseUnits || hints.hasStudyModules;
@@ -60,7 +59,16 @@ const AnyCourse = ({ hints, children }) => {
           }
       >
         <div className={`ds-bodytext-md ${styles.anyCourseContent}`}>
-          {children}
+          <span>
+            {text}{' '}
+            <eduviewer-ds-link
+              dsHref={linkUrl}
+              dsTarget="_blank"
+              dsRel="noopener noreferrer"
+              dsText={linkText}
+              dsVariant="inline"
+            />
+          </span>
         </div>
       </div>
     </div>
@@ -69,7 +77,9 @@ const AnyCourse = ({ hints, children }) => {
 
 AnyCourse.propTypes = {
   hints: hintType.isRequired,
-  children: oneOfType([node, arrayOf(node), string]).isRequired
+  text: string.isRequired,
+  linkText: string.isRequired,
+  linkUrl: string.isRequired
 };
 
 export default AnyCourse;

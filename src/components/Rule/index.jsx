@@ -120,11 +120,23 @@ const Rule = ({
       );
     case ruleTypes.ANY_COURSE_UNIT_RULE:
       return (
-        <AnyCourse hints={hints} key={rule.localId}>{t('anyCourseUnit')}</AnyCourse>
+        <AnyCourse
+          hints={hints}
+          key={rule.localId}
+          text={t('anyCourseUnit')}
+          linkText={t('anyCourseUnitLink')}
+          linkUrl={t('optionalStudiesUrl')}
+        />
       );
     case ruleTypes.ANY_MODULE_RULE:
       return (
-        <AnyCourse hints={hints} key={rule.localId}>{t('anyModule')}</AnyCourse>
+        <AnyCourse
+          hints={hints}
+          key={rule.localId}
+          text={t('anyModule')}
+          linkText={t('anyModuleLink')}
+          linkUrl={t('optionalStudiesUrl')}
+        />
       );
     case ruleTypes.COURSE_UNIT_RULE: {
       const {
