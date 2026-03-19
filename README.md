@@ -5,8 +5,8 @@ This repository contains source code for the front end of the Eduviewer
 ## Dependencies
 
 - Webpack 5.0
-- css-loader 3.6.0 (loading breaks in 4.x version, fix later)
 - Node 24+ (upgraded due to OpenSSL version change)
+- Docker, if need to run/update e2e tests
 
 ## Usage
 
@@ -67,9 +67,16 @@ You'll also need to include the following `script` tag at the end of your page's
   <script src="address/to/eduviewer.var.js"></script>
 ```
 
-# Create secrets from ssl
+### Testing
 
-The stage is QA or PROD. This makes it possible to have different ssl files for different stages.
+#### Playwright E2E tests
+
+- To run e2e tests, run `npm run test:e2e`
+- To update e2e snapshot images, run `npm run test:e2e:update`
+
+# Create secrets from SSL
+
+The stage is QA or PROD. This makes it possible to have different SSL files for different stages.
 The "keys" ssl.crt and ssl.key become file names since these are mounted as files.
 They must match what is specified in nginx.conf.template.
 Also the path in nginx.conf.template must match the path specified in the deployments pod specs volume mount.
