@@ -63,8 +63,6 @@ const AnyCourse = ({
             {text}{' '}
             <eduviewer-ds-link
               dsHref={linkUrl}
-              dsTarget="_blank"
-              dsRel="noopener noreferrer"
               dsText={linkText}
               dsVariant="inline"
             />
