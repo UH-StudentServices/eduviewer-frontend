@@ -77,6 +77,18 @@ const getRootAttribute = (attributeName) => {
  */
 const parseBooleanAttribute = (valueString) => valueString !== null && valueString.toLocaleLowerCase() !== 'false';
 
+let reactRoot = null;
+const getOrCreateReactRoot = () => {
+  const container = getRoot();
+  if (!container) return null;
+
+  if (!reactRoot) {
+    reactRoot = createRoot(container);
+  }
+
+  return reactRoot;
+};
+
 // eslint-disable-next-line import/prefer-default-export
 export const render = () => {
   const code = getRootAttribute(MODULE_ATTR_NAME) || getRootAttribute(DEGREE_PROGRAM_ATTR_NAME) || '';
@@ -95,7 +107,11 @@ export const render = () => {
   const showOnlySelectedAcademicYear = parseBooleanAttribute(onlySelectedAcademicYearString);
   const lang = getRootAttribute(LANGUAGE_ATTR_NAME) || availableLanguages.FI;
   const header = getRootAttribute(HEADER_ATTR_NAME) || '';
-  createRoot(getRoot()).render(
+
+  const root = getOrCreateReactRoot();
+  if (!root) return;
+
+  root.render(
     <ViewportContextProvider>
       <LangContextProvider>
         <InitializeLang currentLang={lang}>
@@ -114,6 +130,14 @@ export const render = () => {
       </LangContextProvider>
     </ViewportContextProvider>
   );
+};
+
+export const clear = () => {
+  if (reactRoot) {
+    // See: https://react.dev/reference/react-dom/client/createRoot#root-unmount
+    reactRoot.unmount();
+    reactRoot = null;
+  }
 };
 
 const initializeApp = () => {
