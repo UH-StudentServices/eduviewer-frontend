@@ -54,7 +54,7 @@ const GroupHeader = ({
         )
       }
     >
-      <span aria-hidden="true">{t('option')} {ordinalString}</span>
+      <span>{t('option')} {ordinalString}</span>
     </div>
   );
 };
