@@ -134,6 +134,9 @@ const CompositeRule = ({
     && !hasGroupHeader
   );
 
+  const isBoxed = hints.isInAccordion
+                    || (!isXSmallOrSmaller && !hints.isInAccordion && hasOnlyTitle);
+
   return (
     <>
       {hasWrapperContent && (
@@ -142,10 +145,7 @@ const CompositeRule = ({
             classNames(
               {
                 [styles.borderTop]: !hints.isInAccordion && hasOnlyTitle,
-                [styles.borderLeft]: (
-                  hints.isInAccordion
-                  || (!isXSmallOrSmaller && !hints.isInAccordion && hasOnlyTitle)
-                ),
+                [styles.borderLeft]: isBoxed,
                 [styles.otherContent]: !hasGroupHeader && (hints.isInAccordion || !hasOnlyTitle)
               }
             )
@@ -158,7 +158,7 @@ const CompositeRule = ({
                 classNames(
                   'ds-heading-xs',
                   'ds-pr-sm',
-                  'ds-pl-sm',
+                  { 'ds-pl-sm': isBoxed },
                   {
                     [styles.rootCompositeRuleTitle]: !hints.isInAccordion,
                     // Applies negative margins.
