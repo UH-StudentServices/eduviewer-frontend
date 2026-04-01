@@ -16,6 +16,7 @@
  */
 import React, { useContext } from 'react';
 import {
+  oneOf,
   string
 } from 'prop-types';
 import classNames from 'classnames';
@@ -24,13 +25,19 @@ import ViewportContext from '../../context/ViewportContext';
 import styles from '../RootModule/rootModule.css';
 import { hintType } from '../../types';
 import GroupHeader from '../GroupHeader';
+import { ruleTypes } from '../../constants';
 
 const AnyCourse = ({
-  hints, text, linkText, linkUrl
+  hints, type, text, linkText, linkUrl
 }) => {
   const { isXSmallOrSmaller } = useContext(ViewportContext);
 
-  const isListItem = hints.hasCourseUnits || hints.hasStudyModules;
+  const isListItem = (
+    hints.hasCourseUnits
+    || hints.hasStudyModules
+    || hints.parent.hasCourseUnits
+    || hints.parent.hasStudyModules
+  );
 
   return (
     <div
@@ -51,14 +58,24 @@ const AnyCourse = ({
               'ds-pr-sm',
               {
                 'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
-                'ds-py-xs': isListItem,
+                'ds-py-2xs': isListItem && type === ruleTypes.ANY_COURSE_UNIT_RULE,
+                'ds-py-xs': isListItem && type === ruleTypes.ANY_MODULE_RULE,
                 'ds-pb-xs ds-pl-sm': !isListItem,
                 'ds-pt-xs': !isListItem && !hints.hasTextContent
               }
             )
           }
       >
-        <div className={`ds-bodytext-md ${styles.anyCourseContent}`}>
+        <div
+          className={
+            classNames(
+              `ds-bodytext-md ${styles.anyCourseContent}`,
+              {
+                [styles.anyCourseContentPadded]: !isListItem
+              }
+            )
+          }
+        >
           <span>
             {text}{' '}
             <eduviewer-ds-link
@@ -75,6 +92,7 @@ const AnyCourse = ({
 
 AnyCourse.propTypes = {
   hints: hintType.isRequired,
+  type: oneOf([ruleTypes.ANY_COURSE_UNIT_RULE, ruleTypes.ANY_MODULE_RULE]).isRequired,
   text: string.isRequired,
   linkText: string.isRequired,
   linkUrl: string.isRequired

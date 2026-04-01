@@ -46,6 +46,8 @@ export const isStudyModule = (dataNode) => dataNode?.type === 'StudyModule';
 
 export const isDegreeProgramme = (moduleOrDataNode) => moduleOrDataNode?.type === 'DegreeProgramme';
 
+export const isCourseUnit = (rule) => rule?.type === COURSE_UNIT_RULE;
+
 export const creditsToString = (credits, translate, showMinSPRequirement = false) => {
   if (!credits) {
     return null;
@@ -278,18 +280,6 @@ export const isInRange = (num, min, max) =>
   num >= min && (max === null || num <= max);
 
 export const getLangAttribute = (lang, langCode) => (lang === langCode ? null : langCode);
-
-export const getHeadingSizeForLevel = (level) => {
-  const minHeadingSize = 'xs';
-  const levelToHeadingSizeMap = {
-    1: 'md',
-    2: 'md',
-    3: 'md',
-    4: 'sm',
-    5: minHeadingSize
-  };
-  return levelToHeadingSizeMap[level] ?? minHeadingSize;
-};
 
 const HYPHENATOR = {
   fi: new Hypher(hyphenationFi),

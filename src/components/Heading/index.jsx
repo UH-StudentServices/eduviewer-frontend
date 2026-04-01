@@ -20,9 +20,6 @@ import {
   arrayOf, node, number, oneOfType, string
 } from 'prop-types';
 
-import styles from '../RootModule/rootModule.css';
-import { getHeadingSizeForLevel } from '../../utils';
-
 const Heading = ({
   id,
   level,
@@ -30,7 +27,7 @@ const Heading = ({
   ariaLabel,
   children
 }) => (
-  <div id={id} className={`${className} ds-heading-${getHeadingSizeForLevel(level)} ${styles.semibold}`} role="heading" aria-level={level} aria-label={ariaLabel}>
+  <div id={id} className={`${className} ds-heading-2xs`} role="heading" aria-level={level} aria-label={ariaLabel}>
     {children}
   </div>
 );

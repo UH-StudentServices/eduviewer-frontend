@@ -72,19 +72,20 @@ const ModuleTitle = ({
         )
       }
     >
-      <Link
-        href={hints.isDegreeProgramme
-          ? getDegreeProgrammeUrl(rule.dataNode.id, lang, academicYear)
-          : getStudyModuleUrl(rule.dataNode.id, lang, academicYear)}
-        external={!internalLinks}
-        lang={nameLang}
-        dsText={hyphenateText(title, lang)}
-        dsWeight="semibold"
-      >
-        <span slot="prefix">{moduleCode}&nbsp;</span>
-      </Link>
+      <span>
+        <span className="ds-font-semibold">{moduleCode}&nbsp;</span>
+        <Link
+          href={hints.isDegreeProgramme
+            ? getDegreeProgrammeUrl(rule.dataNode.id, lang, academicYear)
+            : getStudyModuleUrl(rule.dataNode.id, lang, academicYear)}
+          external={!internalLinks}
+          lang={nameLang}
+          dsText={hyphenateText(title, lang)}
+          dsWeight="semibold"
+        />
+      </span>
       {moduleCredits
-          && <span className={styles.moduleCredits}>{moduleCredits}</span>}
+          && <span className={`${styles.moduleCredits} ds-font-regular`}>{moduleCredits}</span>}
     </Heading>
   ) : (
     <Heading

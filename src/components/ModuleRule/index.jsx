@@ -110,7 +110,6 @@ const ModuleRule = ({
       <Accordion
         rule={rule}
         hlevel={hlevel}
-        isCompact={hints.isInAccordion}
         hints={hints}
       >
         {content}
