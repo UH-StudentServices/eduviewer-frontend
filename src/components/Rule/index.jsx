@@ -31,7 +31,7 @@ import useTranslation from '../../hooks/useTranslation';
 import AnyCourse from '../AnyCourse';
 import {
   getRules, hasCreditRequirement, hasCreditsRule,
-  isAccordion, isDegreeProgramme, isStudyModule,
+  isAccordion, isCourseUnit, isDegreeProgramme, isStudyModule,
   isStudyTrack
 } from '../../utils';
 import { hintType } from '../../types';
@@ -58,11 +58,12 @@ export const getHints = (parent, rule, index = 0) => {
     isDegreeProgramme: isDegreeProgramme(rule.dataNode),
     isStudyTrack: isStudyTrack(rule),
     isStudyModule: isStudyModule(rule.dataNode),
+    isCourseUnit: isCourseUnit(rule),
     isInStudyModule: parent?.isStudyModule || parent?.isInStudyModule || false,
     hasCreditsRule: hasCreditsRule(rule.dataNode),
     hasDescription: !!rule.description,
     hasStudyModules: rules?.some((r) => isStudyModule(r.dataNode)),
-    hasCourseUnits: rules?.some((r) => r.type === ruleTypes.COURSE_UNIT_RULE),
+    hasCourseUnits: rules?.some(isCourseUnit),
     requireMin: (hasCreditRequirement(rule) && rules.length > 1) ? rule.require.min : undefined,
     ordinal:
       (parent?.requireMin != null && parent.rulesCount > 1
@@ -122,6 +123,7 @@ const Rule = ({
       return (
         <AnyCourse
           hints={hints}
+          type={rule.type}
           key={rule.localId}
           text={t('anyCourseUnit')}
           linkText={t('anyCourseUnitLink')}
@@ -132,6 +134,7 @@ const Rule = ({
       return (
         <AnyCourse
           hints={hints}
+          type={rule.type}
           key={rule.localId}
           text={t('anyModule')}
           linkText={t('anyModuleLink')}

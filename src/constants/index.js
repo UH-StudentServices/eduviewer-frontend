@@ -21,7 +21,8 @@ export const ruleTypes = {
   COMPOSITE_RULE: 'CompositeRule',
   COURSE_UNIT_RULE: 'CourseUnitRule',
   CREDITS_RULE: 'CreditsRule',
-  MODULE_RULE: 'ModuleRule'
+  MODULE_RULE: 'ModuleRule',
+  GROUPING_MODULE: 'GroupingModule'
 };
 
 export const availableLanguages = {

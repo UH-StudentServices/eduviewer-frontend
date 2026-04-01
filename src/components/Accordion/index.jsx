@@ -22,7 +22,7 @@ import React, {
   useState
 } from 'react';
 import {
-  arrayOf, bool, node, number, oneOfType, string
+  arrayOf, node, number, oneOfType, string
 } from 'prop-types';
 import classNames from 'classnames';
 
@@ -42,7 +42,6 @@ import useTranslation from '../../hooks/useTranslation';
 const Accordion = ({
   rule,
   hlevel = 3,
-  isCompact,
   hints,
   children
 }) => {
@@ -80,7 +79,7 @@ const Accordion = ({
           external={!internalLinks}
           lang={nameLang}
           dsText={hyphenateText(title, lang)}
-          dsWeight={isCompact ? 'regular' : 'semibold'}
+          dsWeight="semibold"
         />
       </span>
       <small className="ds-bodytext-md">{myCredits}</small>
@@ -101,7 +100,7 @@ const Accordion = ({
         className={
           classNames(
             styles.accordionHeaderContent,
-            isCompact ? `ds-bodytext-md ${styles.accordionHeaderContentCompact}` : 'ds-bodytext-lg'
+            'ds-bodytext-md'
           )
         }
       >
@@ -123,7 +122,7 @@ const Accordion = ({
     <eduviewer-ds-accordion
       ref={accordionRef}
       className={styles.accordion}
-      dsVariant={isCompact ? 'compact' : 'default'}
+      dsVariant="compact"
       dsHeadingLevel={hlevel}
       dsHeadingVariant={isIconButton ? 'icon-button' : 'button'}
       dsContentHasBackground
@@ -147,15 +146,13 @@ const Accordion = ({
 };
 
 Accordion.defaultProps = {
-  hlevel: 3,
-  isCompact: false
+  hlevel: 3
 };
 
 Accordion.propTypes = {
   hints: hintType.isRequired,
   rule: oneOfRulesType.isRequired,
   hlevel: number,
-  isCompact: bool,
   children: oneOfType([node, arrayOf(node), string]).isRequired
 };
 

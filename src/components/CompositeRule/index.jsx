@@ -135,7 +135,7 @@ const CompositeRule = ({
   );
 
   const isBoxed = hints.isInAccordion
-                    || (!isXSmallOrSmaller && !hints.isInAccordion && hasOnlyTitle);
+    || (!isXSmallOrSmaller && !hints.isInAccordion && hasOnlyTitle);
 
   return (
     <>
@@ -156,9 +156,9 @@ const CompositeRule = ({
               id={titleId}
               className={
                 classNames(
-                  'ds-heading-xs',
+                  'ds-heading-2xs',
                   'ds-pr-sm',
-                  { 'ds-pl-sm': isBoxed },
+                  { 'ds-pl-sm': isBoxed || isXSmallOrSmaller },
                   {
                     [styles.rootCompositeRuleTitle]: !hints.isInAccordion,
                     // Applies negative margins.

@@ -68,7 +68,7 @@ const Course = ({
       <div
         className={
           classNames(
-            'ds-py-xs',
+            'ds-py-2xs',
             'ds-pr-sm',
             'ds-pl-sm'
           )

@@ -333,7 +333,7 @@ const App = ({
                 className={
                   classNames(
                     'ds-mb-xs',
-                    'ds-bodytext-lg',
+                    'ds-bodytext-md',
                     {
                       'ds-mx-sm': isXSmallOrSmaller
                     }
