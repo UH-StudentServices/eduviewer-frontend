@@ -125,8 +125,8 @@ const Rule = ({
           hints={hints}
           type={rule.type}
           key={rule.localId}
-          text={t('anyCourseUnit')}
-          linkText={t('anyCourseUnitLink')}
+          text={`${t('anyCourseUnit')} ${t('optionalStudiesIntro')}`}
+          linkText={t('optionalStudiesLinkText')}
           linkUrl={t('optionalStudiesUrl')}
         />
       );
@@ -136,8 +136,8 @@ const Rule = ({
           hints={hints}
           type={rule.type}
           key={rule.localId}
-          text={t('anyModule')}
-          linkText={t('anyModuleLink')}
+          text={`${t('anyModule')} ${t('optionalStudiesIntro')}`}
+          linkText={t('optionalStudiesLinkText')}
           linkUrl={t('optionalStudiesUrl')}
         />
       );

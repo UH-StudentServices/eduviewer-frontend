@@ -64,20 +64,20 @@
     "Valfri kurs.",
     "Optional course."
   ],
-  "anyCourseUnitLink": [
-    "Tutustu valinnaisten opintojen tarjontaan.",
-    "Kolla in utbudet av valfria studier.",
-    "Explore the selection of optional studies."
-  ],
   "anyModule": [
     "Vapaasti valittava opintokokonaisuus.",
     "Valfri studiehelhet.",
     "Optional study module."
   ],
-  "anyModuleLink": [
-    "Tutustu valinnaisten opintojen tarjontaan.",
-    "Kolla in utbudet av valfria studier.",
-    "Explore the selection of optional studies."
+  "optionalStudiesIntro": [
+    "Tutustu",
+    "Kolla in",
+    "Explore"
+  ],
+  "optionalStudiesLinkText": [
+    "valinnaisten opintojen tarjontaan.",
+    "utbudet av valfria studier.",
+    "the selection of optional studies."
   ],
   "optionalStudiesUrl": [
     "https://studies.helsinki.fi/ohjeet/perustutkinto-opiskelijat/valinnaiset-opinnot",
