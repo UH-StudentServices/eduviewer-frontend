@@ -37,6 +37,7 @@ import {
 import styles from '../RootModule/rootModule.css';
 import Link from '../Link';
 import OptionContext from '../../context/OptionContext';
+import AccordionStateContext from '../../context/AccordionStateContext';
 import useTranslation from '../../hooks/useTranslation';
 
 const Accordion = ({
@@ -45,7 +46,6 @@ const Accordion = ({
   hints,
   children
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const accordionRef = useRef(null);
   const {
     lang,
@@ -53,9 +53,25 @@ const Accordion = ({
     internalLinks,
     showAll
   } = useContext(OptionContext);
+  const {
+    isAccordionOpen, setAccordionOpen, registerRestoration
+  } = useContext(AccordionStateContext);
   const { t } = useTranslation();
 
+  const savedOpen = isAccordionOpen(rule.localId);
+  const [isOpen, setIsOpen] = useState(savedOpen);
+  const prevShowAll = useRef(showAll);
+
   useEffect(() => {
+    if (savedOpen) {
+      const p = accordionRef.current?.setIsExpanded(true);
+      if (p && registerRestoration) registerRestoration(p);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (prevShowAll.current === showAll) return;
+    prevShowAll.current = showAll;
     accordionRef.current?.setIsExpanded(showAll);
     setIsOpen(showAll);
   }, [showAll]);
@@ -116,6 +132,7 @@ const Accordion = ({
   const handleDsToggle = (event) => {
     event.stopPropagation();
     setIsOpen(event.detail);
+    setAccordionOpen(rule.localId, event.detail);
   };
 
   return (

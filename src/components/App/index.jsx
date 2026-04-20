@@ -50,6 +50,25 @@ const fetchModuleHierarchy = async (code, academicYear) => {
 };
 
 const EDUCATION_VALUE_SEPARATOR = '|';
+const SELECTION_STORAGE_KEY = 'eduviewer:selection';
+
+const loadSavedSelection = () => {
+  try {
+    const stored = sessionStorage.getItem(SELECTION_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : null;
+  } catch {
+    return null;
+  }
+};
+
+const saveSelection = (moduleCode, academicYear) => {
+  try {
+    const value = JSON.stringify({ code: moduleCode, academicYear });
+    sessionStorage.setItem(SELECTION_STORAGE_KEY, value);
+  } catch {
+    // sessionStorage may be unavailable
+  }
+};
 
 const App = ({
   code,
@@ -62,13 +81,17 @@ const App = ({
   internalCourseLink,
   header
 }) => {
+  const saved = code ? null : loadSavedSelection();
   const [educations, setEducations] = useState([]);
   const [academicYears, setAcademicYears] = useState([]);
   const [academicYearNames, setAcademicYearNames] = useState({});
   const [hierarchyLoading, setHierarchyLoading] = useState(false);
   const [optionsLoading, setOptionsLoading] = useState(false);
   const [moduleHierarchy, setModuleHierarchy] = useState(NO_MODULE_HIERARCHY);
-  const [moduleAndYear, setModuleAndYear] = useState({ code, academicYear: academicYearCode });
+  const [moduleAndYear, setModuleAndYear] = useState({
+    code: saved?.code || code,
+    academicYear: saved?.academicYear || academicYearCode
+  });
   const [errorMessage, setErrorMessage] = useState('');
   const [showAll, setShowAll] = useState(false);
   const { isXSmallOrSmaller } = useContext(ViewportContext);
@@ -150,6 +173,14 @@ const App = ({
         setOptionsLoading(true);
         await initAcademicYearNames();
         await initEducations();
+        if (saved?.code) {
+          try {
+            const savedYears = await getAcademicYearsByCode(saved.code);
+            setAcademicYears(savedYears);
+          } catch {
+            // Saved code may no longer be valid
+          }
+        }
         setOptionsLoading(false);
       } else if (code) {
         setOptionsLoading(true);
@@ -167,6 +198,7 @@ const App = ({
     try {
       trackEvent(trackingCategories.SELECT_ACADEMIC_YEAR, academicYearNames[newAcademicYear]);
       setModuleAndYear({ code: moduleAndYear.code, academicYear: newAcademicYear });
+      if (!code) saveSelection(moduleAndYear.code, newAcademicYear);
     } catch (error) {
       handleError(error);
     }
@@ -202,6 +234,7 @@ const App = ({
       const newAcademicYear = getAcademicYear(newAcademicYears);
       setAcademicYears(newAcademicYears);
       setModuleAndYear({ code: newCode, academicYear: newAcademicYear });
+      saveSelection(newCode, newAcademicYear);
     } catch (error) {
       handleError(error);
     }
@@ -224,6 +257,11 @@ const App = ({
     const academicYearsLabel = t('academicYear');
     const educationsLabel = t('degreeProgrammes');
     const moduleCode = getCode(moduleHierarchy);
+    const selectedEducation = educationOptions
+      .find((o) => o.value === moduleCode);
+    const educationValue = selectedEducation
+      ? `${selectedEducation.id}${EDUCATION_VALUE_SEPARATOR}${selectedEducation.value}`
+      : '';
 
     return (
       <div
@@ -242,7 +280,7 @@ const App = ({
               <eduviewer-ds-combobox
                 dsId={EDUCATIONS_ID}
                 dsLabel={educationsLabel}
-                dsValue={moduleCode}
+                dsValue={educationValue}
                 dsLoading={optionsLoading}
                 dsFullWidth
                 dsOptionsError={!optionsLoading && educationOptions.length === 0}
