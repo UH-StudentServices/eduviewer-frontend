@@ -64,6 +64,18 @@ test.describe('Education structure view', () => {
       const slug = slugify(label);
       const searchText = label.split(' [')[0];
 
+      // Clear any previous selection restored from sessionStorage so the
+      // dropdown reopens when we type the next searchText. The restore from
+      // sessionStorage happens after goto resolves, so we wait briefly for
+      // the button to appear rather than clicking immediately.
+      const clearButton = page.getByRole('button', { name: 'Poista valinta' });
+      try {
+        await clearButton.waitFor({ state: 'visible', timeout: 2000 });
+        await clearButton.click();
+      } catch {
+        // No prior selection (e.g. first iteration) — nothing to clear.
+      }
+
       // Select the programme
       await combobox.fill(searchText);
       await page.getByRole('option', { name: searchText }).click();

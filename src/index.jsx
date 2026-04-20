@@ -89,7 +89,6 @@ const getOrCreateReactRoot = () => {
   return reactRoot;
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export const render = () => {
   const code = getRootAttribute(MODULE_ATTR_NAME) || getRootAttribute(DEGREE_PROGRAM_ATTR_NAME) || '';
   const academicYearCode = getRootAttribute(ACADEMIC_YEAR_ATTR_NAME) || calculateCurrentLV();
