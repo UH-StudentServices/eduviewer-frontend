@@ -15,22 +15,18 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useContext } from 'react';
+import React from 'react';
 import { shape, string } from 'prop-types';
 import classNames from 'classnames';
 
-import ViewportContext from '../../context/ViewportContext';
 import styles from '../RootModule/rootModule.css';
 import { getLangAttribute, getLocalizedTextWithLangCode } from '../../utils';
-import { hintType } from '../../types';
 
 const Description = ({
   id,
   rule,
-  lang,
-  hints
+  lang
 }) => {
-  const { isXSmallOrSmaller } = useContext(ViewportContext);
   const { description } = rule;
 
   if (!description) {
@@ -50,10 +46,7 @@ const Description = ({
         classNames(
           styles.description,
           'ds-bodytext-md',
-          'ds-pr-sm',
-          {
-            'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller
-          }
+          'ds-px-sm'
         )
       }
       lang={getLangAttribute(lang, langCode)}
@@ -68,8 +61,7 @@ const Description = ({
 Description.propTypes = {
   id: string.isRequired,
   rule: shape({}).isRequired,
-  lang: string.isRequired,
-  hints: hintType.isRequired
+  lang: string.isRequired
 };
 
 export default Description;

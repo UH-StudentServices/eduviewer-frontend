@@ -15,7 +15,7 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { useContext } from 'react';
+import React from 'react';
 import {
   bool, number, string, shape,
   oneOf
@@ -32,7 +32,6 @@ import {
 } from '../../utils';
 import styles from '../RootModule/rootModule.css';
 import { hintType } from '../../types';
-import ViewportContext from '../../context/ViewportContext';
 import useTranslation from '../../hooks/useTranslation';
 
 const ModuleTitle = ({
@@ -48,7 +47,6 @@ const ModuleTitle = ({
   academicYear,
   internalLinks
 }) => {
-  const { isXSmallOrSmaller } = useContext(ViewportContext);
   const { t } = useTranslation();
   const nameLang = getLangAttribute(lang, nameLangCode);
 
@@ -62,13 +60,10 @@ const ModuleTitle = ({
       className={
         classNames(
           styles.moduleTitle,
+          styles.borderLeft,
           'ds-pt-xs',
           'ds-pb-sm',
-          'ds-pr-sm',
-          {
-            'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
-            [styles.borderLeft]: hints.isInAccordion
-          }
+          'ds-px-sm'
         )
       }
     >
@@ -94,12 +89,9 @@ const ModuleTitle = ({
       className={
         classNames(
           styles.moduleTitle,
+          styles.borderLeft,
           'ds-pb-sm',
-          'ds-pr-sm',
-          {
-            'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
-            [styles.borderLeft]: hints.isInAccordion
-          }
+          'ds-px-sm'
         )
       }
     >

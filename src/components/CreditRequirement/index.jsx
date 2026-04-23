@@ -14,7 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { useCallback, useContext } from 'react';
+
+import React, { useCallback } from 'react';
 import { shape, string } from 'prop-types';
 import classNames from 'classnames';
 
@@ -26,12 +27,10 @@ import {
   isInRange,
   requiredCoursesToString
 } from '../../utils';
-import ViewportContext from '../../context/ViewportContext';
 import useTranslation from '../../hooks/useTranslation';
 import { hintType } from '../../types';
 
 const CreditRequirement = ({ id, rule, hints }) => {
-  const { isXSmallOrSmaller } = useContext(ViewportContext);
   const { t, lang } = useTranslation();
   const rules = getRules(rule);
 
@@ -94,13 +93,10 @@ const CreditRequirement = ({ id, rule, hints }) => {
       id={id}
       className={
         classNames(
-          'ds-bodytext-md',
           styles.creditRequirement,
           styles.semibold,
-          'ds-pr-sm',
-          {
-            'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller
-          }
+          'ds-bodytext-md',
+          'ds-px-sm'
         )
       }
     >
