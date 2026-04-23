@@ -19,6 +19,12 @@
   --border: var(--ds-borderWidth-hairline) solid var(--ds-borderColor-light);
 
   position: relative;
+  border-top: var(--border);
+  margin-inline-start: calc(-1 * var(--ds-borderWidth-hairline));
+
+  @media (width >= 30rem) {
+    margin-inline-start: 0;
+  }
 
   eduviewer-ds-accordion {
     position: relative;

@@ -15,14 +15,10 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, {
-  useContext,
-  useRef
-} from 'react';
+import React, { useRef } from 'react';
 import { number, shape } from 'prop-types';
 import classNames from 'classnames';
 
-import ViewportContext from '../../context/ViewportContext';
 import { hintType } from '../../types';
 import { creditsToString } from '../../utils';
 import useTranslation from '../../hooks/useTranslation';
@@ -38,7 +34,6 @@ const CreditsRule = ({
   index
 }) => {
   const dsTagRef = useRef(null);
-  const { isXSmallOrSmaller } = useContext(ViewportContext);
   const { t } = useTranslation();
 
   /**
@@ -51,12 +46,9 @@ const CreditsRule = ({
     dsTagRef,
     classNames(
       styles.creditsRule,
+      styles.borderLeft,
       'ds-py-sm',
-      'ds-pr-sm',
-      {
-        'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
-        [styles.borderLeft]: hints.isInAccordion
-      }
+      'ds-px-sm'
     )
   );
 

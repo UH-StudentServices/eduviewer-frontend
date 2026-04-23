@@ -31,7 +31,6 @@ import {
 // eslint-disable-next-line import/no-cycle
 import RuleItem from '../RuleItem';
 import OptionContext from '../../context/OptionContext';
-import ViewportContext from '../../context/ViewportContext';
 import Description from '../Description';
 import styles from '../RootModule/rootModule.css';
 import { hintType } from '../../types';
@@ -49,7 +48,6 @@ const CompositeRule = ({
   const ruleId = ruleGenerator.next().value;
   const { t } = useTranslation();
   const { lang } = useContext(OptionContext);
-  const { isXSmallOrSmaller } = useContext(ViewportContext);
 
   if (!rule) {
     return null;
@@ -105,7 +103,7 @@ const CompositeRule = ({
     if (hasCreditRequirementHeader) {
       return (
         <>
-          <Description id={descriptionId} rule={rule} lang={lang} hints={hints} />
+          <Description id={descriptionId} rule={rule} lang={lang} />
           <CreditRequirement id={creditRequirementId} rule={rule} hints={hints} />
           <GroupHeader id={groupHeaderId} hints={hints} borderTop borderBottom />
         </>
@@ -115,12 +113,12 @@ const CompositeRule = ({
       return (
         <>
           <GroupHeader id={groupHeaderId} hints={hints} borderTop borderBottom />
-          <Description id={descriptionId} rule={rule} lang={lang} hints={hints} />
+          <Description id={descriptionId} rule={rule} lang={lang} />
         </>
       );
     }
     return (
-      <Description id={descriptionId} rule={rule} lang={lang} hints={hints} />
+      <Description id={descriptionId} rule={rule} lang={lang} />
     );
   };
 
@@ -134,18 +132,14 @@ const CompositeRule = ({
     && !hasGroupHeader
   );
 
-  const isBoxed = hints.isInAccordion
-    || (!isXSmallOrSmaller && !hints.isInAccordion && hasOnlyTitle);
-
   return (
     <>
       {hasWrapperContent && (
         <div
           className={
             classNames(
+              styles.borderLeft,
               {
-                [styles.borderTop]: !hints.isInAccordion && hasOnlyTitle,
-                [styles.borderLeft]: isBoxed,
                 [styles.otherContent]: !hasGroupHeader && (hints.isInAccordion || !hasOnlyTitle)
               }
             )
@@ -157,8 +151,7 @@ const CompositeRule = ({
               className={
                 classNames(
                   'ds-heading-2xs',
-                  'ds-pr-sm',
-                  { 'ds-pl-sm': isBoxed || isXSmallOrSmaller },
+                  'ds-px-sm',
                   {
                     [styles.rootCompositeRuleTitle]: !hints.isInAccordion,
                     // Applies negative margins.

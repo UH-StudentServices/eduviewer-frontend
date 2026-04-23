@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
-import React, { useContext } from 'react';
+
+import React from 'react';
 import {
   oneOf,
   string
 } from 'prop-types';
 import classNames from 'classnames';
 
-import ViewportContext from '../../context/ViewportContext';
 import styles from '../RootModule/rootModule.css';
 import { hintType } from '../../types';
 import GroupHeader from '../GroupHeader';
@@ -30,8 +30,6 @@ import { ruleTypes } from '../../constants';
 const AnyCourse = ({
   hints, type, text, linkText, linkUrl
 }) => {
-  const { isXSmallOrSmaller } = useContext(ViewportContext);
-
   const isListItem = (
     hints.hasCourseUnits
     || hints.hasStudyModules
@@ -44,8 +42,8 @@ const AnyCourse = ({
       className={
         classNames(
           styles.anyCourse,
+          styles.borderLeft,
           {
-            [styles.borderLeft]: hints.isInAccordion,
             [styles.borderTop]: isListItem
           }
         )
@@ -55,12 +53,11 @@ const AnyCourse = ({
       <div
         className={
             classNames(
-              'ds-pr-sm',
+              'ds-px-sm',
               {
-                'ds-pl-sm': hints.isInAccordion || isXSmallOrSmaller,
                 'ds-py-2xs': isListItem && type === ruleTypes.ANY_COURSE_UNIT_RULE,
                 'ds-py-xs': isListItem && type === ruleTypes.ANY_MODULE_RULE,
-                'ds-pb-xs ds-pl-sm': !isListItem,
+                'ds-pb-xs': !isListItem,
                 'ds-pt-xs': !isListItem && !hints.hasTextContent
               }
             )
@@ -69,7 +66,8 @@ const AnyCourse = ({
         <div
           className={
             classNames(
-              `ds-bodytext-md ${styles.anyCourseContent}`,
+              styles.anyCourseContent,
+              'ds-bodytext-md',
               {
                 [styles.anyCourseContentPadded]: !isListItem
               }
