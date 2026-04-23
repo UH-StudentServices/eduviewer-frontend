@@ -29,6 +29,27 @@
     box-sizing: inherit;
   }
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-block: var(--ds-spacing-large) var(--ds-spacing-small);
+    padding: 0;
+    color: var(--ds-textColor-default);
+    font-family: var(--ds-fontFamily-heading);
+    font-weight: var(--ds-fontWeight-semibold);
+    font-size: var(--ds-fontSize-14);
+    line-height: 16px;
+    letter-spacing: var(--ds-letterSpacing-normal);
+
+    @media (width >= 60rem) {
+      font-size: var(--ds-fontSize-16);
+      line-height: 18px;
+    }
+  }
+
   & p {
     font-size: unset;
     margin-block: var(--ds-spacing-small);
