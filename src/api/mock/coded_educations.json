@@ -52,5 +52,14 @@
       "sv": "Kandidatsprogrammet i matematiska vetenskaper och magisterprogram (3 år + 2 år)"
     },
     "degreeProgrammeCode": "KH50_001"
+  },
+  {
+    "educationId": "hy-EDU-114256791-2017",
+    "name": {
+        "en": "Degree Programme in Medicine (6 years)",
+        "fi": "Lääketieteen koulutusohjelma, lääketieteen lisensiaatti (6v)",
+        "sv": "Utbildningsprogrammet i medicin (6 år)"
+    },
+    "degreeProgrammeCode": "MH30_001"
   }
 ]
