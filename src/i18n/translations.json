@@ -60,14 +60,14 @@
     "Study modules"
   ],
   "anyCourseUnit": [
-    "Vapaasti valittava opintojakso.",
-    "Valfri kurs.",
-    "Optional course."
+    "Jokin vapaasti valittava opintojakso.",
+    "Någon valfri kurs.",
+    "Any optional course."
   ],
   "anyModule": [
-    "Vapaasti valittava opintokokonaisuus.",
-    "Valfri studiehelhet.",
-    "Optional study module."
+    "Jokin vapaasti valittava opintokokonaisuus.",
+    "Någon valfri studiehelhet.",
+    "Any optional study module."
   ],
   "optionalStudiesIntro": [
     "Tutustu",
