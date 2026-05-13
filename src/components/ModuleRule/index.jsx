@@ -29,6 +29,7 @@ import {
 import Accordion from '../Accordion';
 // eslint-disable-next-line import/no-cycle
 import RuleItem from '../RuleItem';
+import DropdownModule from '../DropdownModule';
 import {
   STUDY_TRACK_DROPDOWN_MODULES,
   SPECIALISATION_DROPDOWN_MODULES
@@ -49,7 +50,7 @@ const ModuleRule = ({
   hints
 }) => {
   const {
-    lang, internalLinks, academicYear, showAll
+    lang, internalLinks, academicYear
   } = useContext(OptionContext);
   const { t } = useTranslation();
 
@@ -62,14 +63,19 @@ const ModuleRule = ({
   }
 
   const nameLower = name.toLowerCase();
-  const shouldRenderDropdown = !showAll
-    && (
-      STUDY_TRACK_DROPDOWN_MODULES.includes(nameLower)
-      || SPECIALISATION_DROPDOWN_MODULES.includes(nameLower)
-    );
+  const shouldRenderDropdown = STUDY_TRACK_DROPDOWN_MODULES.includes(nameLower)
+    || SPECIALISATION_DROPDOWN_MODULES.includes(nameLower);
   if (shouldRenderDropdown) {
-    // TODO: Re-introduce <DropdownModule /> when its new design
-    // is ready and approved by the PO.
+    return (
+      <div
+        id={rule.localId}
+        key={rule.localId}
+        className={styles.moduleRule}
+      >
+        <GroupHeader hints={hints} borderTop borderLeft />
+        <DropdownModule rule={rule} hlevel={hlevel} hints={hints} />
+      </div>
+    );
   }
 
   const moduleCredits = creditsToString(rule.dataNode.targetCredits, t, true);

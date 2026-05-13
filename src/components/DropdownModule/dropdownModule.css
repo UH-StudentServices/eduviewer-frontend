@@ -1,0 +1,30 @@
+.dropdownContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-xSmall);
+  padding-inline: var(--ds-spacing-small);
+  padding-block: var(--ds-spacing-xSmall);
+  border-top: var(--ds-borderWidth-hairline) solid var(--ds-borderColor-light);
+  border-bottom: var(--ds-borderWidth-hairline) solid var(--ds-borderColor-light);
+  position: relative;
+
+  @media (width > 30rem) {
+    border-left: var(--ds-borderWidth-hairline) solid var(--ds-borderColor-light);
+  }
+}
+
+.dropdownContainerSelected {
+  background-color: var(--ds-bgColor-neutralLight);
+}
+
+.selectedTrackContent {
+  padding-inline-start: var(--ds-spacing-small);
+}
+
+.studyTrackTitle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-spacing-small);
+  line-height: var(--ds-lineHeight-large);
+  justify-content: space-between;
+}

@@ -101,6 +101,14 @@ test.describe('Education structure view', () => {
       const expandedResults = await axe(page).analyze();
       expect(expandedResults.violations).toEqual([]);
 
+      // Test expanded study track with one degree programme.
+      if (slug === 'kh50-001') {
+        const studyTrack = page.getByRole('combobox', { name: 'Valitse opintosuunta' });
+        await studyTrack.fill('Matematiikka');
+        await page.getByRole('option', { name: 'Matematiikka', exact: true }).click();
+        await page.waitForTimeout(1000);
+      }
+
       // Visual regression screenshot
       await expect(page).toHaveScreenshot(
         `${slug}-expanded.png`,

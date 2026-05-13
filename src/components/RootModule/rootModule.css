@@ -20,10 +20,12 @@
 
   position: relative;
   border-top: var(--border);
-  margin-inline-start: calc(-1 * var(--ds-borderWidth-hairline));
 
-  @media (width >= 30rem) {
-    margin-inline-start: 0;
+  @media (width < 30rem) {
+    & > .moduleRule > .borderLeft,
+    & > .moduleRule > * > .borderLeft {
+      border-left: none;
+    }
   }
 
   eduviewer-ds-accordion {
@@ -54,7 +56,7 @@
 
     &:first-child {
       padding-block-start: var(--ds-spacing-small);
-    }    
+    }
   }
 
   & .module:first-of-type > .moduleTitle {
