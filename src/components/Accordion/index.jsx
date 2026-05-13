@@ -38,6 +38,7 @@ import styles from '../RootModule/rootModule.css';
 import Link from '../Link';
 import OptionContext from '../../context/OptionContext';
 import AccordionStateContext from '../../context/AccordionStateContext';
+import ViewportContext from '../../context/ViewportContext';
 import useTranslation from '../../hooks/useTranslation';
 
 const Accordion = ({
@@ -56,14 +57,16 @@ const Accordion = ({
   const {
     isAccordionOpen, setAccordionOpen, registerRestoration
   } = useContext(AccordionStateContext);
+  const { isXSmallOrSmaller } = useContext(ViewportContext);
   const { t } = useTranslation();
 
   const savedOpen = isAccordionOpen(rule.localId);
-  const [isOpen, setIsOpen] = useState(savedOpen);
+  const initialOpen = savedOpen || showAll;
+  const [isOpen, setIsOpen] = useState(initialOpen);
   const prevShowAll = useRef(showAll);
 
   useEffect(() => {
-    if (savedOpen) {
+    if (initialOpen) {
       const p = accordionRef.current?.setIsExpanded(true);
       if (p && registerRestoration) registerRestoration(p);
     }
@@ -144,7 +147,7 @@ const Accordion = ({
       dsHeadingVariant={isIconButton ? 'icon-button' : 'button'}
       dsContentHasBackground
       dsHideContentBorders
-      dsHideLeftBorder={false}
+      dsHideLeftBorder={isXSmallOrSmaller && !hints.isInAccordion && !hints.isInStudyTrack}
       dsHideRightBorder
       dsHideTopBorder={false}
       dsHideBottomBorder={false}

@@ -66,6 +66,7 @@ const hintShape = {
   isStudyModule: bool.isRequired,
   isCourseUnit: bool.isRequired,
   isInStudyModule: bool.isRequired,
+  isInStudyTrack: bool.isRequired,
   hasCreditsRule: bool.isRequired,
   hasDescription: bool.isRequired,
   hasStudyModules: bool.isRequired,

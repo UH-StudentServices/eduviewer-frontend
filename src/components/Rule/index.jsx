@@ -60,6 +60,7 @@ export const getHints = (parent, rule, index = 0) => {
     isStudyModule: isStudyModule(rule.dataNode),
     isCourseUnit: isCourseUnit(rule),
     isInStudyModule: parent?.isStudyModule || parent?.isInStudyModule || false,
+    isInStudyTrack: parent?.isInStudyTrack || false,
     hasCreditsRule: hasCreditsRule(rule.dataNode),
     hasDescription: !!rule.description,
     hasStudyModules: rules?.some((r) => isStudyModule(r.dataNode)),

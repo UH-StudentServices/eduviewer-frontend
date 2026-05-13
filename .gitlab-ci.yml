@@ -25,7 +25,7 @@ test_and_build:
       - dist/
 
 test_e2e:
-  image: mcr.microsoft.com/playwright:v1.58.2-noble
+  image: mcr.microsoft.com/playwright:v1.60.0-noble
   stage: test_and_build
   script:
     - npm ci
