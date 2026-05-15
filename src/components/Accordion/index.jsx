@@ -145,7 +145,8 @@ const Accordion = ({
       dsVariant="compact"
       dsHeadingLevel={hlevel}
       dsHeadingVariant={isIconButton ? 'icon-button' : 'button'}
-      dsContentHasBackground
+      dsHeaderHasBackground="expanded"
+      dsContentHasBackground={false}
       dsHideContentBorders
       dsHideLeftBorder={isXSmallOrSmaller && !hints.isInAccordion && !hints.isInStudyTrack}
       dsHideRightBorder
