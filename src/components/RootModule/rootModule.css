@@ -32,15 +32,6 @@
     position: relative;
     display: block;
   }
-  
-  /* TODO: Remove once fixed in https://jira.it.helsinki.fi/browse/DS-589 */
-  eduviewer-ds-accordion div[role="region"] {
-    /*
-      NOTE: The colour should not be white (but transparent).
-      This is fine as a workaround as long as eduviewer is embedded onto a white background.
-    */
-    background-color: var(--ds-bgColor-white);
-  }
 
   & a.link {
     all: unset;
