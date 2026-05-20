@@ -14,25 +14,25 @@
     "Laddar struktur...",
     "Loading structure..."
   ],
-  "openStructure": [
+  "expandStructure": [
     "Avaa koko rakenne",
     "Öppna hela strukturen",
-    "Open full structure"
+    "Expand full structure"
   ],
-  "closeStructure": [
+  "collapseStructure": [
     "Sulje koko rakenne",
     "Stäng hela strukturen",
-    "Close full structure"
+    "Collapse full structure"
   ],
-  "structureOpened": [
+  "structureExpanded": [
     "Rakenne avattu",
     "Strukturen öppnad",
-    "Structure opened"
+    "Structure expanded"
   ],
-  "structureClosed": [
+  "structureCollapsed": [
     "Rakenne suljettu",
     "Strukturen stängd",
-    "Structure closed"
+    "Structure collapsed"
   ],
   "noDegreeProgramToShow": [
     "Ei näytettävää koulutusohjelmaa.",
