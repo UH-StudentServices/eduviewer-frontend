@@ -28,7 +28,7 @@ const ToggleAllButton = ({ onChange, showAll }) => {
   const [feedback, setFeedback] = useState('');
 
   useEffect(() => {
-    setFeedback(showAll ? 'structureOpened' : 'structureClosed');
+    setFeedback(showAll ? 'structureExpanded' : 'structureCollapsed');
 
     const resetFeedback = setTimeout(() => {
       setFeedback('');
@@ -41,7 +41,7 @@ const ToggleAllButton = ({ onChange, showAll }) => {
     <div className={styles.toggleAllButton}>
       <eduviewer-ds-button
         dsVariant="supplementary"
-        dsText={t(showAll ? 'closeStructure' : 'openStructure')}
+        dsText={t(showAll ? 'collapseStructure' : 'expandStructure')}
         dsIcon={showAll ? 'unfold_less' : 'unfold_more'}
         onClick={onChange}
       />
