@@ -30,6 +30,11 @@ const eduviewerHostnames = {
   PROD: 'eduviewer.it.helsinki.fi'
 };
 
+const eduviewerBaseUrls = {
+  QA: 'https://od.helsinki.fi/eduviewer-qa',
+  PROD: 'https://od.helsinki.fi/eduviewer'
+};
+
 const studiesHostBaseUrls = {
   QA: 'https://studies-qa.it.helsinki.fi/',
   PROD: 'https://studies.helsinki.fi/'
@@ -120,6 +125,7 @@ const env = {
 };
 
 module.exports = {
+  DEFAULT_BASE_URL: getBaseUrl(eduviewerBaseUrls),
   DEFAULT_STYLE_URL: getStyleUrl(),
   STUDIES_HOST_BASE_URL: getBaseUrl(studiesHostBaseUrls),
   isNonProd,
