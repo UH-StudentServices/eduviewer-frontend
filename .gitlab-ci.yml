@@ -195,10 +195,8 @@ sbom:
   image: node:jod-alpine
   needs:
     - job: deploy_image_openshift_prod
-      optional: true
-  when: manual
   only:
-    - master
+    - prod
   before_script:
     - apk add --no-cache curl
     - npm install -g @cyclonedx/cyclonedx-npm
