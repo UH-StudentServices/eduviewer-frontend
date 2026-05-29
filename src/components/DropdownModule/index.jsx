@@ -77,7 +77,11 @@ const DropdownModule = ({ rule, hlevel, hints }) => {
           {childRules.map((child) => {
             const [childName] = getNameWithLangCode(child, lang);
             return (
-              <eduviewer-ds-option key={child.localId} dsValue={child.localId}>
+              <eduviewer-ds-option
+                key={child.localId}
+                dsId={`dropdown-${rule.localId}-option-${child.localId}`}
+                dsValue={child.localId}
+              >
                 {childName}
               </eduviewer-ds-option>
             );
