@@ -73,7 +73,7 @@ const ModuleRule = ({
         className={styles.moduleRule}
       >
         <GroupHeader hints={hints} borderTop borderLeft />
-        <DropdownModule rule={rule} hlevel={hlevel} hints={hints} />
+        <DropdownModule rule={rule} hlevel={hlevel} hints={hints} key={rule.localId} />
       </div>
     );
   }
