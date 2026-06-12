@@ -28,3 +28,8 @@
   line-height: var(--ds-lineHeight-large);
   justify-content: space-between;
 }
+
+/* ds-control-label adds --ds-spacing-2xSmall below slotted labels inside shadow DOM. */
+.dropdownContainer .studyTrackTitle {
+  margin-block: 0 calc(var(--ds-spacing-xSmall) - var(--ds-spacing-2xSmall));
+}
