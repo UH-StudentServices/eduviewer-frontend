@@ -23,11 +23,9 @@ import { hintType } from '../../types';
 import {
   creditsToString, getLangAttribute, getNameWithLangCode, hyphenateText
 } from '../../utils';
-import { SPECIALISATION_DROPDOWN_MODULES } from '../../constants';
 import OptionContext from '../../context/OptionContext';
 import AccordionStateContext from '../../context/AccordionStateContext';
 import useTranslation from '../../hooks/useTranslation';
-import Heading from '../Heading';
 // eslint-disable-next-line import/no-cycle
 import Rule from '../Rule';
 import rootStyles from '../RootModule/rootModule.css';
@@ -40,8 +38,6 @@ const DropdownModule = ({ rule, hlevel, hints }) => {
 
   const childRules = rule.dataNode?.rule?.rules ?? [];
   const [name, nameLangCode] = getNameWithLangCode(rule, lang);
-  const isSpecialisation = SPECIALISATION_DROPDOWN_MODULES.includes(name?.toLowerCase());
-  const ariaLabelKey = isSpecialisation ? 'chooseSpecialisation' : 'chooseStudyTrack';
   const moduleCredits = creditsToString(rule.dataNode.targetCredits, t, true);
   const nameLang = getLangAttribute(lang, nameLangCode);
 
@@ -54,6 +50,10 @@ const DropdownModule = ({ rule, hlevel, hints }) => {
     setStudyTrackSelection(rule.localId, next || null);
   };
 
+  const comboboxId = `dropdown-${rule.localId}`;
+  const LabelHeading = `h${hlevel}`;
+  const titleClassName = classNames(styles.studyTrackTitle, 'ds-heading-2xs');
+
   return (
     <>
       <div
@@ -62,18 +62,17 @@ const DropdownModule = ({ rule, hlevel, hints }) => {
           { [styles.dropdownContainerSelected]: !!selected }
         )}
       >
-        <Heading level={hlevel} className={styles.studyTrackTitle}>
-          <span lang={nameLang}>{hyphenateText(name, lang)}</span>
-          {moduleCredits && <span className={rootStyles.moduleCredits}>{moduleCredits}</span>}
-        </Heading>
         <eduviewer-ds-combobox
-          dsId={`dropdown-${rule.localId}`}
-          dsAriaLabel={t(ariaLabelKey)}
+          dsId={comboboxId}
           dsValue={selected}
           dsFullWidth
           dsClearable
           ondsChange={(event) => handleChange(event.detail)}
         >
+          <LabelHeading slot="label" className={titleClassName}>
+            <label lang={nameLang} htmlFor={comboboxId}>{hyphenateText(name, lang)}</label>
+            {moduleCredits && <span className={rootStyles.moduleCredits}>{moduleCredits}</span>}
+          </LabelHeading>
           {childRules.map((child) => {
             const [childName] = getNameWithLangCode(child, lang);
             return (

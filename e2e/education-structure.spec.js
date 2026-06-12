@@ -103,7 +103,7 @@ test.describe('Education structure view', () => {
 
       // Test expanded study track with one degree programme.
       if (slug === 'kh50-001') {
-        const studyTrack = page.getByRole('combobox', { name: 'Valitse opintosuunta' });
+        const studyTrack = page.getByRole('combobox', { name: 'Opintosuunta' });
         await studyTrack.fill('Matematiikka');
         await page.getByRole('option', { name: 'Matematiikka', exact: true }).click();
         await page.waitForTimeout(1000);
