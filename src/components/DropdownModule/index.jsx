@@ -69,7 +69,7 @@ const DropdownModule = ({ rule, hlevel, hints }) => {
           dsClearable
           ondsChange={(event) => handleChange(event.detail)}
         >
-          <LabelHeading slot="label">
+          <LabelHeading slot="label" className={styles.studyTrackLabelHeading}>
             <label lang={nameLang} htmlFor={comboboxId} className={titleClassName}>
               {hyphenateText(name, lang)}
             </label>
