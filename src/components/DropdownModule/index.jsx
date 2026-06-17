@@ -69,8 +69,10 @@ const DropdownModule = ({ rule, hlevel, hints }) => {
           dsClearable
           ondsChange={(event) => handleChange(event.detail)}
         >
-          <LabelHeading slot="label" className={titleClassName}>
-            <label lang={nameLang} htmlFor={comboboxId}>{hyphenateText(name, lang)}</label>
+          <LabelHeading slot="label">
+            <label lang={nameLang} htmlFor={comboboxId} className={titleClassName}>
+              {hyphenateText(name, lang)}
+            </label>
             {moduleCredits && <span className={rootStyles.moduleCredits}>{moduleCredits}</span>}
           </LabelHeading>
           {childRules.map((child) => {
