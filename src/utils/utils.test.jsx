@@ -27,7 +27,8 @@ import {
   getLocalizedTextWithLangCode,
   getLocalizedText,
   getNameWithLangCode,
-  getName
+  getName,
+  getChildRuleOptions
 } from '.';
 import { ruleTypes } from '../constants';
 
@@ -320,5 +321,18 @@ describe('hyphenateText', () => {
     const result = hyphenateText(text, lang);
     // Replace soft-hyphens for test assertion readability
     expect(result.replaceAll('\u00AD', '-')).toBe(expected);
+  });
+});
+
+describe('getChildRuleOptions', () => {
+  it('filters out children without a name', () => {
+    const childRules = [
+      { localId: '1', dataNode: { name: { fi: 'Nimi' } } },
+      { localId: '2', dataNode: { name: {} } },
+      { localId: '3', dataNode: {} }
+    ];
+    const result = getChildRuleOptions(childRules, 'fi');
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual({ localId: '1', name: 'Nimi' });
   });
 });

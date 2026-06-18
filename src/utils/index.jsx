@@ -316,3 +316,21 @@ export const hyphenateText = (text, lang = 'fi') => {
 export const componentOnReady = (...args) =>
   import('@uh-design-system/component-library/dist/index')
     .then((lib) => lib.componentOnReady(...args));
+
+/**
+ * Filters child rules to options with name and localId for dropdowns.
+ *
+ * @see {@link https://jira.it.helsinki.fi/browse/EDVWR-246}
+ *
+ * @param {{ localId: string; dataNode: { name: string } }[]} childRules
+ *   Array of child rules to filter and map to options.
+ * @param {'en' | 'fi' | 'sv'} lang ISO language code.
+ * @returns {{ localId: string; name: string; }[]} Array of options with localId and name.
+ */
+export const getChildRuleOptions = (childRules, lang) => childRules.reduce((acc, child) => {
+  const [childName] = getNameWithLangCode(child, lang);
+  if (!childName) return acc;
+
+  acc.push({ localId: child.localId, name: childName });
+  return acc;
+}, []);

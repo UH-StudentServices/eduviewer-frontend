@@ -21,7 +21,11 @@ import classNames from 'classnames';
 
 import { hintType } from '../../types';
 import {
-  creditsToString, getLangAttribute, getNameWithLangCode, hyphenateText
+  creditsToString,
+  getChildRuleOptions,
+  getLangAttribute,
+  getNameWithLangCode,
+  hyphenateText
 } from '../../utils';
 import OptionContext from '../../context/OptionContext';
 import AccordionStateContext from '../../context/AccordionStateContext';
@@ -75,18 +79,15 @@ const DropdownModule = ({ rule, hlevel, hints }) => {
             </label>
             {moduleCredits && <span className={rootStyles.moduleCredits}>{moduleCredits}</span>}
           </LabelHeading>
-          {childRules.map((child) => {
-            const [childName] = getNameWithLangCode(child, lang);
-            return (
-              <eduviewer-ds-option
-                key={child.localId}
-                dsId={`dropdown-${rule.localId}-option-${child.localId}`}
-                dsValue={child.localId}
-              >
-                {childName}
-              </eduviewer-ds-option>
-            );
-          })}
+          {getChildRuleOptions(childRules, lang).map(({ localId, name: childName }) => (
+            <eduviewer-ds-option
+              key={localId}
+              dsId={`dropdown-${rule.localId}-option-${localId}`}
+              dsValue={localId}
+            >
+              {childName}
+            </eduviewer-ds-option>
+          ))}
         </eduviewer-ds-combobox>
       </div>
       {selectedSubRule && (
