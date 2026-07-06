@@ -35,10 +35,14 @@ const loadMatomoTagManagerScript = () => {
 };
 
 export const initializeTracker = () => {
+  if (isNonProd()) {
+    return;
+  }
   // eslint-disable-next-line no-underscore-dangle
-  if (!globalThis._mtm && !isNonProd()) {
+  if (!globalThis._mtm) {
     loadMatomoTagManagerScript();
   }
+  injectMatomoScript();
 };
 
 export const trackEvent = (category, action, label = null) => {
