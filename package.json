@@ -97,6 +97,7 @@
       "jsx"
     ],
     "moduleNameMapper": {
+      "^@uh-design-system/component-library/dist/index\\.js$": "<rootDir>/node_modules/@uh-design-system/component-library/dist/cjs/index.cjs.js",
       "\\.(css)$": "<rootDir>/src/__mocks__/styleMock.js"
     }
   }
