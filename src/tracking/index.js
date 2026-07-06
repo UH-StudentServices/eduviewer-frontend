@@ -15,6 +15,8 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// eslint-disable-next-line import/extensions
+import { injectMatomoScript } from '@uh-design-system/component-library/dist/index.js';
 import { isNonProd } from '../config';
 
 export const trackingCategories = {
