@@ -28,7 +28,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
     "@sentry/react": "^10.32.1",
-    "@uh-design-system/component-library": "1.5.1",
+    "@uh-design-system/component-library": "1.6.0",
     "classnames": "^2.5.1",
     "core-js": "^3.47.0",
     "dotenv": "^17.2.3",
@@ -97,6 +97,7 @@
       "jsx"
     ],
     "moduleNameMapper": {
+      "^@uh-design-system/component-library/dist/index\\.js$": "<rootDir>/node_modules/@uh-design-system/component-library/dist/cjs/index.cjs.js",
       "\\.(css)$": "<rootDir>/src/__mocks__/styleMock.js"
     }
   }

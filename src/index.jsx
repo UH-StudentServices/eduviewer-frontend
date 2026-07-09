@@ -53,6 +53,10 @@ const ONLY_SELECTED_YEAR_ATTR_NAME = 'only-selected-academic-year';
 // Unknown values starting with "on" are not allowed in React
 const SELECTED_YEAR__ONLY_ATTR_NAME = 'selected-academic-year-only';
 const HEADER_ATTR_NAME = 'header';
+// Attribution for DS component analytics, see
+// https://designsystem.helsinki.fi/2de013a32/p/574a88-developers ("Enable analytics")
+const DS_APP_NAME_ATTR_NAME = 'data-uhds-app-name';
+const DS_APP_NAME = 'eduviewer';
 
 const getRoot = () => document.getElementById(EDUVIEWER_ROOT_ID);
 const getRootAttribute = (attributeName) => {
@@ -81,6 +85,10 @@ let reactRoot = null;
 const getOrCreateReactRoot = () => {
   const container = getRoot();
   if (!container) return null;
+
+  if (!container.hasAttribute(DS_APP_NAME_ATTR_NAME)) {
+    container.setAttribute(DS_APP_NAME_ATTR_NAME, DS_APP_NAME);
+  }
 
   if (!reactRoot) {
     reactRoot = createRoot(container);

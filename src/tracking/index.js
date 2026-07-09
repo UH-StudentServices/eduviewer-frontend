@@ -15,6 +15,8 @@
  * along with Eduviewer-frontend.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// eslint-disable-next-line import/extensions
+import { injectMatomoScript } from '@uh-design-system/component-library/dist/index.js';
 import { isNonProd } from '../config';
 
 export const trackingCategories = {
@@ -35,10 +37,14 @@ const loadMatomoTagManagerScript = () => {
 };
 
 export const initializeTracker = () => {
+  if (isNonProd()) {
+    return;
+  }
   // eslint-disable-next-line no-underscore-dangle
-  if (!globalThis._mtm && !isNonProd()) {
+  if (!globalThis._mtm) {
     loadMatomoTagManagerScript();
   }
+  injectMatomoScript();
 };
 
 export const trackEvent = (category, action, label = null) => {

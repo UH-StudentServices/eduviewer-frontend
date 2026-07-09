@@ -27,12 +27,14 @@ const Link = ({
   href, external, lang, children, ariaLabel, dsText, dsVariant, dsWeight
 }) => {
   const onNavigate = () => trackEvent(trackingCategories.FOLLOW_LINK, href, ariaLabel);
+  const linkLabel = ariaLabel || dsText.replaceAll('\u00ad', '');
 
   return (
     // eslint-disable-next-line react/jsx-no-target-blank
     <a
       className={styles.link}
       href={href}
+      aria-label={linkLabel}
       target={external ? '_blank' : undefined}
       rel={external ? 'noopener nofollow' : undefined}
       lang={lang}
