@@ -23,63 +23,16 @@ import { initializeTracker } from './tracking';
 import App from './components/App';
 
 import './styles';
-import { availableLanguages } from './constants';
 import { calculateCurrentLV } from './utils';
+import { getRoot, readEmbedConfig } from './utils/rootAttributes';
 import ViewportContextProvider from './context/ViewportContext/ViewportContextProvider';
 import LangContextProvider from './context/LangContext/LangContextProvider';
-import InitializeLang from './components/InititializeLang';
+import InitializeLang from './components/InitializeLang';
 
-const EDUVIEWER_ROOT_ID = 'eduviewer-root';
-const LANGUAGE_ATTR_NAME = 'lang';
-/**
- * @deprecated use `MODULE_ATTR_NAME` instead
- */
-const DEGREE_PROGRAM_ATTR_NAME = 'degree-program-id';
-const MODULE_ATTR_NAME = 'module-code';
-const ACADEMIC_YEAR_ATTR_NAME = 'academic-year';
-const HIDE_SELECTIONS_ATTR_NAME = 'hide-selections';
-const HIDE_SELECTED_ACADEMIC_YEAR_ATTR_NAME = 'hide-selected-academic-year';
-/**
- * @deprecated use `SKIP_TITLE_ATTR_NAME` instead
- */
-const HIDE_ACCORDION_ATTR_NAME = 'hide-accordion';
-const SKIP_TITLE_ATTR_NAME = 'skip-title';
-const INTERNAL_COURSE_LINK_ATTR_NAME = 'internal-course-links';
-/**
- * @deprecated use `SELECTED_YEAR__ONLY_ATTR_NAME` instead
- */
-const ONLY_SELECTED_YEAR_ATTR_NAME = 'only-selected-academic-year';
-// Alternate value for ONLY_SELECTED_YEAR_ATTR_NAME for use with React
-// Unknown values starting with "on" are not allowed in React
-const SELECTED_YEAR__ONLY_ATTR_NAME = 'selected-academic-year-only';
-const HEADER_ATTR_NAME = 'header';
 // Attribution for DS component analytics, see
 // https://designsystem.helsinki.fi/2de013a32/p/574a88-developers ("Enable analytics")
 const DS_APP_NAME_ATTR_NAME = 'data-uhds-app-name';
 const DS_APP_NAME = 'eduviewer';
-
-const getRoot = () => document.getElementById(EDUVIEWER_ROOT_ID);
-const getRootAttribute = (attributeName) => {
-  const root = getRoot();
-  return root ? root.getAttribute(attributeName) : null;
-};
-
-/**
- * Parses a string attribute value to boolean.
- *
- * Any value other than `null` or `'false'` (case insensitive) is considered true.
- *
- * @example
- * parseBooleanAttribute(null) => false
- * parseBooleanAttribute('false') => false
- * parseBooleanAttribute('FALSE') => false
- * parseBooleanAttribute('true') => true
- * parseBooleanAttribute('anything else') => true
- *
- * @param {*} valueString - The attribute value as string
- * @returns {boolean}
- */
-const parseBooleanAttribute = (valueString) => valueString !== null && valueString.toLocaleLowerCase() !== 'false';
 
 let reactRoot = null;
 const getOrCreateReactRoot = () => {
@@ -98,22 +51,8 @@ const getOrCreateReactRoot = () => {
 };
 
 export const render = () => {
-  const code = getRootAttribute(MODULE_ATTR_NAME) || getRootAttribute(DEGREE_PROGRAM_ATTR_NAME) || '';
-  const academicYearCode = getRootAttribute(ACADEMIC_YEAR_ATTR_NAME) || calculateCurrentLV();
-  const hideSelectionsString = getRootAttribute(HIDE_SELECTIONS_ATTR_NAME);
-  const hideSelections = parseBooleanAttribute(hideSelectionsString);
-  const hideSelectedAcademicYearString = getRootAttribute(HIDE_SELECTED_ACADEMIC_YEAR_ATTR_NAME);
-  const hideSelectedAcademicYear = parseBooleanAttribute(hideSelectedAcademicYearString);
-  const skipTitleString = getRootAttribute(SKIP_TITLE_ATTR_NAME)
-    || getRootAttribute(HIDE_ACCORDION_ATTR_NAME);
-  const skipTitle = parseBooleanAttribute(skipTitleString);
-  const internalCourseLinkString = getRootAttribute(INTERNAL_COURSE_LINK_ATTR_NAME);
-  const internalCourseLink = parseBooleanAttribute(internalCourseLinkString);
-  const onlySelectedAcademicYearString = getRootAttribute(SELECTED_YEAR__ONLY_ATTR_NAME)
-    || getRootAttribute(ONLY_SELECTED_YEAR_ATTR_NAME);
-  const showOnlySelectedAcademicYear = parseBooleanAttribute(onlySelectedAcademicYearString);
-  const lang = getRootAttribute(LANGUAGE_ATTR_NAME) || availableLanguages.FI;
-  const header = getRootAttribute(HEADER_ATTR_NAME) || '';
+  const config = readEmbedConfig(getRoot());
+  const academicYearCode = config.academicYearCode || calculateCurrentLV();
 
   const root = getOrCreateReactRoot();
   if (!root) return;
@@ -121,17 +60,17 @@ export const render = () => {
   root.render(
     <ViewportContextProvider>
       <LangContextProvider>
-        <InitializeLang currentLang={lang}>
+        <InitializeLang currentLang={config.lang}>
           <App
-            code={code}
+            code={config.code}
             academicYearCode={academicYearCode}
-            hideSelections={hideSelections}
-            skipTitle={skipTitle}
-            internalCourseLink={internalCourseLink}
-            onlySelectedAcademicYear={showOnlySelectedAcademicYear}
-            hideSelectedAcademicYear={hideSelectedAcademicYear}
-            lang={lang}
-            header={header}
+            hideSelections={config.hideSelections}
+            skipTitle={config.skipTitle}
+            internalCourseLink={config.internalCourseLink}
+            onlySelectedAcademicYear={config.onlySelectedAcademicYear}
+            hideSelectedAcademicYear={config.hideSelectedAcademicYear}
+            lang={config.lang}
+            header={config.header}
           />
         </InitializeLang>
       </LangContextProvider>

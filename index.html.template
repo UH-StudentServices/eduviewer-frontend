@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="<%= lang %>">
     <head>
        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
        <title><%= title %></title>
@@ -19,6 +19,6 @@
        </style>
     </head>
     <body>
-        <main id="eduviewer-root" degree-program-id="" module-code="" academic-year="" only-selected-academic-year="false" skip-title="true" lang="<%= lang %>" header="" data-uhds-app-name="eduviewer"></main>
+        <main id="eduviewer-root" data-module-code="" data-academic-year="" data-selected-academic-year-only="false" data-skip-title="true" data-header="" data-uhds-app-name="eduviewer"></main>
     </body>
 </html>

@@ -3,10 +3,9 @@ const AxeBuilder = require('@axe-core/playwright').default;
 
 // Rules disabled because they concern the host page or design system, not the widget logic:
 // - color-contrast: design system responsibility
-// - html-has-lang: dev server template lacks lang attr; real host pages provide it
 // - page-has-heading-one: widget is embedded; host page provides h1
 // - heading-order: recursive module nesting produces deep aria-levels by design
-const AXE_DISABLE_RULES = ['color-contrast', 'html-has-lang', 'page-has-heading-one', 'heading-order'];
+const AXE_DISABLE_RULES = ['color-contrast', 'page-has-heading-one', 'heading-order'];
 
 const axe = (page) => new AxeBuilder({ page })
   .exclude('[data-origin="external"]')
