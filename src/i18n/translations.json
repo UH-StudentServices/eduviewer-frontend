@@ -99,6 +99,11 @@
     "Studieinriktningar",
     "Study tracks"
   ],
+  "studyTrack": [
+    "Opintosuunta",
+    "Studieinriktning",
+    "Study track"
+  ],
   "chooseStudyTrack": [
     "Valitse opintosuunta",
     "Välj studieinriktning",

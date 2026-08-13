@@ -68,15 +68,16 @@ const DropdownModule = ({ rule, hlevel, hints }) => {
       >
         <eduviewer-ds-combobox
           dsId={comboboxId}
+          dsAriaLabel={t('studyTrack')}
           dsValue={selected}
           dsFullWidth
           dsClearable
           ondsChange={(event) => handleChange(event.detail)}
         >
           <LabelHeading slot="label" className={styles.studyTrackLabelHeading}>
-            <label lang={nameLang} htmlFor={comboboxId} className={titleClassName}>
+            <span lang={nameLang} className={titleClassName}>
               {hyphenateText(name, lang)}
-            </label>
+            </span>
             {moduleCredits && <span className={rootStyles.moduleCredits}>{moduleCredits}</span>}
           </LabelHeading>
           {getChildRuleOptions(childRules, lang).map(({ localId, name: childName }) => (
