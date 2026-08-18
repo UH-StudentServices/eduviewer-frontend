@@ -61,10 +61,11 @@ push_master_to_github:
     - name: docker:28-dind
   variables:
     DOCKER_HOST: "unix:///runner/services/docker/docker.sock"
+    OC_CLIENT_VERSION: "4.16"
   before_script:
     # Install openshift client and required libraries
     - apk add --update tar gzip curl ca-certificates gettext libc6-compat && rm -rf /var/cache/apk/*
-    - curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.10/openshift-client-linux.tar.gz
+    - curl -sLo /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-${OC_CLIENT_VERSION}/openshift-client-linux.tar.gz
     - tar xzvf /tmp/oc.tar.gz -C /usr/local/bin
     - chmod +x /usr/local/bin/oc /usr/local/bin/kubectl
     - rm -rf /tmp/oc.tar.gz
@@ -127,7 +128,7 @@ provision_openshift_stack_prod:
 .build_push_image_openshift: &build_push_image_openshift_scripts
   - export IMAGE_REPOSITORY=$REGISTRY_URL/tike/eduviewer-frontend
   - export IMAGE_TAG=${IMAGE_TAG_PREFIX}-${CI_COMMIT_SHA}
-  - docker login -u="$REGISTRY_USER" -p="$REGISTRY_TOKEN" $REGISTRY_URL
+  - echo "$REGISTRY_TOKEN" | docker login -u "$REGISTRY_USER" --password-stdin "$REGISTRY_URL"
   - sed "s/\${SERVER_NAME}/$SERVER_NAME/g" ci/build/frontend/nginx.conf.template > ./default.conf
   - docker build -f ci/build/frontend/Dockerfile -t $IMAGE_REPOSITORY:$IMAGE_TAG .
   - docker push $IMAGE_REPOSITORY:$IMAGE_TAG
