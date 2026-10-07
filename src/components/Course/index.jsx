@@ -16,7 +16,7 @@
  */
 
 import React, { useContext } from 'react';
-import { string } from 'prop-types';
+import { bool, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { creditsType, hintType, localizedTextType } from '../../types';
@@ -35,7 +35,7 @@ import Link from '../Link';
 import { ruleTypes } from '../../constants';
 
 const Course = ({
-  id, code, name, credits, hints
+  id, code, name, credits, isCrossStudy, hints
 }) => {
   const { t } = useTranslation();
   const { lang, academicYear, internalLinks } = useContext(OptionContext);
@@ -84,7 +84,16 @@ const Course = ({
               dsText={hyphenateText(courseName, lang)}
             />
           </span>
-          <small className="ds-bodytext-md">{myCredits}</small>
+          <div className={styles.courseMeta}>
+            {isCrossStudy && (
+              <eduviewer-ds-tag
+                dsText={t('crossStudy')}
+                dsColour="white"
+                dsSize="small"
+              />
+            )}
+            <small className="ds-bodytext-md">{myCredits}</small>
+          </div>
         </div>
       </div>
     </div>
@@ -96,7 +105,12 @@ Course.propTypes = {
   code: string.isRequired,
   name: localizedTextType.isRequired,
   credits: creditsType.isRequired,
+  isCrossStudy: bool,
   hints: hintType.isRequired
+};
+
+Course.defaultProps = {
+  isCrossStudy: false
 };
 
 export default Course;

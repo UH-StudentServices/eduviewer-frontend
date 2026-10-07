@@ -61,5 +61,14 @@
         "sv": "Utbildningsprogrammet i medicin (6 år)"
     },
     "degreeProgrammeCode": "MH30_001"
+  },
+  {
+    "educationId": "hy-EDU-114257670-2017",
+    "name": {
+      "en": "Master's Programme in Agricultural, Environmental and Resource Economics (2 years)",
+      "fi": "Maatalous-, ympäristö- ja luonnonvaraekonomian maisteriohjelma (2v)",
+      "sv": "Magisterprogrammet i lantbruks -, miljö- och naturresursekonomi (2 år)"
+    },
+    "degreeProgrammeCode": "MH80_002"
   }
 ]
