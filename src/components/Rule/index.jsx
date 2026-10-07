@@ -144,7 +144,7 @@ const Rule = ({
       );
     case ruleTypes.COURSE_UNIT_RULE: {
       const {
-        id, code, name, credits
+        id, code, name, credits, ripa
       } = rule.dataNode;
       const isValidCourse = code && name && credits;
 
@@ -159,6 +159,7 @@ const Rule = ({
           code={code}
           name={name}
           credits={credits}
+          isCrossStudy={ripa === true}
           hints={hints}
         />
       );

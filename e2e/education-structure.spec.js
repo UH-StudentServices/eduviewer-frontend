@@ -75,8 +75,9 @@ test.describe('Education structure view', () => {
         // No prior selection (e.g. first iteration) — nothing to clear.
       }
 
-      // Select the programme
-      await combobox.fill(searchText);
+      // Select the programme. DS combobox opens its options on key events,
+      // which fill() does not dispatch, so type the text instead.
+      await combobox.pressSequentially(searchText);
       await page.getByRole('option', { name: searchText }).click();
 
       // Wait for content to load
@@ -103,7 +104,7 @@ test.describe('Education structure view', () => {
       // Test expanded study track with one degree programme.
       if (slug === 'kh50-001') {
         const studyTrack = page.getByRole('combobox', { name: 'Opintosuunta' });
-        await studyTrack.fill('Matematiikka');
+        await studyTrack.pressSequentially('Matematiikka');
         await page.getByRole('option', { name: 'Matematiikka', exact: true }).click();
         await page.waitForTimeout(1000);
       }

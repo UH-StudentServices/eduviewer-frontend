@@ -90,6 +90,22 @@
     flex-shrink: 0;
   }
 
+  & .courseContent {
+    flex-wrap: wrap;
+  }
+
+  & .courseContent > span {
+    flex: 1 1 0;
+  }
+
+  & .courseMeta {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--ds-spacing-small);
+    margin-inline-start: auto;
+  }
+
   & .anyCourseContentPadded {
     padding-block: 0.1875rem;
 
@@ -216,6 +232,7 @@
   & .description {
     display: block;
     max-width: 650px;
+    overflow-wrap: anywhere;
   }
  
   & .description > :first-child {
