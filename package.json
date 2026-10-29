@@ -25,6 +25,11 @@
     "node": ">= 24.11.0",
     "npm": ">= 11.6.1"
   },
+  "overrides": {
+    "sockjs": {
+      "uuid": "^14.0.2"
+    }
+  },
   "dependencies": {
     "@sentry/react": "^10.32.1",
     "@uh-design-system/component-library": "1.8.0",
